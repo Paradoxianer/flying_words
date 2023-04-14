@@ -4,56 +4,49 @@ import 'package:flutter/material.dart';
 
 class Spiral extends StatefulWidget {
   final String text;
-  final double speed;
+  final Duration duration;
 
-  Spiral({required this.text,  this.speed=0.01});
-
+  Spiral({required this.text,  this.duration=const Duration(seconds: 5)});
   @override
   _SpiralState createState() => _SpiralState();
 }
 
 class _SpiralState extends State<Spiral> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late List<Animation<double>> _animations;
-  late List<double> _delays;
-
   late MediaQueryData _mediaQueryData;
-  double _screenWidth = 0.0;
-  double _screenHeight = 0.0;
+  late Animation<double> _animation;
+  late AnimationController _controller;
+  double _radius = 0.0;
+  double _angle = 50.0;
+  int _currentIndex = 0;
 
   List<String> get _words => widget.text.split(' ');
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
-    )..addListener(() {
-      setState(() {});
+      duration: widget.duration,
+    );
+    _animation = Tween<double>(begin: 1.0,end: 360.0).animate(_controller)
+      ..addListener(() {
+        setState(() {
+          _radius += 0.1;
+          // The state that has changed here is the animation object’s value.
+        });
+      });
+    _animation.addStatusListener((status) {
+      if (_currentIndex<_words.length-1){
+        if (status == AnimationStatus.completed) {
+          _controller.reset();
+          _controller.forward();
+          _currentIndex++;
+          _angle = 0.0;
+          _radius =0.0;
+        }
+      }
     });
-
-    _mediaQueryData = MediaQuery.of(context);
-    _screenWidth = _mediaQueryData.size.width;
-    _screenHeight = _mediaQueryData.size.height;
-
-    _animations = List.generate(_words.length, (index) {
-      final distance = _screenWidth / 2 - 50 - (index * 10);
-      final durationInSeconds = distance / widget.speed;
-      final duration = Duration(seconds: durationInSeconds.toInt());
-
-      return Tween(begin: 0.0, end: distance).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(_delays[index], 1.0, curve: Curves.easeInOut),
-        ),
-      );
-    });
-
-    _delays = List.generate(_words.length, (index) {
-      return index * 0.5;
-    });
-
     _controller.forward();
   }
 
@@ -72,22 +65,33 @@ class _SpiralState extends State<Spiral> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: Stack(
         children: [
-          for (var i = 0; i < _words.length; i++)
-            Positioned(
-              left: _screenWidth / 2 +
-                  _animations[i].value * cos(i * pi / 2),
-              top: _screenHeight / 2 -
-                  _animations[i].value * sin(i * pi / 2),
-              child: Transform.scale(
-                scale: 1 + _animations[i].value / _screenWidth,
-                child: Text(
-                  _words[i],
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ),
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                double x = _radius * cos(_angle);
+                double y = _radius * sin(_angle);
+                double size = sqrt(pow(x, 2) + pow(y, 2));
+
+                // Calculate the speed based on the distance
+                return Positioned(
+
+                  left: (_mediaQueryData.size.width / 2) + x,
+                  top: (_mediaQueryData.size.height / 2) + y,
+                  child: Text(
+                      _words[_currentIndex],
+                      style: TextStyle(
+                        fontSize: 20+size,
+                        color: Colors.blue,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.bold,
+                      ),
+                  )
+                );
+              }
+            )
         ],
       ),
     );

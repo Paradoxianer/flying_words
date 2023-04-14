@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:game_template/src/play_session/spiral.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
@@ -43,7 +44,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.watch<Palette>();
+   /* final palette = context.watch<Palette>();
 
     return MultiProvider(
       providers: [
@@ -116,7 +117,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           ),
         ),
       ),
-    );
+    );*/
+    return Spiral(text: "Das ist ein Text der fliegt");
   }
 
   @override

@@ -5,7 +5,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:game_template/src/play_session/spiral.dart';
+import 'package:flying_words/src/play_session/flying_words.dart';
+import 'package:flying_words/src/play_session/text_progress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class PlaySessionScreen extends StatefulWidget {
 }
 
 class _PlaySessionScreenState extends State<PlaySessionScreen> {
+  final String testText = "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen.";
   static final _log = Logger('PlaySessionScreen');
 
   static const _celebrationDuration = Duration(milliseconds: 2000);
@@ -44,7 +46,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-   /* final palette = context.watch<Palette>();
+    final palette = context.watch<Palette>();
 
     return MultiProvider(
       providers: [
@@ -64,7 +66,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               Center(
                 // This is the entirety of the "game".
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(
                       alignment: Alignment.centerRight,
@@ -76,11 +78,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         ),
                       ),
                     ),
-                    const Spacer(),
-                    Text('Drag the slider to ${widget.level.difficulty}%'
-                        ' or above!'),
+                    TextProgress(text: testText, index: ValueNotifier(2)),
                     Consumer<LevelState>(
-                      builder: (context, levelState, child) => Slider(
+                      builder: (context, levelState, child) =>
+                          /*Slider(
                         label: 'Level Progress',
                         autofocus: true,
                         value: levelState.progress / 100,
@@ -88,8 +89,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                             levelState.setProgress((value * 100).round()),
                         onChangeEnd: (value) => levelState.evaluate(),
                       ),
+                           */
+                      Expanded(child: FlyingWord(text: testText)),
                     ),
-                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
@@ -117,8 +119,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           ),
         ),
       ),
-    );*/
-    return Spiral(text: "Das ist ein Text der fliegt");
+    );
   }
 
   @override

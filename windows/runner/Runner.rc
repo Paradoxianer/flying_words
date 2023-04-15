@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "game_template" "\0"
+            VALUE "CompanyName", "de.heilsarmee" "\0"
+            VALUE "FileDescription", "flying_words" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "game_template" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "game_template.exe" "\0"
-            VALUE "ProductName", "game_template" "\0"
+            VALUE "InternalName", "flying_words" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 de.heilsarmee. All rights reserved." "\0"
+            VALUE "OriginalFilename", "flying_words.exe" "\0"
+            VALUE "ProductName", "flying_words" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

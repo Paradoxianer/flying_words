@@ -1,4 +1,4 @@
-package com.example.game_template
+package de.heilsarmee.flying_words
 
 import io.flutter.embedding.android.FlutterActivity
 

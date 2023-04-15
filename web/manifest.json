@@ -1,6 +1,6 @@
 {
-    "name": "game_template",
-    "short_name": "game_template",
+    "name": "flying_words",
+    "short_name": "flying_words",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -36,9 +36,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   final String testText = "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen.";
   static final _log = Logger('PlaySessionScreen');
 
-  static const _celebrationDuration = Duration(milliseconds: 2000);
+  static const _celebrationDuration = Duration(milliseconds: 4000);
 
-  static const _preCelebrationDuration = Duration(milliseconds: 500);
+  static const _preCelebrationDuration = Duration(milliseconds: 100);
 
   bool _duringCelebration = false;
 
@@ -93,7 +93,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ),
                     Consumer<LevelState>(
                       builder: (context, levelState, child) =>
-                        Expanded(child: FlyingWord(state: levelState)),
+                        Expanded(
+                            child: FlyingWord(state: levelState)
+                        ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

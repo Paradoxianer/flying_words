@@ -1,4 +1,5 @@
-A starter game in Flutter with all the bells and whistles
+A game in Flutter where word fly towards you, and you need to select the right word,
+to complete a given text. In this case these textes are Bible Verses
 of a mobile (iOS & Android) game including the following features:
 
 - sound

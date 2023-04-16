@@ -27,20 +27,28 @@ class _TextProgressState extends State<TextProgress> {
     @override
   Widget build(BuildContext context) {
     int currentIndex = widget.state.wordIndex;
+
     String done ="";
-    String current = _words[currentIndex];
+    String current = "";
     String coming ="";
-    TextStyle doneStyle = _textStyle.merge(TextStyle(color: Colors.black38));
-    TextStyle currentStyle = _textStyle.merge(TextStyle(backgroundColor: Colors.red));
-    TextStyle commingStyle = _textStyle.merge(TextStyle(color: Colors.black));
+      TextStyle doneStyle = _textStyle.merge(TextStyle(color: Colors.black38));
+      TextStyle currentStyle = _textStyle.merge(
+          TextStyle(backgroundColor: Colors.red));
+      TextStyle commingStyle = _textStyle.merge(TextStyle(color: Colors.black));
 
-    for (int i=0;i<currentIndex;i++){
-      done += _words[i] + " ";
+  if (currentIndex < widget.state.words.length) {
+      current=_words[currentIndex];
+      for (int i=0;i<currentIndex;i++){
+        done += _words[i] + " ";
+      }
+      for (int i=currentIndex+1;i<_words.length;i++){
+        coming += _words[i] + " ";
+      }
     }
+  else {
+    current=widget.state.text;
+  }
 
-    for (int i=currentIndex+1;i<_words.length;i++){
-      coming += _words[i] + " ";
-    }
     return RichText(
       text: TextSpan(
         children:  <TextSpan>[

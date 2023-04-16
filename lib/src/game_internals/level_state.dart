@@ -43,7 +43,6 @@ class LevelState extends ChangeNotifier {
 
   void evaluate() {
     if (_wordIndex >= _words.length) {
-      _wordIndex=0;
       onWin();
     }
   }

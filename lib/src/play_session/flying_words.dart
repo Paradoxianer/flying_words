@@ -24,28 +24,35 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   late List<String> _allWords;
   late List<double> _allAngles;
   late List<int> _wordIndexes;
-  late double _centerX;
-  late double _centerY;
   late int _correctWordIndex = 10;
 
   double _radius = 0.0;
 
   List<String> get _words => widget.state.words;
 
-  void _randomWordsList(int howMany) {
+  void _textWordsList() {
+    _allWords = _words;
+    _allAngles = List<double>.empty(growable: true);
+    final double angleSlice = (2 * pi) / (_allWords.length + 1);
+    for (int i = 0; i < _allWords.length+1; i++) {
+      double angle = angleSlice * i-(pi/2);
+      _allAngles.add(angle);
+    }
+    _wordIndexes = List.generate(_allWords.length, (index) => index);
+  }
+
+
+    void _randomWordsList(int howMany) {
     _allWords = List<String>.empty(growable: true);
     _allAngles = List<double>.empty(growable: true);
     final random = Random();
+    final double angleSlice = (2 * pi) / (howMany+1);
     for (int i = 0; i < howMany; i++) {
       int index = random.nextInt(bibleWords.length);
       //first calculate the in how many Parts we need to split up 2pi circle
-      double angleSlice = (2 * pi) / (howMany+1);
       //TODO maybe add a little random degree to it.
       double angle = angleSlice * i;
-      if (i > 0)
-        _allAngles.add(angle);
-      else
-        _allAngles.add(angle);
+      _allAngles.add(angle);
       // if we got the same word out of the list we choose a new random index
       if (bibleWords[index] == _words[widget.state.wordIndex])
         index = random.nextInt(bibleWords.length);
@@ -60,13 +67,16 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   void _nextWord() {
     widget.state.nextWordIndex();
     widget.state.evaluate();
-    //restart Animation Controller
-    _controller.reset();
-    _controller.forward();
     //next Word
     _radius = 0.0;
     //generate Random Word List
-    _randomWordsList(10);
+    if (widget.state.wordIndex>=widget.state.words.length)
+      _textWordsList();
+    else
+      _randomWordsList(10);
+    //restart Animation Controller
+    _controller.reset();
+    _controller.forward();
   }
 
   @override

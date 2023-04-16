@@ -11,21 +11,39 @@ import 'package:flutter/foundation.dart';
 class LevelState extends ChangeNotifier {
   final VoidCallback onWin;
 
-  final int goal;
+  final String text;
+  int _wordIndex = 0;
+  List<String> _words =[];
+  List<int> _errors = List<int>.empty(growable: true);
 
-  LevelState({required this.onWin, this.goal = 100});
+  LevelState({required this.onWin, required this.text})
+  {
+    _words = text.split(' ');
+  }
 
-  int _progress = 0;
 
-  int get progress => _progress;
 
-  void setProgress(int value) {
-    _progress = value;
+  int get wordIndex => _wordIndex;
+  List<String> get words => _words;
+
+  void setWordIndex(int index) {
+    _wordIndex = index;
+    notifyListeners();
+  }
+
+  void nextWordIndex() {
+    _wordIndex++;
+    notifyListeners();
+  }
+
+  void addErrorIndex(int index) {
+    _errors.add(index);
     notifyListeners();
   }
 
   void evaluate() {
-    if (_progress >= goal) {
+    if (_wordIndex >= _words.length) {
+      _wordIndex=0;
       onWin();
     }
   }

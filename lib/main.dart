@@ -129,15 +129,15 @@ class MyApp extends StatelessWidget {
       GoRoute(
           path: '/',
           builder: (context, state) =>
-              const MainMenuScreen(key: Key('main menu')),
+          const MainMenuScreen(key: Key('main menu')),
           routes: [
             GoRoute(
                 path: 'play',
                 pageBuilder: (context, state) => buildMyTransition<void>(
-                      child: const LevelSelectionScreen(
-                          key: Key('level selection')),
-                      color: context.watch<Palette>().backgroundLevelSelection,
-                    ),
+                  child: const LevelSelectionScreen(
+                      key: Key('level selection')),
+                  color: context.watch<Palette>().backgroundLevelSelection,
+                ),
                 routes: [
                   GoRoute(
                     path: 'session/:level',
@@ -173,7 +173,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
               path: 'settings',
               builder: (context, state) =>
-                  const SettingsScreen(key: Key('settings')),
+              const SettingsScreen(key: Key('settings')),
             ),
           ]),
     ],
@@ -255,6 +255,7 @@ class MyApp extends StatelessWidget {
                   color: palette.ink,
                 ),
               ),
+              useMaterial3: true,
             ),
             routeInformationProvider: _router.routeInformationProvider,
             routeInformationParser: _router.routeInformationParser,

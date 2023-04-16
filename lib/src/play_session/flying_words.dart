@@ -6,13 +6,14 @@ import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../game_internals/level_state.dart';
 
 class FlyingWord extends StatefulWidget {
-  final String text;
   final Duration duration;
+  final LevelState state;
 
-
-  FlyingWord({required this.text,  this.duration=const Duration(seconds: 15)});
+  FlyingWord(
+      {required this.state, this.duration = const Duration(seconds: 15)});
   @override
   _FlyingWordState createState() => _FlyingWordState();
 }
@@ -28,61 +29,55 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   late int _correctWordIndex = 10;
 
   double _radius = 0.0;
-  ValueNotifier<int>  currentIndex =ValueNotifier(0);
 
-  List<String> get _words => widget.text.split(' ');
+  List<String> get _words => widget.state.words;
 
-  void _randomWordsList(int howMany){
-    _allWords=List<String>.empty(growable: true);
+  void _randomWordsList(int howMany) {
+    _allWords = List<String>.empty(growable: true);
     _allAngles = List<double>.empty(growable: true);
     final random = Random();
     for (int i = 0; i < howMany; i++) {
-      final int index = random.nextInt(bibleWords.length);
-      //this need to be adjustes so that in -45 bis 45 nur ein Wort ist und auch in 135 bis 225 and thats it at least more than 0 degree..
-      double angle=5+(random.nextDouble()*(360.0/(howMany+1)));
-      print(angle);
-      if (i>0)
-        _allAngles.add(_allAngles[i-1]+angle);
+      int index = random.nextInt(bibleWords.length);
+      //first calculate the in how many Parts we need to split up 2pi circle
+      double angleSlice = (2 * pi) / (howMany + 1);
+      //TODO maybe add a little random degree to it.
+      double angle = angleSlice * i;
+      if (i > 0)
+        _allAngles.add(angle);
       else
         _allAngles.add(angle);
-      if (bibleWords[index]==_words[currentIndex.value])
-        final int index = random.nextInt(bibleWords.length);
+      // if we got the same word out of the list we choose a new random index
+      if (bibleWords[index] == _words[widget.state.wordIndex])
+        index = random.nextInt(bibleWords.length);
       _allWords.add(bibleWords[index]);
     }
-    _allWords.add(_words[currentIndex.value]);
-    _allAngles.add(5+(random.nextDouble()*(360.0/(howMany+1))-5));
+    _allWords.add(_words[widget.state.wordIndex]);
+    _allAngles.add(5 + (random.nextDouble() * (360.0 / (howMany + 1)) - 5));
     _wordIndexes = List.generate(_allWords.length, (index) => index);
     _wordIndexes.shuffle();
   }
 
-  void _nextWord(){
-    if (currentIndex.value<_words.length-1){
-      //restart Animation Controller
-      _controller.reset();
-      _controller.forward();
-      //next Word
-      currentIndex.value++;
-      //reset Radius to null
-      _radius =0.0;
-      //generate Random Word List
-      _randomWordsList(10);
-    }
-    else{
-
-    }
+  void _nextWord() {
+    widget.state.nextWordIndex();
+    widget.state.evaluate();
+    //restart Animation Controller
+    _controller.reset();
+    _controller.forward();
+    //next Word
+    _radius = 0.0;
+    //generate Random Word List
+    _randomWordsList(10);
   }
-
 
   @override
   void initState() {
     super.initState();
     _randomWordsList(10);
-
     _controller = AnimationController(
       vsync: this,
       duration: widget.duration,
     );
-    _animation = Tween<double>(begin: 1.0,end: 1.0).animate(_controller)
+    _animation = Tween<double>(begin: 1.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {
           _radius += 0.5;
@@ -90,9 +85,9 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         });
       });
     _animation.addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _nextWord();
-        }
+      if (status == AnimationStatus.completed) {
+        _nextWord();
+      }
     });
     _controller.forward();
   }
@@ -111,37 +106,33 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   Widget _buildWord(int index) {
     final audioController = context.read<AudioController>();
     final angle = _allAngles[_wordIndexes[index]];
-    final dx = _centerX+_radius * cos(angle);
-    final dy = _centerY+_radius * sin(angle);
-      return Positioned(
-         left: dx,
+    final dx = _centerX + _radius * cos(angle);
+    final dy = _centerY + _radius * sin(angle);
+    return Positioned(
+        left: dx,
         top: dy,
-         child: GestureDetector(
-            onTap: () {
-              setState(() {
-                if (index == _correctWordIndex) {
-                  print("correkt Wort");
-                  audioController.playSfx(SfxType.swishSwish);
-                  _nextWord();
-                }
-                else{
-                  print("falsches Wort");
-                  audioController.playSfx(SfxType.huhsh);
-                }
-              });
-            },
-            child: Text(
-              _allWords[index],
-              style:TextStyle(
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              if (index == _correctWordIndex) {
+                print("correkt Wort");
+                audioController.playSfx(SfxType.swishSwish);
+                _nextWord();
+              } else {
+                print("falsches Wort");
+                audioController.playSfx(SfxType.huhsh);
+              }
+            });
+          },
+          child: Text(_allWords[index],
+              textAlign: TextAlign.center,
+              style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
-                  decoration: TextDecoration.none
-              )
-            ),
-          )
-      );
-    }
+                  decoration: TextDecoration.none)),
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +140,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     _centerY = MediaQuery.of(context).size.height / 2;
     return Container(
       color: Colors.white,
+
       child: Stack(
         children: [
           for (int index = 0; index < _allWords.length; index++)

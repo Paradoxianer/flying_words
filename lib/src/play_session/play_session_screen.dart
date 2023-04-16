@@ -52,7 +52,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => LevelState(
-            goal: widget.level.difficulty,
+            text: testText,
             onWin: _playerWon,
           ),
         ),
@@ -78,7 +78,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         ),
                       ),
                     ),
-                    TextProgress(text: testText, index: ValueNotifier(2)),
                     Consumer<LevelState>(
                       builder: (context, levelState, child) =>
                           /*Slider(
@@ -90,7 +89,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         onChangeEnd: (value) => levelState.evaluate(),
                       ),
                            */
-                      Expanded(child: FlyingWord(text: testText)),
+                      TextProgress(state: levelState),
+                    ),
+                    Consumer<LevelState>(
+                      builder: (context, levelState, child) =>
+                        Expanded(child: FlyingWord(state: levelState)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

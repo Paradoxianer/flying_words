@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-class TextProgress extends StatefulWidget {
-  final String text;
-  final ValueNotifier<int> index;
+import '../game_internals/level_state.dart';
 
-  TextProgress({required this.text, required this.index});
+class TextProgress extends StatefulWidget {
+  LevelState state;
+
+  TextProgress({required this.state});
 
   @override
   _TextProgressState createState() => _TextProgressState();
@@ -12,14 +13,26 @@ class TextProgress extends StatefulWidget {
 }
 
 class _TextProgressState extends State<TextProgress> {
-  List<String> get _words => widget.text.split(' ');
+  List<String> get _words => widget.state.words;
+  TextStyle _textStyle = TextStyle(
+    fontSize: 26,
+  );
 
   @override
+  void initState() {
+    super.initState();
+    widget.state.addListener(_onIndexChanged);
+  }
+
+    @override
   Widget build(BuildContext context) {
-    int currentIndex = widget.index.value;
+    int currentIndex = widget.state.wordIndex;
     String done ="";
     String current = _words[currentIndex];
     String coming ="";
+    TextStyle doneStyle = _textStyle.merge(TextStyle(color: Colors.black38));
+    TextStyle currentStyle = _textStyle.merge(TextStyle(backgroundColor: Colors.red));
+    TextStyle commingStyle = _textStyle.merge(TextStyle(color: Colors.black));
 
     for (int i=0;i<currentIndex;i++){
       done += _words[i] + " ";
@@ -31,30 +44,19 @@ class _TextProgressState extends State<TextProgress> {
     return RichText(
       text: TextSpan(
         children:  <TextSpan>[
-          TextSpan(text:  done,
-              style: TextStyle(
-                    color: Colors.grey)
-            ),
-          TextSpan(text: current,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                backgroundColor: Colors.red,
-              )),
-    TextSpan(text: coming),
+          TextSpan(text:  done, style: doneStyle),
+          TextSpan(text: current, style: currentStyle),
+          TextSpan(text: coming, style:commingStyle),
         ],
       ),
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    widget.index.addListener(_onIndexChanged);
-  }
+
 
   @override
   void dispose() {
-    widget.index.removeListener(_onIndexChanged);
+    widget.state.removeListener(_onIndexChanged);
     super.dispose();
   }
 

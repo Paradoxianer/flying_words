@@ -39,7 +39,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     for (int i = 0; i < howMany; i++) {
       int index = random.nextInt(bibleWords.length);
       //first calculate the in how many Parts we need to split up 2pi circle
-      double angleSlice = (2 * pi) / (howMany + 1);
+      double angleSlice = (2 * pi) / (howMany+1);
       //TODO maybe add a little random degree to it.
       double angle = angleSlice * i;
       if (i > 0)
@@ -77,10 +77,13 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
       vsync: this,
       duration: widget.duration,
     );
-    _animation = Tween<double>(begin: 1.0, end: 1.0).animate(_controller)
+    _animation = Tween<double>(
+        begin: 0.0, end: 1.0,
+    ).animate(
+        _controller)
       ..addListener(() {
         setState(() {
-          _radius += 0.5;
+          _radius += 0.005;
           // The state that has changed here is the animation object’s value.
         });
       });
@@ -106,11 +109,10 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   Widget _buildWord(int index) {
     final audioController = context.read<AudioController>();
     final angle = _allAngles[_wordIndexes[index]];
-    final dx = _centerX + _radius * cos(angle);
-    final dy = _centerY + _radius * sin(angle);
-    return Positioned(
-        left: dx,
-        top: dy,
+    final dx = _radius * cos(angle);
+    final dy = _radius * sin(angle)*MediaQuery.of(context).size.aspectRatio;
+    return Align(
+        alignment: Alignment(dx,dy),
         child: GestureDetector(
           onTap: () {
             setState(() {
@@ -136,11 +138,8 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _centerX = MediaQuery.of(context).size.width / 2;
-    _centerY = MediaQuery.of(context).size.height / 2;
     return Container(
       color: Colors.white,
-
       child: Stack(
         children: [
           for (int index = 0; index < _allWords.length; index++)

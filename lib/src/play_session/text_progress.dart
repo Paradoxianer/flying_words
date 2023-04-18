@@ -49,15 +49,35 @@ class _TextProgressState extends State<TextProgress> {
     current=widget.state.text;
   }
 
-    return RichText(
-      text: TextSpan(
-        children:  <TextSpan>[
-          TextSpan(text:  done, style: doneStyle),
-          TextSpan(text: current, style: currentStyle),
-          TextSpan(text: coming, style:commingStyle),
-        ],
-      ),
-    );
+    return
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            const BoxShadow(
+              color: Colors.black26,
+            ),
+            const BoxShadow(
+              //we need to tight this to the widget background color
+              color: Color(0xffffebb5),
+              spreadRadius: -3.0,
+              blurRadius: 2.0,
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(5.0),
+        child: RichText(
+        text: TextSpan(
+          children:  <TextSpan>[
+            TextSpan(text:  done, style: doneStyle),
+            TextSpan(text: current, style: currentStyle),
+            TextSpan(text: coming, style:commingStyle),
+          ],
+        ),
+    ),
+      );
   }
 
 

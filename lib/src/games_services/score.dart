@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:flying_words/src/game_internals/lesson.dart';
+import 'package:flying_words/src/game_internals/level_state.dart';
 
 /// Encapsulates a score and the arithmetic to compute it.
 @immutable
@@ -13,10 +15,14 @@ class Score {
 
   final int level;
 
-  factory Score(int level, int difficulty, Duration duration) {
+  //final LevelState levelState;
+
+
+  factory Score(int level, Difficulty difficulty, Duration duration) {
     // The higher the difficulty, the higher the score.
-    var score = difficulty;
+    var score = (difficulty.index+1);
     // The lower the time to beat the level, the higher the score.
+    //score *= (levelState.length-levelState.numErrors);
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);
     return Score._(score, duration, level);
   }

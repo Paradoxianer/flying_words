@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/random_words.dart';
 import 'package:provider/provider.dart';
 
@@ -10,10 +11,11 @@ import '../game_internals/level_state.dart';
 
 class FlyingWord extends StatefulWidget {
   final Duration duration;
+  final Lesson lesson;
   final LevelState state;
 
   FlyingWord(
-      {required this.state, this.duration = const Duration(seconds: 15)});
+      {required this.state, required this.lesson, this.duration = const Duration(seconds: 15)});
   @override
   _FlyingWordState createState() => _FlyingWordState();
 }
@@ -28,7 +30,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
   double _radius = 0.0;
 
-  List<String> get _words => widget.state.words;
+  List<String> get _words => widget.lesson.words;
 
   void _textWordsList() {
     _allWords = _words;
@@ -70,7 +72,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     //next Word
     _radius = 0.0;
     //generate Random Word List
-    if (widget.state.wordIndex>=widget.state.words.length)
+    if (widget.state.wordIndex>=widget.lesson.words.length)
       _textWordsList();
     else
       _randomWordsList(10);
@@ -151,7 +153,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     return Container(
       color: Colors.white,
       child: Stack(
-        children: [
+          children: [
           for (int index = 0; index < _allWords.length; index++)
             _buildWord(index),
         ],

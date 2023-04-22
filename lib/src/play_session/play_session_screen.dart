@@ -5,7 +5,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/play_session/flying_words.dart';
+import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:flying_words/src/play_session/text_progress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -14,30 +16,27 @@ import 'package:provider/provider.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
-import '../game_internals/level_state.dart';
 import '../games_services/games_services.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
-import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
-  final GameLevel level;
+  final Lesson lesson;
+  final Difficulty difficulty = Difficulty.slow;
 
-  const PlaySessionScreen(this.level, {super.key});
+  const PlaySessionScreen(this.lesson, {super.key});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
 }
 
 class _PlaySessionScreenState extends State<PlaySessionScreen> {
-  final String testText = "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen.";
   static final _log = Logger('PlaySessionScreen');
 
   static const _celebrationDuration = Duration(milliseconds: 4000);
-
   static const _preCelebrationDuration = Duration(milliseconds: 100);
 
   bool _duringCelebration = false;
@@ -52,7 +51,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => LevelState(
-            text: testText,
+            length: widget.lesson.words.length,
             onWin: _playerWon,
           ),
         ),
@@ -80,21 +79,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ),
                     Consumer<LevelState>(
                       builder: (context, levelState, child) =>
-                          /*Slider(
-                        label: 'Level Progress',
-                        autofocus: true,
-                        value: levelState.progress / 100,
-                        onChanged: (value) =>
-                            levelState.setProgress((value * 100).round()),
-                        onChangeEnd: (value) => levelState.evaluate(),
-                      ),
-                           */
-                      TextProgress(state: levelState),
+                      TextProgress(lesson: widget.lesson,state: levelState),
                     ),
                     Consumer<LevelState>(
                       builder: (context, levelState, child) =>
                         Expanded(
-                            child: FlyingWord(state: levelState)
+                            child: FlyingWord(lesson: widget.lesson,state: levelState)
                         ),
                     ),
                     Padding(
@@ -143,16 +133,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   Future<void> _playerWon() async {
-    _log.info('Level ${widget.level.number} won');
+    _log.info('Level ${widget.lesson.number} won');
 
     final score = Score(
-      widget.level.number,
-      widget.level.difficulty,
+      widget.lesson.number,
+      widget.difficulty,
       DateTime.now().difference(_startOfPlay),
     );
 
     final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(widget.level.number);
+    playerProgress.setLevelReached(widget.lesson.number);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);
@@ -168,12 +158,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     final gamesServicesController = context.read<GamesServicesController?>();
     if (gamesServicesController != null) {
       // Award achievement.
+      /*ToDo implement
       if (widget.level.awardsAchievement) {
         await gamesServicesController.awardAchievement(
           android: widget.level.achievementIdAndroid!,
           iOS: widget.level.achievementIdIOS!,
         );
-      }
+      }*/
 
       // Send score to leaderboard.
       await gamesServicesController.submitLeaderboardScore(score);

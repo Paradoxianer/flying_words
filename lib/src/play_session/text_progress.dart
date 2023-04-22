@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flying_words/src/game_internals/lesson.dart';
 
 import '../game_internals/level_state.dart';
 
 class TextProgress extends StatefulWidget {
-  LevelState state;
+  final LevelState state;
+  final Lesson lesson;
 
-  TextProgress({required this.state});
+  TextProgress({required this.lesson,required this.state});
 
   @override
   _TextProgressState createState() => _TextProgressState();
@@ -13,7 +15,7 @@ class TextProgress extends StatefulWidget {
 }
 
 class _TextProgressState extends State<TextProgress> {
-  List<String> get _words => widget.state.words;
+  List<String> get _words => widget.lesson.words;
   TextStyle _textStyle = TextStyle(
     fontSize: 26,
   );
@@ -36,7 +38,7 @@ class _TextProgressState extends State<TextProgress> {
           TextStyle(backgroundColor: Colors.red));
       TextStyle commingStyle = _textStyle.merge(TextStyle(color: Colors.black));
 
-  if (currentIndex < widget.state.words.length) {
+  if (currentIndex < widget.lesson.words.length) {
       current=_words[currentIndex];
       for (int i=0;i<currentIndex;i++){
         done += _words[i] + " ";
@@ -46,7 +48,7 @@ class _TextProgressState extends State<TextProgress> {
       }
     }
   else {
-    current=widget.state.text;
+    current=widget.lesson.text;
   }
 
     return

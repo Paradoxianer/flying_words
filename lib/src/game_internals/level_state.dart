@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 /// An extremely silly example of a game state.
 ///
@@ -10,21 +10,14 @@ import 'package:flutter/foundation.dart';
 /// the value of [progress] reaches [goal].
 class LevelState extends ChangeNotifier {
   final VoidCallback onWin;
-
-  final String text;
+  final length;
   int _wordIndex = 0;
-  List<String> _words =[];
   List<int> _errors = List<int>.empty(growable: true);
 
-  LevelState({required this.onWin, required this.text})
-  {
-    _words = text.split(' ');
-  }
-
-
+  LevelState({required this.onWin, required this.length});
 
   int get wordIndex => _wordIndex;
-  List<String> get words => _words;
+  int get numErrors => _errors.length;
 
   void setWordIndex(int index) {
     _wordIndex = index;
@@ -37,12 +30,15 @@ class LevelState extends ChangeNotifier {
   }
 
   void addErrorIndex(int index) {
-    _errors.add(index);
-    notifyListeners();
+    //only register first mistake on the word... maybe later find a more fance way to count multiple erros on
+    if (!_errors.contains(index)) {
+      _errors.add(index);
+      notifyListeners();
+    }
   }
 
   void evaluate() {
-    if (_wordIndex >= _words.length) {
+    if (_wordIndex >= length) {
       onWin();
     }
   }

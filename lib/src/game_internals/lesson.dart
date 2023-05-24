@@ -6,6 +6,17 @@ enum Difficulty{
   normal,
   insane,
 }
+Map<Difficulty, String> difficultyIcons = {
+  Difficulty.slow: "assets/images/speedometer/speedometer-slow_gray.png",
+  Difficulty.normal: "assets/images/speedometer/speedometer-normal_gray.png",
+  Difficulty.insane: "assets/images/speedometer/speedometer-fast_gray.png",
+};
+
+Map<Difficulty, double> difficultySpeed = {
+  Difficulty.slow: 0.25,
+  Difficulty.normal: 1.0,
+  Difficulty.insane: 2.0,
+};
 
 class Lesson{
   final int number;

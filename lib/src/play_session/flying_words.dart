@@ -61,7 +61,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
       _allWords.add(bibleWords[index]);
     }
     _allWords.add(_words[widget.state.wordIndex]);
-    _allAngles.add(5 + (random.nextDouble() * (360.0 / (howMany + 1)) - 5));
+    _allAngles.add(angleSlice * howMany);
     _wordIndexes = List.generate(_allWords.length, (index) => index);
     _wordIndexes.shuffle();
   }

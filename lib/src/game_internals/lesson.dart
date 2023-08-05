@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:flutter/cupertino.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 
 enum Difficulty{
@@ -17,6 +18,12 @@ Map<Difficulty, int> difficultyWordcount = {
   Difficulty.slow: 3,
   Difficulty.normal: 7,
   Difficulty.insane: 12,
+};
+
+Map<Difficulty, Image> difficultyImagePath = {
+  Difficulty.slow: Image.asset('assets/images/marker/marker_green.png'),
+  Difficulty.normal: Image.asset('assets/images/marker/marker_yellow.png'),
+  Difficulty.insane: Image.asset('assets/images/marker/marker_red.png'),
 };
 
 

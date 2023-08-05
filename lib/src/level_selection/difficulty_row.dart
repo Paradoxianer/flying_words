@@ -22,23 +22,19 @@ class DifficultyRow extends StatelessWidget {
             children: Difficulty.values
                 .map<Widget>((e) =>
                 Expanded(
-                  child: ElevatedButton(
+                  child: Opacity(
+                  opacity: 0.5,
+                  child: IconButton(
+                    icon: difficultyImagePath[e]!,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                 onPressed: () {
                   final audioController = context.read<AudioController>();
                   audioController.playSfx(SfxType.buttonTap);
                 GoRouter.of(context)
                     .go('/play/session/${level.number}');
-              },
-                  style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.red.withOpacity(0.1),
-                      foregroundColor: Colors.black,
-                      side: const BorderSide(
-                        width: 1.0,
-                        color: Colors.green,
-                      )),
-                  child: Text(e.name),
-            )))
+              }
+            ))))
                 .toList(),
           ),
         ],

@@ -6,11 +6,6 @@ enum Difficulty{
   normal,
   insane,
 }
-Map<Difficulty, String> difficultyIcons = {
-  Difficulty.slow: "assets/images/speedometer/speedometer-slow_gray.png",
-  Difficulty.normal: "assets/images/speedometer/speedometer-normal_gray.png",
-  Difficulty.insane: "assets/images/speedometer/speedometer-fast_gray.png",
-};
 
 Map<Difficulty, double> difficultySpeed = {
   Difficulty.slow: 0.25,
@@ -18,8 +13,16 @@ Map<Difficulty, double> difficultySpeed = {
   Difficulty.insane: 2.0,
 };
 
+Map<Difficulty, int> difficultyWordcount = {
+  Difficulty.slow: 3,
+  Difficulty.normal: 7,
+  Difficulty.insane: 12,
+};
+
+
 class Lesson{
   final int number;
+  final String verse;
   List<String> _words =[];
   final String text;
   List<LevelState> levels = [];
@@ -35,6 +38,7 @@ class Lesson{
 
   Lesson({
     required this.number,
+    required this.verse,
     required this.text,
     this.achievementIdIOS,
     this.achievementIdAndroid,

@@ -11,6 +11,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -143,11 +144,13 @@ class MyApp extends StatelessWidget {
                     path: 'session/:level',
                     pageBuilder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
+                      final Difficulty difficulty = Difficulty.slow;
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
                       return buildMyTransition<void>(
                         child: PlaySessionScreen(
                           level,
+                          difficulty,
                           key: const Key('play session'),
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,

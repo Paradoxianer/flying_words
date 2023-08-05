@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flying_words/src/level_selection/difficulty_row.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class LevelSelectionScreen extends StatelessWidget {
               padding: EdgeInsets.all(16),
               child: Center(
                 child: Text(
-                  'Select level',
+                  'Select lesson',
                   style:
                       TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
                 ),
@@ -41,7 +42,7 @@ class LevelSelectionScreen extends StatelessWidget {
               child: ListView(
                 children: [
                   for (final level in gameLevels)
-                    ListTile(
+/*                    ListTile(
                       enabled: playerProgress.highestLevelReached >=
                           level.number - 1,
                       onTap: () {
@@ -51,9 +52,13 @@ class LevelSelectionScreen extends StatelessWidget {
                         GoRouter.of(context)
                             .go('/play/session/${level.number}');
                       },
-                      leading: Text(level.number.toString()),
-                      title: Text('Level #${level.number}'),
-                    )
+                      title:
+                            Expanded(
+                              child: Text(level.text,
+                              softWrap: true),
+                      ),
+                    )*/
+                  DifficultyRow(level)
                 ],
               ),
             ),

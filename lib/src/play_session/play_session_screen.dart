@@ -25,9 +25,9 @@ import '../style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final Lesson lesson;
-  final Difficulty difficulty = Difficulty.slow;
+  final Difficulty difficulty;
 
-  const PlaySessionScreen(this.lesson, {super.key});
+  const PlaySessionScreen(this.lesson, this.difficulty, {super.key});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();

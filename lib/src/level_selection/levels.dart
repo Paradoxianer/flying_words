@@ -8,6 +8,7 @@ import 'package:flying_words/src/game_internals/lesson.dart';
 final gameLevels = [
   Lesson(
     number: 1,
+    verse: "1. Korinther 12, 6",
     text:   "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen.",
     // TODO: When ready, change these achievement IDs.
     // You configure this in App Store Connect.
@@ -17,6 +18,7 @@ final gameLevels = [
   ),
   Lesson(
     number: 2,
+    verse: "Johannes 3, 16",
     text:  "Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab, auf daß jeder, der an ihn glaubt, nicht verloren gehe, sondern ewiges Leben habe."
   ),
  /* Lesson(

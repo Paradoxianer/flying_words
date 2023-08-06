@@ -14,10 +14,13 @@ class DifficultyRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         child: Stack(
+          alignment: Alignment.centerLeft,
       children: <Widget>[
         Expanded(
         child: Text(level.text,
-        softWrap: true)),
+        softWrap: true,
+        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
+        )),
         Row(
             children: Difficulty.values
                 .map<Widget>((e) =>

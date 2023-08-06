@@ -7,9 +7,9 @@ import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 
 
-class DifficultyRow extends StatelessWidget {
+class LevelItem extends StatelessWidget {
   final level;
-  DifficultyRow(this.level);
+  LevelItem(this.level);
 
   Widget build(BuildContext context) {
     return Expanded(

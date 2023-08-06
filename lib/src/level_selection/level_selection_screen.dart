@@ -58,7 +58,7 @@ class LevelSelectionScreen extends StatelessWidget {
                               softWrap: true),
                       ),
                     )*/
-                  DifficultyRow(level)
+                  LevelItem(level)
                 ],
               ),
             ),

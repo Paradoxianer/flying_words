@@ -13,9 +13,10 @@ class FlyingWord extends StatefulWidget {
   final Duration duration;
   final Lesson lesson;
   final LevelState state;
+  final numberFlyingWords;
 
   FlyingWord(
-      {required this.state, required this.lesson, this.duration = const Duration(seconds: 15)});
+      {required this.state, required this.lesson, this.duration = const Duration(seconds: 15), this.numberFlyingWords=10});
   @override
   _FlyingWordState createState() => _FlyingWordState();
 }
@@ -26,7 +27,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   late List<String> _allWords;
   late List<double> _allAngles;
   late List<int> _wordIndexes;
-  late int _correctWordIndex = 10;
+  late int _correctWordIndex = widget.numberFlyingWords;
 
   double _radius = 0.0;
 
@@ -75,7 +76,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     if (widget.state.wordIndex>=widget.lesson.words.length)
       _textWordsList();
     else
-      _randomWordsList(10);
+      _randomWordsList(widget.numberFlyingWords);
     //restart Animation Controller
     _controller.reset();
     _controller.forward();
@@ -84,7 +85,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _randomWordsList(10);
+    _randomWordsList(widget.numberFlyingWords);
     _controller = AnimationController(
       vsync: this,
       duration: widget.duration,

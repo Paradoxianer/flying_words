@@ -3,12 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flying_words/src/level_selection/difficulty_row.dart';
+import 'package:flying_words/src/level_selection/level_item.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../audio/audio_controller.dart';
-import '../audio/sounds.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
@@ -42,22 +40,6 @@ class LevelSelectionScreen extends StatelessWidget {
               child: ListView(
                 children: [
                   for (final level in gameLevels)
-/*                    ListTile(
-                      enabled: playerProgress.highestLevelReached >=
-                          level.number - 1,
-                      onTap: () {
-                        final audioController = context.read<AudioController>();
-                        audioController.playSfx(SfxType.buttonTap);
-
-                        GoRouter.of(context)
-                            .go('/play/session/${level.number}');
-                      },
-                      title:
-                            Expanded(
-                              child: Text(level.text,
-                              softWrap: true),
-                      ),
-                    )*/
                   LevelItem(level)
                 ],
               ),

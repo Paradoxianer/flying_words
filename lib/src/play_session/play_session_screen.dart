@@ -78,14 +78,19 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ),
                     ),
                     Consumer<LevelState>(
-                      builder: (context, levelState, child) =>
-                      TextProgress(lesson: widget.lesson,state: levelState),
+                      builder: (context, levelState, child) => TextProgress(
+                          lesson: widget.lesson, state: levelState),
                     ),
                     Consumer<LevelState>(
-                      builder: (context, levelState, child) =>
-                        Expanded(
-                            child: FlyingWord(lesson: widget.lesson,state: levelState)
-                        ),
+                      builder: (context, levelState, child) => Expanded(
+                          child: FlyingWord(
+                              lesson: widget.lesson,
+                              state: levelState,
+                              duration: Duration(
+                                  seconds:
+                                      difficultySpeed[widget.difficulty] ?? 12),
+                              numberFlyingWords:
+                                  difficultyWordcount[widget.difficulty])),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

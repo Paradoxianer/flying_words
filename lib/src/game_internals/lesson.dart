@@ -8,10 +8,11 @@ enum Difficulty{
   insane,
 }
 
-Map<Difficulty, double> difficultySpeed = {
-  Difficulty.slow: 0.25,
-  Difficulty.normal: 1.0,
-  Difficulty.insane: 2.0,
+//tells how much time the user have to klick on the word.. until every word disapared
+Map<Difficulty, int> difficultySpeed = {
+  Difficulty.slow: 12,
+  Difficulty.normal: 7,
+  Difficulty.insane: 3,
 };
 
 Map<Difficulty, int> difficultyWordcount = {

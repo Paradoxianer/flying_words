@@ -130,21 +130,23 @@ class MyApp extends StatelessWidget {
       GoRoute(
           path: '/',
           builder: (context, state) =>
-          const MainMenuScreen(key: Key('main menu')),
+              const MainMenuScreen(key: Key('main menu')),
           routes: [
             GoRoute(
                 path: 'play',
                 pageBuilder: (context, state) => buildMyTransition<void>(
-                  child: const LevelSelectionScreen(
-                      key: Key('level selection')),
-                  color: context.watch<Palette>().backgroundLevelSelection,
-                ),
+                      child: const LevelSelectionScreen(
+                          key: Key('level selection')),
+                      color: context.watch<Palette>().backgroundLevelSelection,
+                    ),
                 routes: [
                   GoRoute(
-                    path: 'session/:level',
+                    path: 'session/:level/:difficulty',
                     pageBuilder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
-                      final Difficulty difficulty = Difficulty.slow;
+                      final Difficulty difficulty = Difficulty.values
+                              .asNameMap()[state.params['difficulty']!] ??
+                          Difficulty.slow;
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
                       return buildMyTransition<void>(
@@ -176,7 +178,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
               path: 'settings',
               builder: (context, state) =>
-              const SettingsScreen(key: Key('settings')),
+                  const SettingsScreen(key: Key('settings')),
             ),
           ]),
     ],

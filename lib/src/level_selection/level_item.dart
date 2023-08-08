@@ -35,7 +35,7 @@ class LevelItem extends StatelessWidget {
                   final audioController = context.read<AudioController>();
                   audioController.playSfx(SfxType.buttonTap);
                 GoRouter.of(context)
-                    .go('/play/session/${level.number}');
+                    .go('/play/session/${level.number}/${e.name}');
               }
             ))))
                 .toList(),

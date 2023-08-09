@@ -9,20 +9,20 @@ enum Difficulty{
 }
 
 //tells how much time the user have to klick on the word.. until every word disapared
-Map<Difficulty, int> difficultySpeed = {
-  Difficulty.slow: 12,
-  Difficulty.normal: 7,
-  Difficulty.insane: 3,
+Map<Difficulty, Duration> difficultySpeed = {
+  Difficulty.slow: Duration(seconds:3 ),
+  Difficulty.normal: Duration(seconds:2 ),
+  Difficulty.insane: Duration(seconds: 1,milliseconds: 750 ),
 };
 
 Map<Difficulty, int> difficultyWordcount = {
   Difficulty.slow: 3,
-  Difficulty.normal: 7,
-  Difficulty.insane: 12,
+  Difficulty.normal: 6,
+  Difficulty.insane: 11,
 };
 
 Map<Difficulty, Image> difficultyImagePath = {
-  Difficulty.slow: Image.asset('assets/images/marker/marker_green.png'),
+  Difficulty.slow: Image.asset('assets/images/marker/marker_green.png',repeat: ImageRepeat.repeat,fit: BoxFit.fitHeight),
   Difficulty.normal: Image.asset('assets/images/marker/marker_yellow.png'),
   Difficulty.insane: Image.asset('assets/images/marker/marker_red.png'),
 };

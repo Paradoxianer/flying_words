@@ -62,9 +62,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           backgroundColor: palette.backgroundPlaySession,
           body: Stack(
             children: [
-              Center(
-                // This is the entirety of the "game".
-                child: Column(
+                Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Align(
@@ -86,14 +84,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           child: FlyingWord(
                               lesson: widget.lesson,
                               state: levelState,
-                              duration: Duration(
-                                  seconds:
-                                      difficultySpeed[widget.difficulty] ?? 12),
+                              duration: difficultySpeed[widget.difficulty] ?? Duration(seconds: 7),
                               numberFlyingWords:
                                   difficultyWordcount[widget.difficulty])),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -103,7 +99,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ),
                     ),
                   ],
-                ),
               ),
               SizedBox.expand(
                 child: Visibility(

@@ -15,8 +15,13 @@ class FlyingWord extends StatefulWidget {
   final LevelState state;
   final numberFlyingWords;
 
-  FlyingWord(
-      {required this.state, required this.lesson, this.duration = const Duration(seconds: 15), this.numberFlyingWords=10});
+  FlyingWord({
+    required this.state,
+    required this.lesson,
+    this.duration = const Duration(seconds: 15),
+    this.numberFlyingWords = 10,
+  });
+
   @override
   _FlyingWordState createState() => _FlyingWordState();
 }
@@ -30,7 +35,6 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   late int _correctWordIndex = widget.numberFlyingWords;
 
   double _radius = 0.0;
-
   List<String> get _words => widget.lesson.words;
 
   void _textWordsList() {
@@ -84,30 +88,33 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    super.initState();
     _randomWordsList(widget.numberFlyingWords);
     _controller = AnimationController(
       vsync: this,
       duration: widget.duration,
     );
     _animation = Tween<double>(
-        begin: 0.0, end: 1.0,
-    ).animate(
-        _controller)
+      begin: 0.1,
+      end: 1.15,
+    ).animate(_controller)
       ..addListener(() {
         setState(() {
-          _radius += 0.005;
-          // The state that has changed here is the animation object’s value.
+          // Berechne die aktuelle Entfernung basierend auf der Animation
+          _radius = _animation.value;
         });
       });
+
     _animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _nextWord();
       }
+    }
+    );
+    super.initState();
+    Future.delayed(Duration(milliseconds: 800), () {
+      _controller.forward();
     });
-    _controller.forward();
   }
-
   @override
   void dispose() {
     _controller.dispose();

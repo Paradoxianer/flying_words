@@ -29,9 +29,10 @@ class LevelSelectionScreen extends StatelessWidget {
               padding: EdgeInsets.all(16),
               child: Center(
                 child: Text(
-                  'Select lesson',
+                  'Wähle deine Herausforderung',
                   style:
                       TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

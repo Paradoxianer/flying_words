@@ -4,20 +4,18 @@
 
 import 'package:flutter/material.dart';
 
-/// An extremely silly example of a game state.
-///
-/// Tracks only a single variable, [progress], and calls [onWin] when
-/// the value of [progress] reaches [goal].
+
 class LevelState extends ChangeNotifier {
   final VoidCallback onWin;
   final length;
   int _wordIndex = 0;
-  List<int> _errors = List<int>.empty(growable: true);
+  Set<int> _errors = Set<int>();
 
   LevelState({required this.onWin, required this.length});
-
+  //returns the wortindex at wich we are in the game
   int get wordIndex => _wordIndex;
   int get numErrors => _errors.length;
+  Set<int> get Errors => _errors;
 
   void setWordIndex(int index) {
     _wordIndex = index;
@@ -30,11 +28,11 @@ class LevelState extends ChangeNotifier {
   }
 
   void addErrorIndex(int index) {
-    //only register first mistake on the word... maybe later find a more fance way to count multiple erros on
-    if (!_errors.contains(index)) {
-      _errors.add(index);
+    //only register first mistake on the word... maybe later find a more fancy way to count multiple erros
+    if (_errors.add(index)) {
       notifyListeners();
     }
+    print(_errors.toString());
   }
 
   void evaluate() {

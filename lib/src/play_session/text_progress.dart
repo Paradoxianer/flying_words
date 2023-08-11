@@ -19,6 +19,7 @@ class _TextProgressState extends State<TextProgress> {
   TextStyle _textStyle = TextStyle(
     fontSize: 26,
   );
+  List<TextSpan> styledText = List<TextSpan>.empty(growable: true);
 
   @override
   void initState() {
@@ -28,29 +29,38 @@ class _TextProgressState extends State<TextProgress> {
 
     @override
   Widget build(BuildContext context) {
+    styledText.clear();
     int currentIndex = widget.state.wordIndex;
 
     String done ="";
     String current = "";
     String coming ="";
-      TextStyle doneStyle = _textStyle.merge(TextStyle(color: Colors.black38));
-      TextStyle currentStyle = _textStyle.merge(
+
+    TextStyle doneStyle = _textStyle.merge(TextStyle(color: Colors.black38));
+    TextStyle doneErrStyle = _textStyle.merge(TextStyle(color: Colors.deepOrangeAccent));
+    TextStyle currentStyle = _textStyle.merge(
           TextStyle(backgroundColor: Colors.red));
-      TextStyle commingStyle = _textStyle.merge(TextStyle(color: Colors.black));
+    TextStyle commingStyle = _textStyle.merge(TextStyle(color: Colors.black));
 
   if (currentIndex < widget.lesson.words.length) {
-      current=_words[currentIndex];
       for (int i=0;i<currentIndex;i++){
-        done += _words[i] + " ";
+      if (widget.state.Errors.contains(i)==true){
+          styledText.add(TextSpan(text: _words[i]+" ",style: doneErrStyle));
+        }
+          else{
+          styledText.add(TextSpan(text: _words[i]+" ",style: doneStyle));
+        }
       }
+      styledText.add(TextSpan(text: _words[currentIndex]+" ",style: currentStyle));
       for (int i=currentIndex+1;i<_words.length;i++){
         coming += _words[i] + " ";
       }
+      styledText.add(TextSpan(text: coming,style: commingStyle));
     }
   else {
     current=widget.lesson.text;
   }
-
+  debugPrint(styledText.toString());
     return
       Container(
         decoration: BoxDecoration(
@@ -71,18 +81,14 @@ class _TextProgressState extends State<TextProgress> {
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.all(5.0),
         child: RichText(
+
         text: TextSpan(
-          children:  <TextSpan>[
-            TextSpan(text:  done, style: doneStyle),
-            TextSpan(text: current, style: currentStyle),
-            TextSpan(text: coming, style:commingStyle),
-          ],
+          children:
+            styledText.toList()
         ),
     ),
       );
   }
-
-
 
   @override
   void dispose() {

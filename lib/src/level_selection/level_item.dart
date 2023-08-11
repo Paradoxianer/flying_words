@@ -15,18 +15,23 @@ class LevelItem extends StatelessWidget {
       child: ListTile(
         title: Text(
             level.verse,
-            textAlign: TextAlign.center
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle:
          Stack(
           alignment: Alignment.centerLeft,
+          //TODO later replace text with autosized text
           children: <Widget>[
-            Expanded(
-                child: Text(
-              level.text,
-              softWrap: true,
+            Flex(
+              direction: Axis.horizontal,
+              children: <Widget>[ Expanded(
+                  child: Text(
+                level.text,
+                softWrap: true,
            //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
-            )),
+              ))]
+            ),
             Row(
               children: Difficulty.values
                   .map<Widget>((e) => Expanded(
@@ -34,6 +39,7 @@ class LevelItem extends StatelessWidget {
                           opacity: 0.5,
                           child: IconButton(
                               icon: difficultyImagePath[e]!,
+                              color: Colors.black38,
                               padding: EdgeInsets.zero,
                               //constraints: BoxConstraints(),
                               onPressed: () {

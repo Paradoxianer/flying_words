@@ -105,6 +105,8 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
     _animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        //since the right word wasnt selected this counts as error
+        widget.state.addErrorIndex(widget.state.wordIndex);
         _nextWord();
       }
     });

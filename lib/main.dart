@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
+import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -164,11 +165,12 @@ class MyApp extends StatelessWidget {
                     pageBuilder: (context, state) {
                       final map = state.extra! as Map<String, dynamic>;
                       final score = map['score'] as Score;
-
+                      final levelState = map['levelState'] as LevelState;
                       return buildMyTransition<void>(
                         child: WinGameScreen(
                           score: score,
                           key: const Key('win game'),
+                          errors: levelState.Errors.length
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );

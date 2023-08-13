@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 
 class LevelState extends ChangeNotifier {
-  final VoidCallback onWin;
+  final Function(LevelState) onWin;
   final length;
   int _wordIndex = 0;
   Set<int> _errors = Set<int>();
@@ -37,7 +37,7 @@ class LevelState extends ChangeNotifier {
 
   void evaluate() {
     if (_wordIndex >= length) {
-      onWin();
+      onWin(this);
     }
   }
 }

@@ -132,13 +132,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     }
   }
 
-  Future<void> _playerWon() async {
+  Future<void> _playerWon(LevelState state) async {
     _log.info('Level ${widget.lesson.number} won');
 
     final score = Score(
       widget.lesson.number,
       widget.difficulty,
       DateTime.now().difference(_startOfPlay),
+      state.numErrors
     );
 
     final playerProgress = context.read<PlayerProgress>();
@@ -174,6 +175,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     await Future<void>.delayed(_celebrationDuration);
     if (!mounted) return;
 
-    GoRouter.of(context).go('/play/won', extra: {'score': score});
+    GoRouter.of(context).go('/play/won', extra: {'score': score,'levelState': state});
   }
 }

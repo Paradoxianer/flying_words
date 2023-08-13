@@ -15,19 +15,19 @@ class Score {
 
   final int level;
 
-  //final LevelState levelState;
+  final int errors;
 
-
-  factory Score(int level, Difficulty difficulty, Duration duration) {
+  factory Score(int level, Difficulty difficulty, Duration duration, int errors) {
     // The higher the difficulty, the higher the score.
     var score = (difficulty.index+1);
     // The lower the time to beat the level, the higher the score.
     //score *= (levelState.length-levelState.numErrors);
+    //TODO calculate the length of the whole level from the givene number and difficulty speed wich gives the total time difficultySpeed[difficulty]
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    return Score._(score, duration, level);
+    return Score._(score, duration, level, errors);
   }
 
-  const Score._(this.score, this.duration, this.level);
+  const Score._(this.score, this.duration, this.level, this.errors);
 
   String get formattedTime {
     final buf = StringBuffer();

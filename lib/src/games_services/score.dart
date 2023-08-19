@@ -2,32 +2,31 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 
+import '../level_selection/levels.dart';
+
+Map<Difficulty, int> difficultyScoreFactor = {
+  Difficulty.slow: 1,
+  Difficulty.normal: 5,
+  Difficulty.insane: 20
+};
+
 /// Encapsulates a score and the arithmetic to compute it.
-@immutable
 class Score {
   final int score;
-
   final Duration duration;
+  Score({this.score=0,this.duration=Duration.zero});
 
-  final int level;
-
-  final int errors;
-
-  factory Score(int level, Difficulty difficulty, Duration duration, int errors) {
+  factory Score.fromResult(int level, Difficulty difficulty, Duration duration, int errors) {
     // The higher the difficulty, the higher the score.
-    var score = (difficulty.index+1);
     // The lower the time to beat the level, the higher the score.
-    //score *= (levelState.length-levelState.numErrors);
-    //TODO calculate the length of the whole level from the givene number and difficulty speed wich gives the total time difficultySpeed[difficulty]
-    score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    return Score._(score, duration, level, errors);
+    var maxScore = gameLevels[level-1].words.length*difficultySpeed[difficulty]!.inMilliseconds;
+    var score = (difficultyScoreFactor[difficulty]??1)*(maxScore ~/ (duration.inSeconds*10)) - (errors*difficultySpeed[difficulty]!.inSeconds*10);
+    return Score(score:score, duration:duration);
   }
 
-  const Score._(this.score, this.duration, this.level, this.errors);
 
   String get formattedTime {
     final buf = StringBuffer();
@@ -50,5 +49,5 @@ class Score {
   }
 
   @override
-  String toString() => 'Score<$score,$formattedTime,$level>';
+  String toString() => 'Score<$score,$formattedTime>';
 }

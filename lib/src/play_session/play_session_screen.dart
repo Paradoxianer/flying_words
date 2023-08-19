@@ -133,9 +133,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   Future<void> _playerWon(LevelState state) async {
-    _log.info('Level ${widget.lesson.number} won');
+    _log.info('Level ${widget.lesson.verse} won');
 
-    final score = Score(
+    final score = Score.fromResult(
       widget.lesson.number,
       widget.difficulty,
       DateTime.now().difference(_startOfPlay),
@@ -143,7 +143,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     );
 
     final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(widget.lesson.number);
+    playerProgress.setScoreforVerse(widget.lesson.verse, widget.difficulty, score);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);

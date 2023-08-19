@@ -33,7 +33,7 @@ class Lesson{
   final String verse;
   List<String> _words =[];
   final String text;
-  List<LevelState> levels = [];
+ // List<LevelState> levelState = [];
 
 
   /// The achievement to unlock when the level is finished, if any.

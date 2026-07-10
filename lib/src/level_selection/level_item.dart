@@ -7,49 +7,55 @@ import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 
 class LevelItem extends StatelessWidget {
-  final level;
-  LevelItem(this.level);
+  final Lesson level;
+  const LevelItem(this.level, {super.key});
 
+  @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(
-            level.verse,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle:
-         Stack(
-          alignment: Alignment.centerLeft,
-          //TODO later replace text with autosized text
-          children: <Widget>[
-            Flex(
-              direction: Axis.horizontal,
-              children: <Widget>[ Expanded(
-                  child: Text(
-                level.text,
-                softWrap: true,
-           //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
-              ))]
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              level.verse,
+              style: const TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 22,
+              ),
             ),
+            const SizedBox(height: 4),
+            Text(
+              level.text,
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.3,
+                color: Colors.grey.shade800,
+              ),
+            ),
+            const SizedBox(height: 8),
             Row(
-              children: Difficulty.values
-                  .map<Widget>((e) => Expanded(
-                      child: Opacity(
-                          opacity: 0.5,
-                          child: IconButton(
-                              icon: difficultyImagePath[e]!,
-                              color: Colors.black38,
-                              padding: EdgeInsets.zero,
-                              //constraints: BoxConstraints(),
-                              onPressed: () {
-                                final audioController =
-                                    context.read<AudioController>();
-                                audioController.playSfx(SfxType.buttonTap);
-                                GoRouter.of(context)
-                                    .go('/play/session/${level.number}/${e.name}');
-                              }))))
-                  .toList(),
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                for (final difficulty in Difficulty.values)
+                  IconButton(
+                    tooltip: difficulty.name,
+                    onPressed: () {
+                      final audioController = context.read<AudioController>();
+                      audioController.playSfx(SfxType.buttonTap);
+                      GoRouter.of(context)
+                          .go('/play/session/${level.number}/${difficulty.name}');
+                    },
+                    icon: Image.asset(
+                      difficultyImagePath[difficulty]!,
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

@@ -126,46 +126,60 @@ Code-Änderungen laufen über Feature-Branches (`feature/<issue>-<slug>`) mit PR
 
 ## Teil 3: Implementierungsplan
 
-### Phase 1 — Stabilisieren (Fundament)
+Status-Update **2026-07-10**: Phase 1 ist abgeschlossen (PRs #31–#35 gemerged),
+die PWA läuft auf GitHub Pages (PR #37). Die beim Testen der PWA gefundenen
+Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
+
+### Phase 1 — Stabilisieren (Fundament) ✅ abgeschlossen
 *Ziel: App kompiliert, Fortschritt wird zuverlässig gespeichert, Score stimmt.*
 
-1. **Issue A**: `player_progress.dart` fixen (Import, `setScoreforVerse`-Logik, `calculateNewHighScore`, richtige `Score`-Typen, `getLatestFromStore` lädt auch `_progress`).
-2. **Issue B**: `toJson`/`fromJson` für `Score` + `VerseProgress`, Round-Trip-Tests.
-3. **Issue D + #7**: Score-Formel absichern (ms statt s, kein negativer Score) und Difficulty-Gewichtung final festlegen.
-4. **Issue C**: Off-by-one der Fehleranzahl beheben (Ursache in `flying_words.dart` suchen).
-5. **Issue E**: Wortliste ohne Duplikate ziehen.
-6. **Issue I (Teil)**: Smoke-Test reparieren, damit Regressionen auffallen.
+1. ✅ **#21**: `player_progress.dart` gefixt — Scores werden gespeichert (PR #31).
+2. ✅ **#22**: `toJson`/`fromJson` für `Score` + `VerseProgress`, Round-Trip-Tests (PR #31).
+3. ✅ **#24 + #7**: Score-Formel abgesichert — keine Division durch Null, min. 1 Punkt (PR #33). Feinjustierung der Faktoren bleibt in #7 offen.
+4. ✅ **#23**: Off-by-one der Fehleranzahl behoben — Phantom-Fehler der Feier-Animation (PR #32).
+5. ✅ **#25**: Wortliste ohne Duplikate (PR #34).
+6. ✅ **#29 (Teil)**: Smoke-Test repariert + **CI-Workflow** (analyze + test bei jedem PR, PR #35).
+
+### Phase 1b — Nachschläge aus dem PWA-Test *(neu)*
+*Beim ersten Spielen der PWA gefundene Punkte — klein und direkt umsetzbar.*
+
+7. 🔄 **#38**: Wort-Flugzeit unabhängig von Bildschirmgröße/Richtung (Bug; PR #41 offen).
+8. 🔄 **#39**: Levelauswahl-Styling — Schraffur weg, Spalten-Layout, Game-Font (PR #43 offen; Feintuning folgt mit #28).
+9. 🔄 **#40**: Nutzername 24 statt 12 Zeichen (PR #42 offen).
+10. **#36**: Upgrade auf aktuelles Flutter/Dart 3 — **vor Phase 2 einplanen**, damit neue Features nicht doppelt migriert werden müssen (ein einzelner PR; danach CI entpinnen und `--fatal-warnings` aktivieren).
 
 ### Phase 2 — Gameplay-Feinschliff
-*Ziel: Runder Spiel-Loop mit sichtbarem Fortschritt.*
+*Ziel: Runder Spiel-Loop mit sichtbarem Fortschritt. Start nach dem Flutter-Upgrade (#36).*
 
-7. **#3**: WinScreen zeigt den kompletten Vers mit markierten Fehlern (`TextProgress` wiederverwenden, `Lesson` an WinScreen durchreichen).
-8. **#11**: Live-Scoreboard im PlayScreen (aktueller Score/Fehler während des Spiels).
-9. **Issue H**: Fortschritt/Highscore in der Levelauswahl.
-10. **Issue F**: Difficulty-Freischaltung mit Padlock.
-11. **Issue G**: Bibeltext ausblenden (Eye-Button), optional Score-Bonus.
+11. **#3**: WinScreen zeigt den kompletten Vers mit markierten Fehlern (`TextProgress` wiederverwenden, `Lesson` an WinScreen durchreichen).
+12. **#11**: Live-Scoreboard im PlayScreen (aktueller Score/Fehler während des Spiels).
+13. **#28**: Fortschritt/Highscore in der Levelauswahl — baut auf dem neuen Karten-Layout aus #39 auf (Sterne-Idee: `docs/GAMEPLAY_VERBESSERUNGEN.md` Punkt 6).
+14. **#26**: Difficulty-Freischaltung mit Padlock.
+15. **#27**: Bibeltext ausblenden (Eye-Button), optional Score-Bonus.
 
 ### Phase 3 — Inhalt & Reichweite
 *Ziel: Beliebige Verse, zwei Sprachen, Hilfe.*
 
-12. **#15**: Bibel-API-Anbindung — Datenschicht (`VerseRepository`), Vers-Auswahl-UI (Buch/Kapitel/Vers), Caching für Offline-Betrieb; kuratierte Standardliste bleibt als Einstieg.
-13. **#2**: Lokalisierung DE/EN (ARB-Dateien, hardcodierte Strings extrahieren).
-14. **#13**: Hilfe-Screen in der App (Spielregeln, Difficulties, Scoring).
-15. **#6**: Share on Winning (`share_plus`, Score + Vers als Text).
-16. **#30**: PWA-Version (Flutter Web + GitHub Pages), sobald der Spiel-Loop stabil ist.
+16. **#15**: Bibel-API-Anbindung — Datenschicht (`VerseRepository`), Vers-Auswahl-UI (Buch/Kapitel/Vers), Caching für Offline-Betrieb; kuratierte Standardliste bleibt als Einstieg. Muss CORS-tauglich sein (PWA!).
+17. **#2**: Lokalisierung DE/EN (ARB-Dateien, hardcodierte Strings extrahieren).
+18. **#13**: Hilfe-Screen in der App (Spielregeln, Difficulties, Scoring).
+19. **#6**: Share on Winning (`share_plus`, Score + Vers als Text).
+20. **#30 (Rest)**: PWA-Feinschliff — Deploy läuft ✅ (PR #37); offen: Audio-/Offline-Verhalten testen, Icons/Theme-Farben.
 
 ### Phase 4 — Release-Vorbereitung
-16. **#14**: Games Services aktivieren (Leaderboard, dann Achievements — TODO in `lesson.dart`/`player_progress.dart`).
-17. **#17 + #18**: AdMob + DSGVO/UMP-Consent-Dialog als Paket.
-18. **#9/#10**: Eigene Musik/FX einbinden, sobald Assets vorliegen.
-19. **Issue I (Rest)**: App-Titel/Branding, Logging, Icons, Store-Metadaten.
+21. **#14**: Games Services aktivieren (Leaderboard, dann Achievements — TODO in `lesson.dart`/`player_progress.dart`).
+22. **#17 + #18**: AdMob + DSGVO/UMP-Consent-Dialog als Paket.
+23. **#9/#10**: Eigene Musik/FX einbinden, sobald Assets vorliegen.
+24. **#29 (Rest)**: App-Titel/Branding, print() → Logger, README neu, Store-Metadaten.
 
 ### Abhängigkeiten (Kurzfassung)
 
 ```
-A ─┬─> B ─┬─> F, H (Freischaltung & Anzeige brauchen gespeicherten Fortschritt)
-   │      └─> #14 Leaderboard (braucht korrekten, stabilen Score)
-D/#7 ──────┘
+#21 ─┬─> #22 ─┬─> #26, #28 (Freischaltung & Anzeige brauchen gespeicherten Fortschritt) ✅ erfüllt
+     │        └─> #14 Leaderboard (braucht korrekten, stabilen Score)
+#24/#7 ────────┘
+#36 Flutter-Upgrade ─> vor Phase 2 (sonst doppelte Migration)
+#39 Karten-Layout ─> #28 Fortschrittsanzeige
 #15 API ─> #2 Lokalisierung der Verse
 #17 <─> #18 (Ads nur mit Consent)
 ```

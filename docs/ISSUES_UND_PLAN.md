@@ -2,8 +2,8 @@
 
 Stand: 2026-07-10 · Basis: Code-Analyse von `main` (Commit 904b27d) und Review der 12 offenen Issues.
 
-Die GitHub-Integration dieser Session hatte keine Berechtigung, Issues anzulegen —
-die folgenden Issue-Texte sind daher zum Copy-Paste vorbereitet.
+Die Issues aus Teil 1 wurden inzwischen angelegt:
+A=#21, B=#22, C=#23, D=#24, E=#25, F=#26, G=#27, H=#28, I=#29.
 
 ---
 

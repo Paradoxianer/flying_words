@@ -144,7 +144,7 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 *Beim ersten Spielen der PWA gefundene Punkte — klein und direkt umsetzbar.*
 
 7. 🔄 **#38**: Wort-Flugzeit unabhängig von Bildschirmgröße/Richtung (Bug; PR #41 offen).
-8. 🔄 **#39**: Levelauswahl-Styling — Schraffur weg, Spalten-Layout, Game-Font (PR #43 offen; Feintuning folgt mit #28).
+8. ⏸️ **#39**: eigentlicher Scope ist ein **generelles „more gamy" Redesign des gesamten Spiels** (inkl. besserer Schwierigkeits-Metapher: Sanduhr/Sterne statt Marker) — **vertagt**, Design-Konzept wird vorher gemeinsam besprochen; #26/#28 fließen mit ein. PR #43 (strukturelles Aufräumen der Levelkarten) steht als optionaler Zwischenschritt offen.
 9. 🔄 **#40**: Nutzername 24 statt 12 Zeichen (PR #42 offen).
 10. **#36**: Upgrade auf aktuelles Flutter/Dart 3 — **vor Phase 2 einplanen**, damit neue Features nicht doppelt migriert werden müssen (ein einzelner PR; danach CI entpinnen und `--fatal-warnings` aktivieren).
 

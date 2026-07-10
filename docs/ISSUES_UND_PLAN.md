@@ -144,18 +144,25 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 *Beim ersten Spielen der PWA gefundene Punkte — klein und direkt umsetzbar.*
 
 7. 🔄 **#38**: Wort-Flugzeit unabhängig von Bildschirmgröße/Richtung (Bug; PR #41 offen).
-8. ⏸️ **#39**: eigentlicher Scope ist ein **generelles „more gamy" Redesign des gesamten Spiels** (inkl. besserer Schwierigkeits-Metapher: Sanduhr/Sterne statt Marker) — **vertagt**, Design-Konzept wird vorher gemeinsam besprochen; #26/#28 fließen mit ein. PR #43 (strukturelles Aufräumen der Levelkarten) steht als optionaler Zwischenschritt offen.
+8. ✅ **#39 (Konzept)**: Design-Diskussion abgeschlossen — **Beschluss: „Scriptorium + Arcade-Energie"** (Pergament/Tinte/Wachssiegel-Grundstimmung, satte Feedback-Momente im Spielfeld). Schwierigkeit = Siegel I/II/III; Sterne pro Vers **und** Stufe (I/II: bis ★★★, III: ★ Meisterstern, max. 7/Vers); Freischaltung streng ab ★★ der Vorstufe. Details im Kommentar auf #39. Umsetzung als eigene Redesign-Phase (s. u.).
 9. 🔄 **#40**: Nutzername 24 statt 12 Zeichen (PR #42 offen).
 10. **#36**: Upgrade auf aktuelles Flutter/Dart 3 — **vor Phase 2 einplanen**, damit neue Features nicht doppelt migriert werden müssen (ein einzelner PR; danach CI entpinnen und `--fatal-warnings` aktivieren).
 
 ### Phase 2 — Gameplay-Feinschliff
-*Ziel: Runder Spiel-Loop mit sichtbarem Fortschritt. Start nach dem Flutter-Upgrade (#36).*
+*Ziel: Runder Spiel-Loop mit sichtbarem Fortschritt.*
 
-11. **#3**: WinScreen zeigt den kompletten Vers mit markierten Fehlern (`TextProgress` wiederverwenden, `Lesson` an WinScreen durchreichen).
-12. **#11**: Live-Scoreboard im PlayScreen (aktueller Score/Fehler während des Spiels).
-13. **#28**: Fortschritt/Highscore in der Levelauswahl — baut auf dem neuen Karten-Layout aus #39 auf (Sterne-Idee: `docs/GAMEPLAY_VERBESSERUNGEN.md` Punkt 6).
-14. **#26**: Difficulty-Freischaltung mit Padlock.
-15. **#27**: Bibeltext ausblenden (Eye-Button), optional Score-Bonus.
+11. ✅ **#3**: WinScreen zeigt den kompletten Vers mit markierten Fehlern (PR #45).
+12. ✅ **#11**: Live-Scoreboard im PlayScreen (PR #46).
+13. **#27**: Bibeltext ausblenden (Eye-Button), optional Score-Bonus — unabhängig vom Redesign umsetzbar.
+
+### Phase 2b — Redesign „Scriptorium" *(Beschluss vom 10.07.2026, siehe #39)*
+*Kleine, reviewbare PRs; #26 und #28 werden hier miterledigt.*
+
+14. **Theme/Token-Modul**: `Palette` zum Design-System erweitern (Pergament/Tinte/Gold/Siegelrot/Oliv, Textstile, Kartendeko), Fonts als Assets bundlen (Cormorant + Source Serif). Technische Vorarbeit: `Score` speichert die **Fehlerzahl** mit (Basis der Sterne-Berechnung, inkl. Migration).
+15. **Versauswahl**: Pergamentkarten, Wachssiegel I/II/III als Stufenwahl, Sterne-Anzeige → erledigt **#28**; Padlock auf gesperrten Siegeln (frei ab ★★ der Vorstufe) → erledigt **#26**.
+16. **Spielfeld**: Pergamentgrund, Tintenwörter, Treffer-/Fehler-Feedback (Wort fliegt in den Vers, Tintenklecks), Scoreboard-Styling.
+17. **Hauptmenü, WinScreen, Settings** im neuen Look.
+18. **Feinschliff**: Combo-Popup, Übergänge, App-Icon-Abgleich.
 
 ### Phase 3 — Inhalt & Reichweite
 *Ziel: Beliebige Verse, zwei Sprachen, Hilfe.*

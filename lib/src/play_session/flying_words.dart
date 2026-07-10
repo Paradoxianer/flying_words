@@ -105,9 +105,13 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
     _animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        //since the right word wasnt selected this counts as error
-        widget.state.addErrorIndex(widget.state.wordIndex);
-        _nextWord();
+        // After the win the words of the verse fly out once more as part of
+        // the celebration; that run must not count as an error.
+        if (widget.state.wordIndex < widget.lesson.words.length) {
+          //since the right word wasnt selected this counts as error
+          widget.state.addErrorIndex(widget.state.wordIndex);
+          _nextWord();
+        }
       }
     });
     super.initState();

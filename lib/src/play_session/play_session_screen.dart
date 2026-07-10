@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/play_session/flying_words.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
+import 'package:flying_words/src/play_session/play_scoreboard.dart';
 import 'package:flying_words/src/play_session/text_progress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -65,14 +66,27 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: InkResponse(
-                        onTap: () => GoRouter.of(context).push('/settings'),
-                        child: Image.asset(
-                          'assets/images/settings.png',
-                          semanticLabel: 'Settings',
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Consumer<LevelState>(
+                              builder: (context, levelState, child) =>
+                                  PlayScoreboard(
+                                state: levelState,
+                                wordCount: widget.lesson.words.length,
+                              ),
+                            ),
+                          ),
+                          InkResponse(
+                            onTap: () => GoRouter.of(context).push('/settings'),
+                            child: Image.asset(
+                              'assets/images/settings.png',
+                              semanticLabel: 'Settings',
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Consumer<LevelState>(

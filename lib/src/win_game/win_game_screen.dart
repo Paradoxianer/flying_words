@@ -8,19 +8,24 @@ import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
 import '../ads/banner_ad_widget.dart';
+import '../game_internals/lesson.dart';
+import '../game_internals/level_state.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
+import '../play_session/text_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
 class WinGameScreen extends StatelessWidget {
   final Score score;
-  final int errors;
+  final Lesson lesson;
+  final LevelState levelState;
 
   const WinGameScreen({
     super.key,
     required this.score,
-    required this.errors,
+    required this.lesson,
+    required this.levelState,
   });
 
   @override
@@ -55,9 +60,25 @@ class WinGameScreen extends StatelessWidget {
             gap,
             Center(
               child: Text(
+                lesson.verse,
+                style: const TextStyle(
+                    fontFamily: 'Permanent Marker', fontSize: 24),
+              ),
+            ),
+            gap,
+            // The whole verse once more, with the missed words highlighted,
+            // so the player sees what to practice.
+            Flexible(
+              child: SingleChildScrollView(
+                child: TextProgress(lesson: lesson, state: levelState),
+              ),
+            ),
+            gap,
+            Center(
+              child: Text(
                 'Score: ${score.score}\n'
-                'Errors: $errors\n'
-                'Time: ${score.formattedTime}',
+                'Fehler: ${levelState.numErrors}\n'
+                'Zeit: ${score.formattedTime}',
                 style: const TextStyle(
                     fontFamily: 'Permanent Marker', fontSize: 20),
               ),
@@ -68,7 +89,7 @@ class WinGameScreen extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).go('/play');
           },
-          child: const Text('Continue'),
+          child: const Text('Weiter'),
         ),
       ),
     );

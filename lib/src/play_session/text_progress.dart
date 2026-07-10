@@ -55,8 +55,17 @@ class _TextProgressState extends State<TextProgress> {
       }
       styledText.add(TextSpan(text: coming,style: commingStyle));
     }
+  else {
+      // The lesson is finished: show the whole verse and highlight the
+      // words that were missed, so the player knows what to practice.
+      for (int i = 0; i < _words.length; i++) {
+        styledText.add(TextSpan(
+          text: "${_words[i]} ",
+          style: widget.state.Errors.contains(i) ? doneErrStyle : commingStyle,
+        ));
+      }
+    }
 
-  debugPrint(styledText.toString());
     return
       Container(
         decoration: BoxDecoration(

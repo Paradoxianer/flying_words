@@ -32,7 +32,8 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   late List<String> _allWords;
   late List<double> _allAngles;
   late List<int> _wordIndexes;
-  late int _correctWordIndex = widget.numberFlyingWords;
+  // Index of the correct word within [_allWords]; set by [_randomWordsList].
+  late int _correctWordIndex;
 
   double _radius = 0.0;
   List<String> get _words => widget.lesson.words;
@@ -49,23 +50,22 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   }
 
   void _randomWordsList(int howMany) {
-    _allWords = List<String>.empty(growable: true);
+    final currentWord = _words[widget.state.wordIndex];
+    // Draw without replacement so neither the correct word nor any
+    // distraction word can show up twice on the screen.
+    final candidates =
+        bibleWords.where((word) => word != currentWord).toSet().toList()
+          ..shuffle();
+    _allWords = candidates.take(howMany).toList();
+    _allWords.add(currentWord);
+    _correctWordIndex = _allWords.length - 1;
     _allAngles = List<double>.empty(growable: true);
-    final random = Random();
-    final double angleSlice = (2 * pi) / (howMany + 1);
-    for (int i = 0; i < howMany; i++) {
-      int index = random.nextInt(bibleWords.length);
-      //first calculate the in how many Parts we need to split up 2pi circle
-      //TODO maybe add a little random degree to it.
-      double angle = angleSlice * i;
-      _allAngles.add(angle);
-      // if we got the same word out of the list we choose a new random index
-      if (bibleWords[index] == _words[widget.state.wordIndex])
-        index = random.nextInt(bibleWords.length);
-      _allWords.add(bibleWords[index]);
+    //first calculate the in how many Parts we need to split up 2pi circle
+    //TODO maybe add a little random degree to it.
+    final double angleSlice = (2 * pi) / _allWords.length;
+    for (int i = 0; i < _allWords.length; i++) {
+      _allAngles.add(angleSlice * i);
     }
-    _allWords.add(_words[widget.state.wordIndex]);
-    _allAngles.add(angleSlice * howMany);
     _wordIndexes = List.generate(_allWords.length, (index) => index);
     _wordIndexes.shuffle();
   }

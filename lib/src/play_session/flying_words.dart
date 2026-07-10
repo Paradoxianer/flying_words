@@ -131,11 +131,20 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     super.didChangeDependencies();
   }
 
-  Widget _buildWord(int index) {
+  Widget _buildWord(int index, double aspectRatio) {
     final audioController = context.read<AudioController>();
     final angle = _allAngles[_wordIndexes[index]];
-    final dx = _radius * cos(angle);
-    final dy = _radius * sin(angle) * MediaQuery.of(context).size.aspectRatio;
+    // Direction in alignment space; the aspect ratio factor makes the
+    // words travel a circular path in pixels.
+    final ux = cos(angle);
+    final uy = sin(angle) * aspectRatio;
+    // Normalize so every word reaches the edge of the play area exactly
+    // when the animation completes. Without this, the time a word stays
+    // visible depends on its direction and the screen size - on a wide
+    // fullscreen window vertical words left the screen in half the time.
+    final edge = max(ux.abs(), uy.abs());
+    final dx = _radius * ux / edge;
+    final dy = _radius * uy / edge;
     return Align(
         alignment: Alignment(dx, dy),
         child: GestureDetector(
@@ -165,14 +174,21 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Stack(
-        children: [
-          for (int index = 0; index < _allWords.length; index++)
-            _buildWord(index),
-        ],
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      // Use the aspect ratio of the actual play area, not of the whole
+      // screen - the words fly inside this widget.
+      final aspectRatio = constraints.maxHeight > 0
+          ? constraints.maxWidth / constraints.maxHeight
+          : 1.0;
+      return Container(
+        color: Colors.white,
+        child: Stack(
+          children: [
+            for (int index = 0; index < _allWords.length; index++)
+              _buildWord(index, aspectRatio),
+          ],
+        ),
+      );
+    });
   }
 }

@@ -117,6 +117,10 @@ Label: keine / `enhancement`
 | #3 WinScreen | Fehler-Darstellung ist laut Kommentar drin; es fehlt die Vers-Präsentation (WinScreen braucht Zugriff auf die `Lesson`). |
 | #2 Lokalisierung | Zwei Ebenen: UI via `flutter_localizations`/ARB (neue Sprache = neue ARB-Datei); Verse über die Bibel-API mit Mapping Sprache → Übersetzung (`de` → Menge `MB`, `en` → WEB/KJV). Versliste referenziert Buch/Kapitel/Vers statt fixem Text. |
 | #9/#10 Musik/FX | Extern blockiert (Assets müssen produziert werden) — kein Code-Task. |
+| #30 PWA | Flutter-Web-Build als PWA, **Hosting über GitHub Pages** aus diesem Repo (CI-Workflow, `--base-href /flying_words/`). |
+
+**Arbeitsweise:** Planungs-/Doku-Änderungen gehen direkt auf `main`;
+Code-Änderungen laufen über Feature-Branches (`feature/<issue>-<slug>`) mit PR.
 
 ---
 

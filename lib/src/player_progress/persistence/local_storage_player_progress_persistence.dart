@@ -4,9 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/player_progress/player_progress.dart';
-import 'package:games_services/games_services.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'player_progress_persistence.dart';
@@ -14,6 +13,8 @@ import 'player_progress_persistence.dart';
 /// An implementation of [PlayerProgressPersistence] that uses
 /// `package:shared_preferences`.
 class LocalStoragePlayerProgressPersistence extends PlayerProgressPersistence {
+  static final _log = Logger('LocalStoragePlayerProgressPersistence');
+
   final Future<SharedPreferences> instanceFuture =
       SharedPreferences.getInstance();
 
@@ -24,47 +25,35 @@ class LocalStoragePlayerProgressPersistence extends PlayerProgressPersistence {
   }
 
   @override
-  Future<Score?> getPlayerScore(String verse, Difficulty forDifficulty) async {
-    Score? scr=null;
-    final playerProgress = await getPlayerProgress();
-    if (playerProgress != null && playerProgress.containsKey(verse)) {
-      final verseProgress = playerProgress[verse]!;
-      if (verseProgress.containsKey(forDifficulty)) {
-        scr =verseProgress[forDifficulty];
-      }
+  Future<Map<String, VerseProgress>> getPlayerProgress() async {
+    final prefs = await instanceFuture;
+    final jsonString = prefs.getString('playerProgress');
+    if (jsonString == null) {
+      return <String, VerseProgress>{};
     }
-    return scr; // Wenn keine passende Wertung gefunden wird
+    try {
+      final decoded = json.decode(jsonString) as Map<String, dynamic>;
+      return decoded.map((verse, verseProgress) => MapEntry(
+          verse, VerseProgress.fromJson(verseProgress as Map<String, dynamic>)));
+    } catch (e) {
+      // Corrupt or incompatible data must not prevent the game from starting.
+      _log.severe('Could not parse stored player progress, starting fresh', e);
+      return <String, VerseProgress>{};
+    }
   }
-
 
   @override
-  Future<Map<String,VerseProgress>> getPlayerProgress() async {
-    final prefs = await instanceFuture;
-    //TODO implement better way to store every VerseProgress seperatly???
-    String? jsonString = prefs.getString("playerProgress");
-    if (jsonString ==null)
-      return new Map<String,VerseProgress>();
-    else {
-      Map<String, VerseProgress> data = json.decode(jsonString);
-      return data;
-    }
-
-  }
-
   Future<void> savePlayerHighscore(int highScore) async {
     final prefs = await instanceFuture;
     await prefs.setInt('playerHighscore', highScore);
   }
 
-  Future<void> savePlayerProgress(Map<String,VerseProgress> playerProgress) async {
+  @override
+  Future<void> savePlayerProgress(
+      Map<String, VerseProgress> playerProgress) async {
     final prefs = await instanceFuture;
-    await prefs.setString('playerProgress', json.encode(playerProgress));
+    final encodable = playerProgress
+        .map((verse, verseProgress) => MapEntry(verse, verseProgress.toJson()));
+    await prefs.setString('playerProgress', json.encode(encodable));
   }
-
-  Future<void> savePlayerScore(String verse, Difficulty forDifficulty, Score score) async{
-    //TODO implement or not use??
-    /*final prefs = await instanceFuture;
-    await prefs.setString('playerProgress', json.encode(playerProgress));*/
-  }
-
 }

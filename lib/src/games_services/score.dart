@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flying_words/src/game_internals/lesson.dart';
-import 'package:flying_words/src/game_internals/level_state.dart';
 
 import '../level_selection/levels.dart';
 
@@ -26,6 +25,16 @@ class Score {
     var score = (difficultyScoreFactor[difficulty]??1)*(maxScore ~/ (duration.inSeconds*10)) - (errors*difficultySpeed[difficulty]!.inSeconds*10);
     return Score(score:score, duration:duration);
   }
+
+  factory Score.fromJson(Map<String, dynamic> json) => Score(
+        score: json['score'] as int? ?? 0,
+        duration: Duration(milliseconds: json['duration'] as int? ?? 0),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'score': score,
+        'duration': duration.inMilliseconds,
+      };
 
 
   String get formattedTime {

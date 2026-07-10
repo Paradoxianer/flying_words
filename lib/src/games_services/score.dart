@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:math';
+
 import 'package:flying_words/src/game_internals/lesson.dart';
 
 import '../level_selection/levels.dart';
@@ -22,7 +24,13 @@ class Score {
     // The higher the difficulty, the higher the score.
     // The lower the time to beat the level, the higher the score.
     var maxScore = gameLevels[level-1].words.length*difficultySpeed[difficulty]!.inMilliseconds;
-    var score = (difficultyScoreFactor[difficulty]??1)*(maxScore ~/ (duration.inSeconds*10)) - (errors*difficultySpeed[difficulty]!.inSeconds*10);
+    // Same scale as duration.inSeconds*10, but a run under a second must not
+    // divide by zero.
+    var elapsedTenthsOfSeconds = max(duration.inMilliseconds ~/ 100, 1);
+    var score = (difficultyScoreFactor[difficulty]??1)*(maxScore ~/ elapsedTenthsOfSeconds) - (errors*difficultySpeed[difficulty]!.inSeconds*10);
+    // A won level is always worth at least one point - otherwise it would not
+    // count as finished (see VerseProgress.finished).
+    if (score < 1) score = 1;
     return Score(score:score, duration:duration);
   }
 

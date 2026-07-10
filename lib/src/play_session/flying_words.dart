@@ -15,7 +15,7 @@ class FlyingWord extends StatefulWidget {
   final LevelState state;
   final numberFlyingWords;
 
-  FlyingWord({
+  const FlyingWord({super.key, 
     required this.state,
     required this.lesson,
     this.duration = const Duration(seconds: 15),
@@ -76,10 +76,11 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     //next Word
     _radius = 0.0;
     //generate Random Word List
-    if (widget.state.wordIndex >= widget.lesson.words.length)
+    if (widget.state.wordIndex >= widget.lesson.words.length) {
       _textWordsList();
-    else
+    } else {
       _randomWordsList(widget.numberFlyingWords);
+    }
     //restart Animation Controller
     _controller.reset();
     _controller.forward();

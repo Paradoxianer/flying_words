@@ -144,9 +144,10 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level/:difficulty',
                     pageBuilder: (context, state) {
-                      final levelNumber = int.parse(state.params['level']!);
+                      final levelNumber =
+                          int.parse(state.pathParameters['level']!);
                       final Difficulty difficulty = Difficulty.values
-                              .asNameMap()[state.params['difficulty']!] ??
+                              .asNameMap()[state.pathParameters['difficulty']!] ??
                           Difficulty.slow;
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
@@ -255,7 +256,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,
-                background: palette.backgroundMain,
+                surface: palette.backgroundMain,
               ),
               textTheme: TextTheme(
                 bodyMedium: TextStyle(

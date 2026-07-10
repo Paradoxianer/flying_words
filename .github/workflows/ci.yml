@@ -13,16 +13,12 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          # Last Flutter release with Dart 2, matching the SDK constraint
-          # in pubspec.yaml (>=2.17.0-0 <3.0.0).
-          flutter-version: '3.7.12'
           channel: stable
           cache: true
 
       - run: flutter pub get
 
-      # Warnings/infos are not fatal yet - the codebase carries a few
-      # pre-existing ones (see issue #29). Errors still fail the build.
-      - run: flutter analyze --no-fatal-warnings --no-fatal-infos
+      # Errors and warnings fail the build; style infos don't (yet).
+      - run: flutter analyze --no-fatal-infos
 
       - run: flutter test

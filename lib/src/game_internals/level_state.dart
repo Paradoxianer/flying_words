@@ -9,7 +9,7 @@ class LevelState extends ChangeNotifier {
   final Function(LevelState) onWin;
   final length;
   int _wordIndex = 0;
-  Set<int> _errors = Set<int>();
+  final Set<int> _errors = <int>{};
 
   LevelState({required this.onWin, required this.length});
   //returns the wortindex at wich we are in the game

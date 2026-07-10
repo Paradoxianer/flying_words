@@ -39,11 +39,11 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
   bool finished(Difficulty difficulty) => (this[difficulty]?.score ?? 0) > 0;
 
   int fullScore() {
-    int _fullScore = 0;
+    int fullScore = 0;
     forEach((key, value) {
-      _fullScore += value.score;
+      fullScore += value.score;
     });
-    return _fullScore;
+    return fullScore;
   }
 }
 

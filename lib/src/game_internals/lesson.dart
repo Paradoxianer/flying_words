@@ -29,7 +29,7 @@ Map<Difficulty, String> difficultyImagePath = {
 class Lesson{
   final int number;
   final String verse;
-  List<String> _words =[];
+  final List<String> _words;
   final String text;
  // List<LevelState> levelState = [];
 
@@ -48,7 +48,7 @@ class Lesson{
     required this.text,
     this.achievementIdIOS,
     this.achievementIdAndroid,
-  }) : this._words=text.split(' '), assert(
+  }) : _words=text.split(' '), assert(
   (achievementIdAndroid != null && achievementIdIOS != null) ||
       (achievementIdAndroid == null && achievementIdIOS == null),
   'Either both iOS and Android achievement ID must be provided, '

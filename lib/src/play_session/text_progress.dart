@@ -7,7 +7,7 @@ class TextProgress extends StatefulWidget {
   final LevelState state;
   final Lesson lesson;
 
-  TextProgress({required this.lesson,required this.state});
+  const TextProgress({super.key, required this.lesson,required this.state});
 
   @override
   _TextProgressState createState() => _TextProgressState();
@@ -16,7 +16,7 @@ class TextProgress extends StatefulWidget {
 
 class _TextProgressState extends State<TextProgress> {
   List<String> get _words => widget.lesson.words;
-  TextStyle _textStyle = TextStyle(
+  final TextStyle _textStyle = TextStyle(
     fontSize: 26,
   );
   List<TextSpan> styledText = List<TextSpan>.empty(growable: true);
@@ -32,8 +32,6 @@ class _TextProgressState extends State<TextProgress> {
     styledText.clear();
     int currentIndex = widget.state.wordIndex;
 
-    String done ="";
-    String current = "";
     String coming ="";
 
     TextStyle doneStyle = _textStyle.merge(TextStyle(color: Colors.black38));
@@ -45,21 +43,19 @@ class _TextProgressState extends State<TextProgress> {
   if (currentIndex < widget.lesson.words.length) {
       for (int i=0;i<currentIndex;i++){
       if (widget.state.Errors.contains(i)==true){
-          styledText.add(TextSpan(text: _words[i]+" ",style: doneErrStyle));
+          styledText.add(TextSpan(text: "${_words[i]} ",style: doneErrStyle));
         }
           else{
-          styledText.add(TextSpan(text: _words[i]+" ",style: doneStyle));
+          styledText.add(TextSpan(text: "${_words[i]} ",style: doneStyle));
         }
       }
-      styledText.add(TextSpan(text: _words[currentIndex]+" ",style: currentStyle));
+      styledText.add(TextSpan(text: "${_words[currentIndex]} ",style: currentStyle));
       for (int i=currentIndex+1;i<_words.length;i++){
-        coming += _words[i] + " ";
+        coming += "${_words[i]} ";
       }
       styledText.add(TextSpan(text: coming,style: commingStyle));
     }
-  else {
-    current=widget.lesson.text;
-  }
+
   debugPrint(styledText.toString());
     return
       Container(

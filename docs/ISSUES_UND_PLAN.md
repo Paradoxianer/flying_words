@@ -110,12 +110,12 @@ Label: keine / `enhancement`
 
 | Issue | Entscheidung |
 |---|---|
-| #15 Verse-Quelle | **Bibel-API anbinden** („Bridge" zu Bibelsoftware), damit beliebige Verse wählbar sind. Übersetzungslizenzen beachten; gemeinfreie Übersetzungen (z. B. Schlachter 1951, Luther 1912, KJV) bevorzugen. |
+| #15 Verse-Quelle | **Bibel-API anbinden**: bolls.life-API, deutsche Standard-Übersetzung **Menge-Bibel** (`MB`) — gut verständlich und gemeinfrei (Menge † 1939; nicht die „Menge 2020"-Revision!). Fallback: Zefania-XML als Offline-Bundle. |
 | #14 Leaderboard | **Google Play Games / Game Center** über den vorhandenen `GamesServicesController`. Kein eigenes Backend. |
 | #17 Ads + #18 DSGVO | **Später, vor Release** als gemeinsames Paket (AdMob + UMP-Consent). Jetzt keine Priorität. |
 | #7 Score | Formel existiert, ist aber buggy → wird über Issue D + #7 zusammen gelöst (Difficulty-Faktor ist mit `difficultyScoreFactor` schon angelegt). |
 | #3 WinScreen | Fehler-Darstellung ist laut Kommentar drin; es fehlt die Vers-Präsentation (WinScreen braucht Zugriff auf die `Lesson`). |
-| #2 Lokalisierung | Deutsch + Englisch via `flutter_localizations`/ARB. Verstexte werden über die Bibel-API pro Sprache/Übersetzung gelöst. |
+| #2 Lokalisierung | Zwei Ebenen: UI via `flutter_localizations`/ARB (neue Sprache = neue ARB-Datei); Verse über die Bibel-API mit Mapping Sprache → Übersetzung (`de` → Menge `MB`, `en` → WEB/KJV). Versliste referenziert Buch/Kapitel/Vers statt fixem Text. |
 | #9/#10 Musik/FX | Extern blockiert (Assets müssen produziert werden) — kein Code-Task. |
 
 ---
@@ -148,6 +148,7 @@ Label: keine / `enhancement`
 13. **#2**: Lokalisierung DE/EN (ARB-Dateien, hardcodierte Strings extrahieren).
 14. **#13**: Hilfe-Screen in der App (Spielregeln, Difficulties, Scoring).
 15. **#6**: Share on Winning (`share_plus`, Score + Vers als Text).
+16. **#30**: PWA-Version (Flutter Web + GitHub Pages), sobald der Spiel-Loop stabil ist.
 
 ### Phase 4 — Release-Vorbereitung
 16. **#14**: Games Services aktivieren (Leaderboard, dann Achievements — TODO in `lesson.dart`/`player_progress.dart`).

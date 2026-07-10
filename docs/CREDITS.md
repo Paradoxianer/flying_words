@@ -28,6 +28,17 @@ der Flutter-Autoren, BSD-3-Clause (siehe `LICENSE`).
 
 ## Bibeltexte
 
-**TODO:** Verwendete Übersetzung identifizieren und hier mit Quelle und
-Lizenz-/Gemeinfreiheits-Status dokumentieren. Bei Anbindung einer Bibel-API (#15)
-pro Übersetzung die Lizenzbedingungen ergänzen.
+Deutsche Standard-Übersetzung: **Menge-Bibel** (Hermann Menge, † 1939) —
+**gemeinfrei** seit 2010 (70 Jahre nach Tod des Übersetzers).
+
+> ⚠️ Gilt nur für die klassische Ausgabe (bis zur posthumen Ausgabe 1949).
+> Die Revision „Menge 2020" ist © CLV und **nicht** gemeinfrei — nicht verwenden,
+> ohne die Lizenz zu klären.
+
+Für Englisch geplant: World English Bible (WEB, public domain) oder KJV.
+Bei Anbindung der Bibel-API (#15, bolls.life) pro zusätzlicher Übersetzung den
+Lizenzstatus hier dokumentieren.
+
+**TODO:** Prüfen, aus welcher Übersetzung die aktuell hardcodierten Verse in
+`levels.dart` stammen (Schreibweise „daß" deutet auf ältere Ausgabe hin) und
+sie durch Menge-Text ersetzen.

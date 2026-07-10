@@ -15,10 +15,10 @@ Lizenzen in `docs/CREDITS.md`.
       (§ 5 DDG). In Store-Eintrag und/oder App verlinken.
 - [ ] **Lizenz-Attribution** — Musik von Mr Smith ist CC BY 4.0 → Namensnennung ist
       **verpflichtend** (in-App „Credits"-Screen oder im Store-Text). Siehe `docs/CREDITS.md`.
-- [ ] **Bibeltext-Lizenz klären** — die verwendete Übersetzung identifizieren und
-      dokumentieren. Gemeinfrei sind z. B. Schlachter 1951, Luther 1912, Elberfelder 1905.
-      Moderne Übersetzungen (LUT 2017, ELB 2006, HFA, NGÜ …) sind lizenzpflichtig!
-      Spätestens bei der Bibel-API-Anbindung (#15) entscheidend.
+- [x] **Bibeltext-Lizenz geklärt** — deutsche Standard-Übersetzung ist die
+      **Menge-Bibel** (gemeinfrei, Menge † 1939; Details in `docs/CREDITS.md`).
+      Offen: hardcodierte Verse in `levels.dart` auf Menge-Text umstellen;
+      bei weiteren Übersetzungen über die Bibel-API (#15) Lizenz je Übersetzung prüfen.
 - [ ] **DSGVO-Consent-Dialog** (#18) — spätestens mit AdMob (#17) nötig (Google UMP SDK).
 
 ## Store-Einträge

@@ -18,31 +18,26 @@ void main() {
       inAppPurchaseController: null,
     ));
 
-    // Verify that the 'Play' button is shown.
-    expect(find.text('Play'), findsOneWidget);
+    // Verify the main menu is shown.
+    expect(find.text('Flying Words'), findsOneWidget);
+    expect(find.text('Spielen'), findsOneWidget);
+    expect(find.text('Einstellungen'), findsOneWidget);
 
-    // Verify that the 'Settings' button is shown.
-    expect(find.text('Settings'), findsOneWidget);
-
-    // Go to 'Settings'.
-    await tester.tap(find.text('Settings'));
+    // Go to the settings.
+    await tester.tap(find.text('Einstellungen'));
     await tester.pumpAndSettle();
     expect(find.text('Music'), findsOneWidget);
 
-    // Go back to main menu.
+    // Go back to the main menu.
     await tester.tap(find.text('Back'));
     await tester.pumpAndSettle();
 
-    // Tap 'Play'.
-    await tester.tap(find.text('Play'));
+    // Go to the level selection.
+    await tester.tap(find.text('Spielen'));
     await tester.pumpAndSettle();
-    expect(find.text('Select level'), findsOneWidget);
+    expect(find.text('Wähle deine Herausforderung'), findsOneWidget);
 
-    // Tap level 1.
-    await tester.tap(find.text('Level #1'));
-    await tester.pumpAndSettle();
-
-    // Find the first level's "tutorial" text.
-    expect(find.text('Drag the slider to 5% or above!'), findsOneWidget);
+    // The first verse is offered as a lesson.
+    expect(find.text('1. Korinther 12, 6'), findsOneWidget);
   });
 }

@@ -164,8 +164,15 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 17. ✅ **Hauptmenü, WinScreen, Settings** (PR #50): Goldlinie/Untertitel im Menü, verdiente Sterne im WinScreen, Settings auf Deutsch. Regel-Fix: Sterne können nie sinken.
 18. ✅ **Feinschliff** (PR #51): Combo-Serie (Scoreboard + Popup), Konfetti in Scriptorium-Farben, Icon-Hintergrund Pergament. Offen bleibt nur das Icon-Motiv selbst (bewusst beim Owner).
 
-### Phase 2c — Gameplay-Ausbau *(Ideen-Runde vom 11.07.2026)*
-*Nach Praxis-Tests der PWA entstanden; Reihenfolge nach Abhängigkeit.*
+### Phase 2d — Spielbarkeit *(gestartet 11.07.2026)*
+*Die Quick Wins aus dem PWA-Test, in dieser Reihenfolge:*
+
+1. **#56**: Pause + Bestätigungsdialog beim Verlassen (Zurück-Button/System-Back/Settings), Wörter dabei verdeckt.
+2. **#57**: Maus/Touchpad-Ausgleich (+45 % Flugzeit bei Maus-Eingabe, einmaliger Hinweis).
+3. **#55**: Feier-Animation — Vers setzt sich lesbar zusammen und blendet in den WinScreen über.
+4. **#27**: Eye-Button (Bibeltext ausblenden), optional Score-Bonus — letzter Phase-2-Punkt.
+
+### Phase 2c — Gameplay-Ausbau *(Ideen-Backlog, nach Phase 2d/3)*
 
 - **#56**: Bestätigungsdialog + Pause/Blur beim Verlassen des Spiels (Quick Win, Bug-Charakter).
 - **#55**: Feier-Animation umdrehen — der Vers setzt sich lesbar von außen zusammen und **blendet in den WinScreen über**.

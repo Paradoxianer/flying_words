@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import 'celebration_verse.dart';
 import '../game_internals/input_device.dart';
 import '../game_internals/level_state.dart';
 import '../style/palette.dart';
@@ -71,18 +72,6 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     }
   }
 
-  void _textWordsList() {
-    _allWords = _words;
-    _misTapped.clear();
-    _allAngles = List<double>.empty(growable: true);
-    final double angleSlice = (2 * pi) / (_allWords.length + 1);
-    for (int i = 0; i < _allWords.length + 1; i++) {
-      double angle = angleSlice * i - (pi / 2);
-      _allAngles.add(angle);
-    }
-    _wordIndexes = List.generate(_allWords.length, (index) => index);
-  }
-
   void _randomWordsList(int howMany) {
     final currentWord = _words[widget.state.wordIndex];
     _misTapped.clear();
@@ -108,14 +97,14 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   void _nextWord() {
     widget.state.nextWordIndex();
     widget.state.evaluate();
+    if (widget.state.wordIndex >= widget.lesson.words.length) {
+      // Finished: the celebration verse takes over (see build), no more
+      // flight animation needed.
+      return;
+    }
     //next Word
     _radius = 0.0;
-    //generate Random Word List
-    if (widget.state.wordIndex >= widget.lesson.words.length) {
-      _textWordsList();
-    } else {
-      _randomWordsList(widget.numberFlyingWords);
-    }
+    _randomWordsList(widget.numberFlyingWords);
     //restart Animation Controller
     _controller.reset();
     // The input device may have changed (or only now become known).
@@ -258,6 +247,17 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         child: Text(
           'Pausiert',
           style: ScriptoriumText.heading.copyWith(color: palette.inkFaded),
+        ),
+      );
+    }
+    if (widget.state.wordIndex >= widget.lesson.words.length) {
+      // Celebration: the verse assembles itself, readable, in the middle
+      // of the play area (#55).
+      return Container(
+        color: palette.parchmentLight,
+        child: CelebrationVerse(
+          words: _words,
+          errors: widget.state.Errors,
         ),
       );
     }

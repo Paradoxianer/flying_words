@@ -1,11 +1,11 @@
 {
-    "name": "Flying Words",
-    "short_name": "Flying Words",
+    "name": "flying_words",
+    "short_name": "flying_words",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Fang die fliegenden Wörter und lerne Bibelverse spielend auswendig!",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+.metadata
 
 # IntelliJ related
 *.iml
@@ -15,14 +16,11 @@
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks that
-# you configure in VS Code that you might want  include in version control,
-# so this line is commented out by default.
-#.vscode/
+# Visual Studio Code related
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -42,3 +40,27 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Platform specific generated files
+**/generated_plugin_registrant.*
+**/generated_plugins.cmake
+
+# iOS/macOS specific
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Ephemeral/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/macos/Flutter/Ephemeral/
+**/macos/Flutter/Generated.xcconfig
+**/macos/Flutter/flutter_export_environment.sh
+**/Pods/
+ServiceDefinition.json
+Connect.tcc
+DerivedData/
+*.moved-aside
+*.xcworkspace
+!**/Runner.xcworkspace
+
+# Windows specific
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugins.cmake

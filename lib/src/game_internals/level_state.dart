@@ -32,7 +32,6 @@ class LevelState extends ChangeNotifier {
     if (_errors.add(index)) {
       notifyListeners();
     }
-    print(_errors.toString());
   }
 
   void evaluate() {

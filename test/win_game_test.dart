@@ -25,9 +25,13 @@ LevelState _finishedState({Set<int> errors = const {}}) {
 void main() {
   testWidgets('TextProgress shows the whole verse with missed words marked',
       (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: TextProgress(lesson: _lesson(), state: _finishedState(errors: {1})),
+    await tester.pumpWidget(Provider(
+      create: (_) => Palette(),
+      child: MaterialApp(
+        home: Scaffold(
+          body:
+              TextProgress(lesson: _lesson(), state: _finishedState(errors: {1})),
+        ),
       ),
     ));
 
@@ -39,9 +43,10 @@ void main() {
 
     expect(spans.map((s) => s.text).join(), 'Alpha Beta Gamma ');
     // The missed word is highlighted, the others are not.
-    expect(spans[1].style!.color, Colors.deepOrangeAccent);
-    expect(spans[0].style!.color, Colors.black);
-    expect(spans[2].style!.color, Colors.black);
+    final palette = Palette();
+    expect(spans[1].style!.color, palette.sealRed);
+    expect(spans[0].style!.color, palette.ink);
+    expect(spans[2].style!.color, palette.ink);
   });
 
   testWidgets('WinGameScreen shows verse, marked errors and stats',

@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:flying_words/src/play_session/play_scoreboard.dart';
+import 'package:flying_words/src/style/palette.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('PlayScoreboard shows progress, time and errors',
       (tester) async {
     final state = LevelState(onWin: (_) {}, length: 5);
 
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(body: PlayScoreboard(state: state, wordCount: 5)),
+    await tester.pumpWidget(Provider(
+      create: (_) => Palette(),
+      child: MaterialApp(
+        home: Scaffold(body: PlayScoreboard(state: state, wordCount: 5)),
+      ),
     ));
 
     expect(find.text('1/5'), findsOneWidget);
@@ -33,8 +38,11 @@ void main() {
     final state = LevelState(onWin: (_) {}, length: 2);
     state.setWordIndex(2);
 
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(body: PlayScoreboard(state: state, wordCount: 2)),
+    await tester.pumpWidget(Provider(
+      create: (_) => Palette(),
+      child: MaterialApp(
+        home: Scaffold(body: PlayScoreboard(state: state, wordCount: 2)),
+      ),
     ));
 
     await tester.pump(const Duration(seconds: 3));

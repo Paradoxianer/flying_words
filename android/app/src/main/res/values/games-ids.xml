@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Google Play Game Services App ID (Hier später deine echte ID aus der Play Console eintragen) -->
+    <string name="app_id" translatable="false">424242424242</string>
+    <string name="package_name" translatable="false">de.heilsarmee.flying_words</string>
+
+    <!-- Beispiel IDs für Achievements/Leaderboards (kannst du erst mal so lassen) -->
+    <string name="achievement_first_win" translatable="false">sOmEiDsTrInG</string>
+    <string name="leaderboard_highest_score" translatable="false">sOmEiDsTrInG</string>
+</resources>

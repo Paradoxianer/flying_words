@@ -19,10 +19,12 @@ import 'package:flutter/widgets.dart';
 /// https://codepen.io/iprodev/pen/azpWBr
 class Confetti extends StatefulWidget {
   static const _defaultColors = [
-    Color(0xffd10841),
-    Color(0xff1d75fb),
-    Color(0xff0050bc),
-    Color(0xffa2dcc7),
+    // Scriptorium celebration: gold leaf, sealing wax and parchment.
+    Color(0xffecc95e),
+    Color(0xffa9802a),
+    Color(0xff8c2f1b),
+    Color(0xff6b6b45),
+    Color(0xfff8f0dd),
   ];
 
   final bool isStopped;

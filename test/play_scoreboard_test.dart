@@ -31,6 +31,15 @@ void main() {
     await tester.pump();
     expect(find.text('2/5'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
+    // No combo shown after an error.
+    expect(find.byIcon(Icons.local_fire_department), findsNothing);
+
+    // Two catches in a row light the combo.
+    state.registerCatch();
+    state.registerCatch();
+    await tester.pump();
+    expect(find.byIcon(Icons.local_fire_department), findsOneWidget);
+    expect(find.text('×2'), findsOneWidget);
   });
 
   testWidgets('PlayScoreboard stops the clock when the lesson is finished',

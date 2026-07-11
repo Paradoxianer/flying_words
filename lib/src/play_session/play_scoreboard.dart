@@ -75,6 +75,11 @@ class _PlayScoreboardState extends State<PlayScoreboard> {
         _entry(palette, Icons.timer_outlined, _formattedTime),
         _entry(palette, Icons.close, '${widget.state.numErrors}',
             iconColor: palette.sealRed),
+        // The combo only shows once there is one - from two in a row.
+        if (widget.state.streak >= 2)
+          _entry(palette, Icons.local_fire_department,
+              '×${widget.state.streak}',
+              iconColor: palette.gold),
       ],
     );
   }

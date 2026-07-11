@@ -120,6 +120,17 @@ class WaxSeal extends StatelessWidget {
                     ),
                 ],
               ),
+              // The time of the best run on this seal.
+              if (progress[difficulty] != null)
+                Text(
+                  progress[difficulty]!.formattedTime,
+                  key: Key('besttime-${difficulty.name}'),
+                  style: TextStyle(
+                    fontFamily: bodyFontFamily,
+                    fontSize: 11,
+                    color: palette.inkFaded,
+                  ),
+                ),
             ],
           ),
         ),

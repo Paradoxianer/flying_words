@@ -18,6 +18,49 @@ void main() {
     expect(state.streak, 1);
   });
 
+  test('pause state notifies listeners and toggles', () {
+    final state = LevelState(onWin: (_) {}, length: 10);
+    var notified = 0;
+    state.addListener(() => notified++);
+
+    state.setPaused(true);
+    expect(state.paused, isTrue);
+    expect(notified, 1);
+
+    // Setting the same value again does not notify.
+    state.setPaused(true);
+    expect(notified, 1);
+
+    state.setPaused(false);
+    expect(state.paused, isFalse);
+    expect(notified, 2);
+  });
+
+  test('blind run: hidden from the first word and never shown again', () {
+    final state = LevelState(onWin: (_) {}, length: 10);
+    expect(state.blindRun, isFalse);
+
+    // Hidden before the first word is solved.
+    state.setTextHidden(true);
+    expect(state.blindRun, isTrue);
+
+    state.nextWordIndex();
+    expect(state.blindRun, isTrue);
+
+    // Peeking cancels the bonus for this run.
+    state.setTextHidden(false);
+    state.setTextHidden(true);
+    expect(state.blindRun, isFalse);
+  });
+
+  test('hiding the text mid-run gives no blind bonus', () {
+    final state = LevelState(onWin: (_) {}, length: 10);
+    state.nextWordIndex();
+    state.setTextHidden(true);
+    expect(state.textHidden, isTrue);
+    expect(state.blindRun, isFalse);
+  });
+
   test('repeated errors on the same word still reset the streak', () {
     final state = LevelState(onWin: (_) {}, length: 10);
     state.addErrorIndex(0);

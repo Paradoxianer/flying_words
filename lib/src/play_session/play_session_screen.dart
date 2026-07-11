@@ -28,7 +28,12 @@ class PlaySessionScreen extends StatefulWidget {
   final Lesson lesson;
   final Difficulty difficulty;
 
-  const PlaySessionScreen(this.lesson, this.difficulty, {super.key});
+  /// Start with the verse text hidden (chosen via the eye toggle in the
+  /// level selection) - the run qualifies for the blind bonus from word one.
+  final bool startBlind;
+
+  const PlaySessionScreen(this.lesson, this.difficulty,
+      {super.key, this.startBlind = false});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -44,6 +49,60 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   late DateTime _startOfPlay;
 
+  // Time spent in pause dialogs/settings; subtracted from the run time so
+  // pausing neither helps nor hurts the score.
+  Duration _pausedTotal = Duration.zero;
+  DateTime? _pauseStarted;
+
+  void _setPaused(LevelState levelState, bool paused) {
+    if (paused) {
+      _pauseStarted ??= DateTime.now();
+    } else if (_pauseStarted != null) {
+      _pausedTotal += DateTime.now().difference(_pauseStarted!);
+      _pauseStarted = null;
+    }
+    levelState.setPaused(paused);
+  }
+
+  /// Pauses the game and asks before throwing away the round's progress.
+  Future<void> _confirmLeave(BuildContext context) async {
+    if (_duringCelebration) return;
+    final levelState = context.read<LevelState>();
+    _setPaused(levelState, true);
+    final leave = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Runde beenden?'),
+        content: const Text('Der Fortschritt dieser Runde geht verloren.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Weiterspielen'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Beenden'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || !context.mounted) return;
+    if (leave == true) {
+      GoRouter.of(context).go('/play');
+    } else {
+      _setPaused(levelState, false);
+    }
+  }
+
+  /// Opens the settings; the game pauses while they are visible.
+  Future<void> _openSettings(BuildContext context) async {
+    final levelState = context.read<LevelState>();
+    _setPaused(levelState, true);
+    await GoRouter.of(context).push('/settings');
+    if (!mounted) return;
+    _setPaused(levelState, false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
@@ -51,13 +110,26 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => LevelState(
-            length: widget.lesson.words.length,
-            onWin: _playerWon,
-          ),
+          create: (context) {
+            final state = LevelState(
+              length: widget.lesson.words.length,
+              onWin: _playerWon,
+            );
+            if (widget.startBlind) {
+              state.setTextHidden(true);
+            }
+            return state;
+          },
         ),
       ],
-      child: IgnorePointer(
+      child: Builder(builder: (context) {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            _confirmLeave(context);
+          },
+          child: IgnorePointer(
         ignoring: _duringCelebration,
         child: Scaffold(
           backgroundColor: palette.backgroundPlaySession,
@@ -80,10 +152,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                             ),
                           ),
                           InkResponse(
-                            onTap: () => GoRouter.of(context).push('/settings'),
+                            onTap: () => _openSettings(context),
                             child: Image.asset(
                               'assets/images/settings.png',
-                              semanticLabel: 'Settings',
+                              semanticLabel: 'Einstellungen',
                             ),
                           ),
                         ],
@@ -107,7 +179,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () => GoRouter.of(context).go('/play'),
+                          onPressed: () => _confirmLeave(context),
                           child: const Text('Zurück'),
                         ),
                       ),
@@ -127,7 +199,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             ],
           ),
         ),
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -150,13 +224,19 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _log.info('Level ${widget.lesson.verse} won');
 
     final score = Score.fromResult(
-      widget.lesson.number,
+      widget.lesson.words.length,
       widget.difficulty,
-      DateTime.now().difference(_startOfPlay),
-      state.numErrors
+      // Time spent in the pause dialog or the settings doesn't count.
+      DateTime.now().difference(_startOfPlay) - _pausedTotal,
+      state.numErrors,
+      blindBonus: state.blindRun,
     );
 
     final playerProgress = context.read<PlayerProgress>();
+    // Remember the best run before this one, for the comparison on the
+    // win screen ("Neue Bestzeit!").
+    final previousBest =
+        playerProgress.getScoreforVerse(widget.lesson.verse, widget.difficulty);
     playerProgress.setScoreforVerse(widget.lesson.verse, widget.difficulty, score);
 
     // Let the player see the game just after winning for a bit.
@@ -194,6 +274,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       'levelState': state,
       'lesson': widget.lesson,
       'difficulty': widget.difficulty,
+      'previousBest': previousBest,
     });
   }
 }

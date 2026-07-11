@@ -2,32 +2,24 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flying_words/src/game_internals/lesson.dart';
 
+/// The curated verses, loaded from `assets/verses/curated_de.json` at
+/// startup by [loadCuratedVerses]. Empty until the load has run.
+List<Lesson> gameLevels = [];
 
-final gameLevels = [
-  Lesson(
-    number: 1,
-    verse: "1. Korinther 12, 6",
-    text:   "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen.",
-
-  ),
-  Lesson(
-    number: 2,
-    verse: "Johannes 3, 16",
-    text:  "Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab, auf daß jeder, der an ihn glaubt, nicht verloren gehe, sondern ewiges Leben habe."
-  ),
-  Lesson(number: 3, verse: "1 Korinther 13:4-5", text: "Die Liebe ist langmütig und freundlich, die Liebe eifert nicht, die Liebe treibt nicht Mutwillen, sie bläht sich nicht auf, sie verhält sich nicht ungehörig, sie sucht nicht das Ihre, sie lässt sich nicht erbittern, sie rechnet das Böse nicht zu."),
-  Lesson(number: 4, verse: "1 Thessalonicher 5:16-18", text: "Seid allezeit fröhlich, betet ohne Unterlass, seid dankbar in allen Dingen; denn das ist der Wille Gottes in Christus Jesus für euch."),
-  Lesson(number: 5, verse: "4 Mose 6:24-26", text: "Der HERR segne dich und behüte dich; der HERR lasse sein Angesicht leuchten über dir und sei dir gnädig; der HERR hebe sein Angesicht über dich und gebe dir Frieden."),
-  Lesson(number: 6, verse: "Römer 12:12", text: "Seid fröhlich in Hoffnung, geduldig in Trübsal, beharrlich im Gebet.")
-
- /* Lesson(
-    number: 3,
-    difficulty: 100,
-    achievementIdIOS: 'finished',
-    achievementIdAndroid: 'CdfIhE96aspNWLGSQg',
-  ),*/
-];
-
+/// Loads the curated verse list from the bundled JSON asset. Kept in a
+/// module-level list so the (synchronous) router and screens can use it
+/// once it is populated before `runApp`.
+Future<void> loadCuratedVerses() async {
+  final jsonString =
+      await rootBundle.loadString('assets/verses/curated_de.json');
+  final data = json.decode(jsonString) as Map<String, dynamic>;
+  final verses = (data['verses'] as List)
+      .map((e) => Lesson.fromJson(e as Map<String, dynamic>))
+      .toList();
+  gameLevels = verses;
+}

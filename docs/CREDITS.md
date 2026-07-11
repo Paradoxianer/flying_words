@@ -49,6 +49,10 @@ Für Englisch geplant: World English Bible (WEB, public domain) oder KJV.
 Bei Anbindung der Bibel-API (#15, bolls.life) pro zusätzlicher Übersetzung den
 Lizenzstatus hier dokumentieren.
 
-**TODO:** Prüfen, aus welcher Übersetzung die aktuell hardcodierten Verse in
-`levels.dart` stammen (Schreibweise „daß" deutet auf ältere Ausgabe hin) und
-sie durch Menge-Text ersetzen.
+**Status der kuratierten Verse:** Die 6 Standard-Verse liegen jetzt in
+`assets/verses/curated_de.json` mit übersetzungsunabhängigen Referenzen
+(OSIS-Buchcodes). Ihr genauer Übersetzungsstand ist **unbestätigt**
+(`"translation": "unbestimmt"`; die Schreibweise „daß" deutet auf eine ältere
+Ausgabe hin). Sie werden mit der Bibel-API (#15b) auf die **Menge-Bibel**
+normalisiert und dann hier mit Lizenzstatus dokumentiert. Bis dahin keine
+weiteren Verse „aus dem Gedächtnis" ergänzen — nur verifizierten Text.

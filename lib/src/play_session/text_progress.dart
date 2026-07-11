@@ -74,6 +74,9 @@ class _TextProgressState extends State<TextProgress> {
       }
     }
 
+    final playing = currentIndex < widget.lesson.words.length;
+    final hidden = widget.state.textHidden && playing;
+
     return Container(
       decoration: BoxDecoration(
         color: palette.parchmentLight,
@@ -89,8 +92,39 @@ class _TextProgressState extends State<TextProgress> {
       ),
       padding: const EdgeInsets.all(12.0),
       margin: const EdgeInsets.all(6.0),
-      child: RichText(
-        text: TextSpan(children: styledText.toList()),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: hidden
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Text(
+                      'Text verdeckt — aus dem Gedächtnis! (Score ×1,5)',
+                      style: ScriptoriumText.verse
+                          .copyWith(color: palette.inkFaded),
+                    ),
+                  )
+                : RichText(
+                    text: TextSpan(children: styledText.toList()),
+                  ),
+          ),
+          // The eye toggles the "no cheat sheet" mode (#27); hidden from
+          // the very first word on, the run earns the blind bonus.
+          if (playing)
+            InkWell(
+              onTap: () => widget.state.setTextHidden(!hidden),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Icon(
+                  hidden ? Icons.visibility_off : Icons.visibility,
+                  key: Key(hidden ? 'text-hidden' : 'text-visible'),
+                  size: 24,
+                  color: palette.inkFaded,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

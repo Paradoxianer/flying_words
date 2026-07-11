@@ -10,7 +10,7 @@ void main() {
   group('Score.errors', () {
     test('fromResult keeps the error count', () {
       final score =
-          Score.fromResult(1, Difficulty.slow, const Duration(seconds: 30), 2);
+          Score.fromResult(20, Difficulty.slow, const Duration(seconds: 30), 2);
       expect(score.errors, 2);
     });
 

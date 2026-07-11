@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/random_words.dart';
@@ -7,9 +8,12 @@ import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import 'celebration_verse.dart';
+import '../game_internals/input_device.dart';
 import '../game_internals/level_state.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
+import '../style/snack_bar.dart';
 
 class FlyingWord extends StatefulWidget {
   final Duration duration;
@@ -47,19 +51,25 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   Alignment _caughtAlignment = Alignment.center;
   int _caughtTick = 0;
 
+  /// The desktop hint is shown at most once per app run.
+  static bool _mouseHintShown = false;
+
   double _radius = 0.0;
   List<String> get _words => widget.lesson.words;
 
-  void _textWordsList() {
-    _allWords = _words;
-    _misTapped.clear();
-    _allAngles = List<double>.empty(growable: true);
-    final double angleSlice = (2 * pi) / (_allWords.length + 1);
-    for (int i = 0; i < _allWords.length + 1; i++) {
-      double angle = angleSlice * i - (pi / 2);
-      _allAngles.add(angle);
+  /// The flight time, stretched for mouse/trackpad players (#57).
+  Duration get _flightTime => Duration(
+      milliseconds:
+          (widget.duration.inMilliseconds * InputDevice.timeFactor).round());
+
+  void _registerPointer(PointerDeviceKind kind) {
+    final wasMouse = InputDevice.usesMouse;
+    InputDevice.register(kind);
+    if (!wasMouse && InputDevice.usesMouse && !_mouseHintShown) {
+      _mouseHintShown = true;
+      showSnackBar('Tipp: Am flüssigsten spielt sich Flying Words auf einem '
+          'Touch-Gerät — mit der Maus bekommst du etwas mehr Zeit.');
     }
-    _wordIndexes = List.generate(_allWords.length, (index) => index);
   }
 
   void _randomWordsList(int howMany) {
@@ -87,16 +97,18 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   void _nextWord() {
     widget.state.nextWordIndex();
     widget.state.evaluate();
+    if (widget.state.wordIndex >= widget.lesson.words.length) {
+      // Finished: the celebration verse takes over (see build), no more
+      // flight animation needed.
+      return;
+    }
     //next Word
     _radius = 0.0;
-    //generate Random Word List
-    if (widget.state.wordIndex >= widget.lesson.words.length) {
-      _textWordsList();
-    } else {
-      _randomWordsList(widget.numberFlyingWords);
-    }
+    _randomWordsList(widget.numberFlyingWords);
     //restart Animation Controller
     _controller.reset();
+    // The input device may have changed (or only now become known).
+    _controller.duration = _flightTime;
     _controller.forward();
   }
 
@@ -105,7 +117,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     _randomWordsList(widget.numberFlyingWords);
     _controller = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: _flightTime,
     );
     _animation = Tween<double>(
       begin: 0.1,
@@ -129,14 +141,32 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         }
       }
     });
+    widget.state.addListener(_onPauseChanged);
     super.initState();
     Future.delayed(Duration(milliseconds: 800), () {
-      _controller.forward();
+      if (!mounted) return;
+      if (!widget.state.paused) {
+        _controller.forward();
+      }
     });
+  }
+
+  /// Freezes the flight while the game is paused and resumes it afterwards.
+  void _onPauseChanged() {
+    if (!mounted) return;
+    if (widget.state.paused) {
+      if (_controller.isAnimating) {
+        _controller.stop(canceled: false);
+      }
+    } else if (!_controller.isAnimating &&
+        widget.state.wordIndex < widget.lesson.words.length) {
+      _controller.forward();
+    }
   }
 
   @override
   void dispose() {
+    widget.state.removeListener(_onPauseChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -208,27 +238,59 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    if (widget.state.paused) {
+      // Hide the words while paused - otherwise the pause dialog would be
+      // a free peek at the right answer.
+      return Container(
+        color: palette.parchmentLight,
+        alignment: Alignment.center,
+        child: Text(
+          'Pausiert',
+          style: ScriptoriumText.heading.copyWith(color: palette.inkFaded),
+        ),
+      );
+    }
+    if (widget.state.wordIndex >= widget.lesson.words.length) {
+      // Celebration: the verse assembles itself, readable, in the middle
+      // of the play area (#55).
+      return Container(
+        color: palette.parchmentLight,
+        child: CelebrationVerse(
+          words: _words,
+          errors: widget.state.Errors,
+        ),
+      );
+    }
     return LayoutBuilder(builder: (context, constraints) {
       // Use the aspect ratio of the actual play area, not of the whole
       // screen - the words fly inside this widget.
       final aspectRatio = constraints.maxHeight > 0
           ? constraints.maxWidth / constraints.maxHeight
           : 1.0;
-      return Container(
-        color: palette.parchmentLight,
-        child: Stack(
-          children: [
-            for (int index = 0; index < _allWords.length; index++)
-              _buildWord(index, aspectRatio, palette),
-            if (_caughtWord != null)
-              _CaughtWordPopup(
-                key: ValueKey(_caughtTick),
-                word: _caughtWord!,
-                combo: widget.state.streak,
-                alignment: _caughtAlignment,
-                color: palette.gold,
-              ),
-          ],
+      // Mouse and trackpad players get more flight time; hovering already
+      // reveals the input device before the first tap (#57).
+      return MouseRegion(
+        onHover: (event) => _registerPointer(event.kind),
+        child: Listener(
+          onPointerDown: (event) => _registerPointer(event.kind),
+          behavior: HitTestBehavior.translucent,
+          child: Container(
+            color: palette.parchmentLight,
+            child: Stack(
+              children: [
+                for (int index = 0; index < _allWords.length; index++)
+                  _buildWord(index, aspectRatio, palette),
+                if (_caughtWord != null)
+                  _CaughtWordPopup(
+                    key: ValueKey(_caughtTick),
+                    word: _caughtWord!,
+                    combo: widget.state.streak,
+                    alignment: _caughtAlignment,
+                    color: palette.gold,
+                  ),
+              ],
+            ),
+          ),
         ),
       );
     });

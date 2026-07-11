@@ -21,6 +21,41 @@ class LevelState extends ChangeNotifier {
   /// Consecutive correctly caught words; any error resets it.
   int get streak => _streak;
 
+  bool _paused = false;
+
+  /// While paused the words stop flying, the clock stops and the play
+  /// area hides the words (so pausing cannot be used as a free look).
+  bool get paused => _paused;
+
+  void setPaused(bool value) {
+    if (_paused == value) return;
+    _paused = value;
+    notifyListeners();
+  }
+
+  bool _textHidden = false;
+  bool _blindRun = false;
+
+  /// Whether the verse text panel is hidden ("no cheat sheet" training, #27).
+  bool get textHidden => _textHidden;
+
+  /// True while the text has been hidden since before the first word was
+  /// solved and never shown again - such a run earns the blind bonus.
+  bool get blindRun => _blindRun && _textHidden;
+
+  void setTextHidden(bool hidden) {
+    if (_textHidden == hidden) return;
+    _textHidden = hidden;
+    if (hidden) {
+      if (_wordIndex == 0) {
+        _blindRun = true;
+      }
+    } else {
+      _blindRun = false;
+    }
+    notifyListeners();
+  }
+
   /// Called when the player catches the right word.
   void registerCatch() {
     _streak++;

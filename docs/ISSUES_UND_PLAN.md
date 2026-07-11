@@ -164,6 +164,33 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 17. ✅ **Hauptmenü, WinScreen, Settings** (PR #50): Goldlinie/Untertitel im Menü, verdiente Sterne im WinScreen, Settings auf Deutsch. Regel-Fix: Sterne können nie sinken.
 18. ✅ **Feinschliff** (PR #51): Combo-Serie (Scoreboard + Popup), Konfetti in Scriptorium-Farben, Icon-Hintergrund Pergament. Offen bleibt nur das Icon-Motiv selbst (bewusst beim Owner).
 
+### Phase 2d — Spielbarkeit ✅ implementiert (PRs #60–#63, gestackt in dieser Reihenfolge)
+
+1. ✅ **#56** (PR #60): Pause + Bestätigungsdialog beim Verlassen; Wörter verdeckt, Uhr stoppt, Pausenzeit zählt nicht in den Score.
+2. ✅ **#57** (PR #61): Maus/Trackpad +45 % Flugzeit (Hover-Erkennung), einmaliger Hinweis.
+3. ✅ **#55** (PR #62): Feier — Vers setzt sich lesbar zusammen (Wrap-Layout), WinScreen blendet über (Fade).
+4. ✅ **#27** (PR #63): Eye-Button; Blind-Lauf (vor dem ersten Wort verdeckt, nie gespickt) = Score ×1,5.
+
+### Phase 3 — Inhalt & Reichweite *(nächste Phase, Start nach Merge von #60–#63)*
+*Ziel: Beliebige Verse in sauberem Datenmodell, dann Sprache & Reichweite.*
+
+1. **#15a — Datenmodell**: `Lesson` bekommt Buch/Kapitel/Vers-Referenzen statt nur Text-String; kuratierte Liste als JSON-Asset (~10 Verse, **Menge-Bibel**-Text) statt hardcoded Dart. Grundlage für alles Weitere.
+2. **#52 — Vers-Progression**: 3 Verse offen, Kette bis alle offen (`PlayerProgress.unlockedVerseCount`), versiegelte Karten in der Auswahl.
+3. **#15b — Bibel-API**: `VerseRepository` gegen bolls.life (`MB`), Caching für Offline/PWA, Vers-Auswahl-UI (Buch/Kapitel/Vers); „Eigene Verse" in 3er-Paketen nach Abschluss der kuratierten Liste (#52-Regel).
+4. **#2 — Lokalisierung**: ARB/`flutter_localizations` DE/EN; Verse pro Sprache über Übersetzungs-Mapping (`de`→MB, `en`→WEB).
+5. **#13 — Hilfe-Screen**: Spielregeln, Siegel/Sterne-System, Joker (sobald vorhanden).
+6. **#6 — Share on Winning**: `share_plus`, Vers + Score als Text.
+
+### Phase 2c — Gameplay-Ausbau *(Ideen-Backlog, nach Phase 2d/3)*
+
+- **#56**: Bestätigungsdialog + Pause/Blur beim Verlassen des Spiels (Quick Win, Bug-Charakter).
+- **#55**: Feier-Animation umdrehen — der Vers setzt sich lesbar von außen zusammen und **blendet in den WinScreen über**.
+- **#52**: Vers-Progression (3 offen → Kette bis ~10 → eigene Verse in 3er-Paketen; hängt an #15).
+- **#53**: Daily/Weekly Challenges mit Jokern (Gnade, Sanduhr, Tintenlöscher, Federkiel).
+- **#54**: Spielwährung „Goldtinte" — Verdienst + Joker-Shop, keine Eintrittskosten. **Kein Wett-/Einsatz-Modus** (Glücksspiel passt nicht zu den Werten des Herausgebers).
+- **#57**: Maus/Touchpad-Ausgleich für die Desktop-PWA (+40–50 % Flugzeit bei Maus-Eingabe, einmaliger Hinweis).
+- **#14 (erweitert)**: Bestenliste gestuft — lokal → Play Games/Game Center → Land/Welt (eigenes Backend).
+
 ### Phase 3 — Inhalt & Reichweite
 *Ziel: Beliebige Verse, zwei Sprachen, Hilfe.*
 

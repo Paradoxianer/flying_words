@@ -6,8 +6,6 @@ import 'dart:math';
 
 import 'package:flying_words/src/game_internals/lesson.dart';
 
-import '../level_selection/levels.dart';
-
 Map<Difficulty, int> difficultyScoreFactor = {
   Difficulty.slow: 1,
   Difficulty.normal: 5,
@@ -25,14 +23,20 @@ class Score {
 
   Score({this.score = 0, this.duration = Duration.zero, this.errors});
 
-  factory Score.fromResult(int level, Difficulty difficulty, Duration duration, int errors) {
+  factory Score.fromResult(
+      int wordCount, Difficulty difficulty, Duration duration, int errors,
+      {bool blindBonus = false}) {
     // The higher the difficulty, the higher the score.
     // The lower the time to beat the level, the higher the score.
-    var maxScore = gameLevels[level-1].words.length*difficultySpeed[difficulty]!.inMilliseconds;
+    var maxScore = wordCount * difficultySpeed[difficulty]!.inMilliseconds;
     // Same scale as duration.inSeconds*10, but a run under a second must not
     // divide by zero.
     var elapsedTenthsOfSeconds = max(duration.inMilliseconds ~/ 100, 1);
     var score = (difficultyScoreFactor[difficulty]??1)*(maxScore ~/ elapsedTenthsOfSeconds) - (errors*difficultySpeed[difficulty]!.inSeconds*10);
+    // Playing with the verse text hidden the whole run pays off (#27).
+    if (blindBonus) {
+      score = (score * 1.5).round();
+    }
     // A won level is always worth at least one point - otherwise it would not
     // count as finished (see VerseProgress.finished).
     if (score < 1) score = 1;

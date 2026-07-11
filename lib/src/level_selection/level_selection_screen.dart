@@ -7,9 +7,11 @@ import 'package:flying_words/src/level_selection/level_item.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 import 'levels.dart';
+import 'sealed_verse_card.dart';
 
 class LevelSelectionScreen extends StatelessWidget {
   const LevelSelectionScreen({super.key});
@@ -17,6 +19,9 @@ class LevelSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final playerProgress = context.watch<PlayerProgress>();
+    final orderedVerses = [for (final level in gameLevels) level.verse];
+    final unlockedCount = playerProgress.unlockedVerseCount(orderedVerses);
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
@@ -38,8 +43,17 @@ class LevelSelectionScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  for (final level in gameLevels)
-                  LevelItem(level)
+                  for (var i = 0; i < gameLevels.length; i++)
+                    if (i < unlockedCount)
+                      LevelItem(gameLevels[i])
+                    else
+                      // Locked verses stay visible as sealed cards so the
+                      // player sees there is more to unlock (#52).
+                      SealedVerseCard(
+                        key: Key('sealed-${gameLevels[i].number}'),
+                        // The very next verse hints at how to open it.
+                        isNext: i == unlockedCount,
+                      ),
                 ],
               ),
             ),
@@ -49,7 +63,7 @@ class LevelSelectionScreen extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).go('/');
           },
-          child: const Text('Back'),
+          child: const Text('Zurück'),
         ),
       ),
     );

@@ -28,7 +28,12 @@ class PlaySessionScreen extends StatefulWidget {
   final Lesson lesson;
   final Difficulty difficulty;
 
-  const PlaySessionScreen(this.lesson, this.difficulty, {super.key});
+  /// Start with the verse text hidden (chosen via the eye toggle in the
+  /// level selection) - the run qualifies for the blind bonus from word one.
+  final bool startBlind;
+
+  const PlaySessionScreen(this.lesson, this.difficulty,
+      {super.key, this.startBlind = false});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -105,10 +110,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => LevelState(
-            length: widget.lesson.words.length,
-            onWin: _playerWon,
-          ),
+          create: (context) {
+            final state = LevelState(
+              length: widget.lesson.words.length,
+              onWin: _playerWon,
+            );
+            if (widget.startBlind) {
+              state.setTextHidden(true);
+            }
+            return state;
+          },
         ),
       ],
       child: Builder(builder: (context) {
@@ -222,6 +233,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     );
 
     final playerProgress = context.read<PlayerProgress>();
+    // Remember the best run before this one, for the comparison on the
+    // win screen ("Neue Bestzeit!").
+    final previousBest =
+        playerProgress.getScoreforVerse(widget.lesson.verse, widget.difficulty);
     playerProgress.setScoreforVerse(widget.lesson.verse, widget.difficulty, score);
 
     // Let the player see the game just after winning for a bit.
@@ -259,6 +274,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       'levelState': state,
       'lesson': widget.lesson,
       'difficulty': widget.difficulty,
+      'previousBest': previousBest,
     });
   }
 }

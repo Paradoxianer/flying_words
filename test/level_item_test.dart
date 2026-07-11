@@ -39,16 +39,34 @@ void main() {
   testWidgets('flawless run on seal I shows three stars and opens seal II',
       (tester) async {
     final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
-    progress.setScoreforVerse(
-        'Test 1,1', Difficulty.slow, Score(score: 100, errors: 0));
+    progress.setScoreforVerse('Test 1,1', Difficulty.slow,
+        Score(score: 100, errors: 0, duration: const Duration(seconds: 45)));
 
     await tester.pumpWidget(_wrap(progress));
 
     expect(find.byKey(const Key('padlock-normal')), findsNothing);
     expect(find.byKey(const Key('padlock-insane')), findsOneWidget);
     expect(find.byIcon(Icons.star), findsNWidgets(3));
+    // The best run's time appears under the seal.
+    expect(find.byKey(const Key('besttime-slow')), findsOneWidget);
+    expect(find.text('00:45'), findsOneWidget);
 
     // Flush the simulated async persistence writes.
     await tester.pump(const Duration(milliseconds: 700));
+  });
+
+  testWidgets('the eye toggle arms a blind run for this verse',
+      (tester) async {
+    final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+    await tester.pumpWidget(_wrap(progress));
+
+    expect(find.byKey(const Key('blind-1-off')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('blind-1-off')));
+    await tester.pump();
+    expect(find.byKey(const Key('blind-1-on')), findsOneWidget);
+    // Toggling back works too.
+    await tester.tap(find.byKey(const Key('blind-1-on')));
+    await tester.pump();
+    expect(find.byKey(const Key('blind-1-off')), findsOneWidget);
   });
 }

@@ -129,14 +129,32 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         }
       }
     });
+    widget.state.addListener(_onPauseChanged);
     super.initState();
     Future.delayed(Duration(milliseconds: 800), () {
-      _controller.forward();
+      if (!mounted) return;
+      if (!widget.state.paused) {
+        _controller.forward();
+      }
     });
+  }
+
+  /// Freezes the flight while the game is paused and resumes it afterwards.
+  void _onPauseChanged() {
+    if (!mounted) return;
+    if (widget.state.paused) {
+      if (_controller.isAnimating) {
+        _controller.stop(canceled: false);
+      }
+    } else if (!_controller.isAnimating &&
+        widget.state.wordIndex < widget.lesson.words.length) {
+      _controller.forward();
+    }
   }
 
   @override
   void dispose() {
+    widget.state.removeListener(_onPauseChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -208,6 +226,18 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    if (widget.state.paused) {
+      // Hide the words while paused - otherwise the pause dialog would be
+      // a free peek at the right answer.
+      return Container(
+        color: palette.parchmentLight,
+        alignment: Alignment.center,
+        child: Text(
+          'Pausiert',
+          style: ScriptoriumText.heading.copyWith(color: palette.inkFaded),
+        ),
+      );
+    }
     return LayoutBuilder(builder: (context, constraints) {
       // Use the aspect ratio of the actual play area, not of the whole
       // screen - the words fly inside this widget.

@@ -21,6 +21,18 @@ class LevelState extends ChangeNotifier {
   /// Consecutive correctly caught words; any error resets it.
   int get streak => _streak;
 
+  bool _paused = false;
+
+  /// While paused the words stop flying, the clock stops and the play
+  /// area hides the words (so pausing cannot be used as a free look).
+  bool get paused => _paused;
+
+  void setPaused(bool value) {
+    if (_paused == value) return;
+    _paused = value;
+    notifyListeners();
+  }
+
   /// Called when the player catches the right word.
   void registerCatch() {
     _streak++;

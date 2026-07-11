@@ -37,8 +37,9 @@ class _PlayScoreboardState extends State<PlayScoreboard> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      // Stop counting once the lesson is finished (celebration).
-      if (widget.state.wordIndex < widget.wordCount) {
+      // Stop counting once the lesson is finished (celebration) and
+      // while the game is paused.
+      if (widget.state.wordIndex < widget.wordCount && !widget.state.paused) {
         setState(() {
           _elapsed += const Duration(seconds: 1);
         });

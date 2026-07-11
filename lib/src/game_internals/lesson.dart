@@ -75,6 +75,15 @@ class Lesson{
         custom: json['custom'] as bool? ?? false,
       );
 
+  Map<String, dynamic> toJson() => {
+        'number': number,
+        'display': verse,
+        'text': text,
+        if (reference != null) 'reference': reference!.toJson(),
+        'translation': translation,
+        'custom': custom,
+      };
+
   List<String> get words => _words;
 
 }

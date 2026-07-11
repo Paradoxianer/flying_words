@@ -19,13 +19,6 @@ Map<Difficulty, int> difficultyWordcount = {
   Difficulty.insane: 11,
 };
 
-Map<Difficulty, String> difficultyImagePath = {
-  Difficulty.slow: 'assets/images/marker/marker_green.png',
-  Difficulty.normal: 'assets/images/marker/marker_yellow.png',
-  Difficulty.insane: 'assets/images/marker/marker_red.png',
-};
-
-
 class Lesson{
   final int number;
   final String verse;

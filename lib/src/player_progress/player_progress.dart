@@ -144,6 +144,11 @@ class PlayerProgress extends ChangeNotifier {
   Score? getScoreforVerse(String verse, Difficulty difficulty) =>
       _progress[verse]?[difficulty];
 
+  /// The progress for [verse]; empty (nothing unlocked beyond seal I,
+  /// no stars) if the verse was never played.
+  VerseProgress progressForVerse(String verse) =>
+      _progress[verse] ?? VerseProgress();
+
   int _calculateTotalScore() {
     int total = 0;
     for (final verseProgress in _progress.values) {

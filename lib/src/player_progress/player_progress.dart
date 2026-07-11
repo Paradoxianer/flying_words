@@ -161,6 +161,29 @@ class PlayerProgress extends ChangeNotifier {
   VerseProgress progressForVerse(String verse) =>
       _progress[verse] ?? VerseProgress();
 
+  /// Number of verses open at the start before any is finished (#52).
+  static const initialUnlockedVerses = 3;
+
+  /// How many verses of [orderedVerses] are unlocked: the first
+  /// [initialUnlockedVerses] plus one more for every verse finished on
+  /// seal I (chain unlock), capped at the list length. Passing the verse
+  /// references in play order keeps the chain independent of the data
+  /// source (#15).
+  int unlockedVerseCount(List<String> orderedVerses) {
+    var finished = 0;
+    for (final verse in orderedVerses) {
+      if (progressForVerse(verse).finished(Difficulty.slow)) {
+        finished++;
+      }
+    }
+    final unlocked = initialUnlockedVerses + finished;
+    return unlocked > orderedVerses.length ? orderedVerses.length : unlocked;
+  }
+
+  /// Whether the verse at [index] in [orderedVerses] is unlocked (#52).
+  bool verseUnlocked(List<String> orderedVerses, int index) =>
+      index < unlockedVerseCount(orderedVerses);
+
   int _calculateTotalScore() {
     int total = 0;
     for (final verseProgress in _progress.values) {

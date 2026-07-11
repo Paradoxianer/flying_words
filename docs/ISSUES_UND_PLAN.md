@@ -164,6 +164,16 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 17. ✅ **Hauptmenü, WinScreen, Settings** (PR #50): Goldlinie/Untertitel im Menü, verdiente Sterne im WinScreen, Settings auf Deutsch. Regel-Fix: Sterne können nie sinken.
 18. ✅ **Feinschliff** (PR #51): Combo-Serie (Scoreboard + Popup), Konfetti in Scriptorium-Farben, Icon-Hintergrund Pergament. Offen bleibt nur das Icon-Motiv selbst (bewusst beim Owner).
 
+### Phase 2c — Gameplay-Ausbau *(Ideen-Runde vom 11.07.2026)*
+*Nach Praxis-Tests der PWA entstanden; Reihenfolge nach Abhängigkeit.*
+
+- **#56**: Bestätigungsdialog + Pause/Blur beim Verlassen des Spiels (Quick Win, Bug-Charakter).
+- **#55**: Feier-Animation umdrehen — der Vers setzt sich lesbar von außen zusammen.
+- **#52**: Vers-Progression (3 offen → Kette bis ~10 → eigene Verse in 3er-Paketen; hängt an #15).
+- **#53**: Daily/Weekly Challenges mit Jokern (Gnadenwort, Sanduhr, Tintenlöscher, Federkiel).
+- **#54**: Spielwährung „Goldtinte" — Empfehlung: Verdienst + Joker-Shop, keine Eintrittskosten.
+- **#14 (erweitert)**: Bestenliste gestuft — lokal → Play Games/Game Center → Land/Welt (eigenes Backend).
+
 ### Phase 3 — Inhalt & Reichweite
 *Ziel: Beliebige Verse, zwei Sprachen, Hilfe.*
 

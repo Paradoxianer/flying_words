@@ -1,0 +1,42 @@
+{
+  "_note": "Kuratierte Standard-Verse. Der genaue Übersetzungsstand der Texte ist unbestätigt ('unbestimmt') und wird mit der Bibel-API (#15b) auf die Menge-Bibel normalisiert. Referenzen sind übersetzungsunabhängig (OSIS-Buchcodes).",
+  "translation": "unbestimmt",
+  "verses": [
+    {
+      "number": 1,
+      "reference": { "book": "1CO", "chapter": 6, "verseStart": 12 },
+      "display": "1. Korinther 6, 12",
+      "text": "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen."
+    },
+    {
+      "number": 2,
+      "reference": { "book": "JHN", "chapter": 3, "verseStart": 16 },
+      "display": "Johannes 3, 16",
+      "text": "Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab, auf daß jeder, der an ihn glaubt, nicht verloren gehe, sondern ewiges Leben habe."
+    },
+    {
+      "number": 3,
+      "reference": { "book": "1CO", "chapter": 13, "verseStart": 4, "verseEnd": 5 },
+      "display": "1. Korinther 13, 4-5",
+      "text": "Die Liebe ist langmütig und freundlich, die Liebe eifert nicht, die Liebe treibt nicht Mutwillen, sie bläht sich nicht auf, sie verhält sich nicht ungehörig, sie sucht nicht das Ihre, sie lässt sich nicht erbittern, sie rechnet das Böse nicht zu."
+    },
+    {
+      "number": 4,
+      "reference": { "book": "1TH", "chapter": 5, "verseStart": 16, "verseEnd": 18 },
+      "display": "1. Thessalonicher 5, 16-18",
+      "text": "Seid allezeit fröhlich, betet ohne Unterlass, seid dankbar in allen Dingen; denn das ist der Wille Gottes in Christus Jesus für euch."
+    },
+    {
+      "number": 5,
+      "reference": { "book": "NUM", "chapter": 6, "verseStart": 24, "verseEnd": 26 },
+      "display": "4. Mose 6, 24-26",
+      "text": "Der HERR segne dich und behüte dich; der HERR lasse sein Angesicht leuchten über dir und sei dir gnädig; der HERR hebe sein Angesicht über dich und gebe dir Frieden."
+    },
+    {
+      "number": 6,
+      "reference": { "book": "ROM", "chapter": 12, "verseStart": 12 },
+      "display": "Römer 12, 12",
+      "text": "Seid fröhlich in Hoffnung, geduldig in Trübsal, beharrlich im Gebet."
+    }
+  ]
+}

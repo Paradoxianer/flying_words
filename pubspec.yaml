@@ -46,6 +46,7 @@ flutter:
     - assets/images/marker/
     - assets/music/
     - assets/sfx/
+    - assets/verses/
 
   fonts:
     - family: Cormorant Garamond

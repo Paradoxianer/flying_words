@@ -224,7 +224,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _log.info('Level ${widget.lesson.verse} won');
 
     final score = Score.fromResult(
-      widget.lesson.number,
+      widget.lesson.words.length,
       widget.difficulty,
       // Time spent in the pause dialog or the settings doesn't count.
       DateTime.now().difference(_startOfPlay) - _pausedTotal,

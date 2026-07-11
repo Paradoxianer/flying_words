@@ -37,6 +37,15 @@ void main() {
       expect(clean.score, greaterThan(sloppy.score));
     });
 
+    test('the blind bonus multiplies the score by 1.5', () {
+      final normal = Score.fromResult(
+          1, Difficulty.normal, const Duration(seconds: 30), 0);
+      final blind = Score.fromResult(
+          1, Difficulty.normal, const Duration(seconds: 30), 0,
+          blindBonus: true);
+      expect(blind.score, (normal.score * 1.5).round());
+    });
+
     test('higher difficulty scores higher for the same result', () {
       final slow = Score.fromResult(
           1, Difficulty.slow, const Duration(seconds: 30), 0);

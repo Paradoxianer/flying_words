@@ -79,6 +79,13 @@ class WinGameScreen extends StatelessWidget {
                   ),
               ],
             ),
+            if (levelState.blindRun)
+              Center(
+                child: Text(
+                  'Blind geschafft — Score ×1,5!',
+                  style: ScriptoriumText.label.copyWith(color: palette.gold),
+                ),
+              ),
             gap,
             Center(
               child: Text(

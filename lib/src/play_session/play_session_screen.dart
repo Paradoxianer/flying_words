@@ -217,7 +217,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       widget.difficulty,
       // Time spent in the pause dialog or the settings doesn't count.
       DateTime.now().difference(_startOfPlay) - _pausedTotal,
-      state.numErrors
+      state.numErrors,
+      blindBonus: state.blindRun,
     );
 
     final playerProgress = context.read<PlayerProgress>();

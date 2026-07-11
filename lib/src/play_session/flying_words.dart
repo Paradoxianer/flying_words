@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/random_words.dart';
@@ -7,9 +8,11 @@ import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../game_internals/input_device.dart';
 import '../game_internals/level_state.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
+import '../style/snack_bar.dart';
 
 class FlyingWord extends StatefulWidget {
   final Duration duration;
@@ -47,8 +50,26 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   Alignment _caughtAlignment = Alignment.center;
   int _caughtTick = 0;
 
+  /// The desktop hint is shown at most once per app run.
+  static bool _mouseHintShown = false;
+
   double _radius = 0.0;
   List<String> get _words => widget.lesson.words;
+
+  /// The flight time, stretched for mouse/trackpad players (#57).
+  Duration get _flightTime => Duration(
+      milliseconds:
+          (widget.duration.inMilliseconds * InputDevice.timeFactor).round());
+
+  void _registerPointer(PointerDeviceKind kind) {
+    final wasMouse = InputDevice.usesMouse;
+    InputDevice.register(kind);
+    if (!wasMouse && InputDevice.usesMouse && !_mouseHintShown) {
+      _mouseHintShown = true;
+      showSnackBar('Tipp: Am flüssigsten spielt sich Flying Words auf einem '
+          'Touch-Gerät — mit der Maus bekommst du etwas mehr Zeit.');
+    }
+  }
 
   void _textWordsList() {
     _allWords = _words;
@@ -97,6 +118,8 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     }
     //restart Animation Controller
     _controller.reset();
+    // The input device may have changed (or only now become known).
+    _controller.duration = _flightTime;
     _controller.forward();
   }
 
@@ -105,7 +128,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     _randomWordsList(widget.numberFlyingWords);
     _controller = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: _flightTime,
     );
     _animation = Tween<double>(
       begin: 0.1,
@@ -244,21 +267,30 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
       final aspectRatio = constraints.maxHeight > 0
           ? constraints.maxWidth / constraints.maxHeight
           : 1.0;
-      return Container(
-        color: palette.parchmentLight,
-        child: Stack(
-          children: [
-            for (int index = 0; index < _allWords.length; index++)
-              _buildWord(index, aspectRatio, palette),
-            if (_caughtWord != null)
-              _CaughtWordPopup(
-                key: ValueKey(_caughtTick),
-                word: _caughtWord!,
-                combo: widget.state.streak,
-                alignment: _caughtAlignment,
-                color: palette.gold,
-              ),
-          ],
+      // Mouse and trackpad players get more flight time; hovering already
+      // reveals the input device before the first tap (#57).
+      return MouseRegion(
+        onHover: (event) => _registerPointer(event.kind),
+        child: Listener(
+          onPointerDown: (event) => _registerPointer(event.kind),
+          behavior: HitTestBehavior.translucent,
+          child: Container(
+            color: palette.parchmentLight,
+            child: Stack(
+              children: [
+                for (int index = 0; index < _allWords.length; index++)
+                  _buildWord(index, aspectRatio, palette),
+                if (_caughtWord != null)
+                  _CaughtWordPopup(
+                    key: ValueKey(_caughtTick),
+                    word: _caughtWord!,
+                    combo: widget.state.streak,
+                    alignment: _caughtAlignment,
+                    color: palette.gold,
+                  ),
+              ],
+            ),
+          ),
         ),
       );
     });

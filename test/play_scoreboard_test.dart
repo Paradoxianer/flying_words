@@ -42,6 +42,29 @@ void main() {
     expect(find.text('×2'), findsOneWidget);
   });
 
+  testWidgets('PlayScoreboard stops the clock while the game is paused',
+      (tester) async {
+    final state = LevelState(onWin: (_) {}, length: 5);
+
+    await tester.pumpWidget(Provider(
+      create: (_) => Palette(),
+      child: MaterialApp(
+        home: Scaffold(body: PlayScoreboard(state: state, wordCount: 5)),
+      ),
+    ));
+
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('00:01'), findsOneWidget);
+
+    state.setPaused(true);
+    await tester.pump(const Duration(seconds: 3));
+    expect(find.text('00:01'), findsOneWidget);
+
+    state.setPaused(false);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('00:02'), findsOneWidget);
+  });
+
   testWidgets('PlayScoreboard stops the clock when the lesson is finished',
       (tester) async {
     final state = LevelState(onWin: (_) {}, length: 2);

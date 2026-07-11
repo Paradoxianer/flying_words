@@ -168,10 +168,11 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 *Nach Praxis-Tests der PWA entstanden; Reihenfolge nach Abhängigkeit.*
 
 - **#56**: Bestätigungsdialog + Pause/Blur beim Verlassen des Spiels (Quick Win, Bug-Charakter).
-- **#55**: Feier-Animation umdrehen — der Vers setzt sich lesbar von außen zusammen.
+- **#55**: Feier-Animation umdrehen — der Vers setzt sich lesbar von außen zusammen und **blendet in den WinScreen über**.
 - **#52**: Vers-Progression (3 offen → Kette bis ~10 → eigene Verse in 3er-Paketen; hängt an #15).
-- **#53**: Daily/Weekly Challenges mit Jokern (Gnadenwort, Sanduhr, Tintenlöscher, Federkiel).
-- **#54**: Spielwährung „Goldtinte" — Empfehlung: Verdienst + Joker-Shop, keine Eintrittskosten.
+- **#53**: Daily/Weekly Challenges mit Jokern (Gnade, Sanduhr, Tintenlöscher, Federkiel).
+- **#54**: Spielwährung „Goldtinte" — Verdienst + Joker-Shop, keine Eintrittskosten. **Kein Wett-/Einsatz-Modus** (Glücksspiel passt nicht zu den Werten des Herausgebers).
+- **#57**: Maus/Touchpad-Ausgleich für die Desktop-PWA (+40–50 % Flugzeit bei Maus-Eingabe, einmaliger Hinweis).
 - **#14 (erweitert)**: Bestenliste gestuft — lokal → Play Games/Game Center → Land/Welt (eigenes Backend).
 
 ### Phase 3 — Inhalt & Reichweite

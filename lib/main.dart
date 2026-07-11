@@ -169,12 +169,14 @@ class MyApp extends StatelessWidget {
                       final score = map['score'] as Score;
                       final levelState = map['levelState'] as LevelState;
                       final lesson = map['lesson'] as Lesson;
+                      final difficulty = map['difficulty'] as Difficulty;
                       return buildMyTransition<void>(
                         child: WinGameScreen(
                           score: score,
                           key: const Key('win game'),
                           lesson: lesson,
                           levelState: levelState,
+                          difficulty: difficulty,
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );

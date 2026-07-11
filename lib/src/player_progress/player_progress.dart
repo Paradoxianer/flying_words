@@ -44,18 +44,13 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
   static int maxStars(Difficulty difficulty) =>
       difficulty == Difficulty.insane ? 1 : 3;
 
-  /// Stars earned on [difficulty]:
+  /// Stars for a single finished run on [difficulty] with [errors] errors:
   /// three for a flawless run, two for at most two errors, one for
   /// finishing. Legacy scores without an error count are worth one star.
-  int stars(Difficulty difficulty) {
-    final score = this[difficulty];
-    if (score == null || score.score <= 0) {
-      return 0;
-    }
+  static int starsForRun(Difficulty difficulty, int? errors) {
     if (difficulty == Difficulty.insane) {
       return 1;
     }
-    final errors = score.errors;
     if (errors == null) {
       return 1;
     }
@@ -63,6 +58,15 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
       return 3;
     }
     return errors <= 2 ? 2 : 1;
+  }
+
+  /// Stars earned on [difficulty] (best stored run).
+  int stars(Difficulty difficulty) {
+    final score = this[difficulty];
+    if (score == null || score.score <= 0) {
+      return 0;
+    }
+    return starsForRun(difficulty, score.errors);
   }
 
   /// A difficulty unlocks once the previous one has at least two stars
@@ -131,8 +135,16 @@ class PlayerProgress extends ChangeNotifier {
   void setScoreforVerse(String verse, Difficulty difficulty, Score score) {
     final verseProgress = _progress.putIfAbsent(verse, () => VerseProgress());
     final existing = verseProgress[difficulty];
-    if (existing != null && existing.score >= score.score) {
-      return;
+    if (existing != null) {
+      // Stars must never go down: keep the run with more stars, and only
+      // for equal stars the one with the higher score.
+      final existingStars =
+          VerseProgress.starsForRun(difficulty, existing.errors);
+      final newStars = VerseProgress.starsForRun(difficulty, score.errors);
+      if (existingStars > newStars ||
+          (existingStars == newStars && existing.score >= score.score)) {
+        return;
+      }
     }
     verseProgress[difficulty] = score;
     _playerScore = _calculateTotalScore();

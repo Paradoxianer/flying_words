@@ -193,6 +193,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       'score': score,
       'levelState': state,
       'lesson': widget.lesson,
+      'difficulty': widget.difficulty,
     });
   }
 }

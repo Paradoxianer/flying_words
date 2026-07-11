@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/score.dart';
+import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/player_progress/player_progress.dart';
 
 void main() {
@@ -54,6 +55,30 @@ void main() {
       final progress = VerseProgress();
       progress[Difficulty.slow] = Score(score: 10);
       expect(progress.stars(Difficulty.slow), 1);
+    });
+  });
+
+  group('PlayerProgress keeps the best stars', () {
+    test('a higher score with worse stars does not replace a flawless run',
+        () {
+      final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+      progress.setScoreforVerse(
+          'v', Difficulty.slow, Score(score: 100, errors: 0)); // 3 stars
+      progress.setScoreforVerse(
+          'v', Difficulty.slow, Score(score: 999, errors: 5)); // 1 star
+
+      final kept = progress.getScoreforVerse('v', Difficulty.slow)!;
+      expect(kept.errors, 0);
+      expect(kept.score, 100);
+    });
+
+    test('equal stars: the higher score wins', () {
+      final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+      progress.setScoreforVerse(
+          'v', Difficulty.slow, Score(score: 100, errors: 0));
+      progress.setScoreforVerse(
+          'v', Difficulty.slow, Score(score: 300, errors: 0));
+      expect(progress.getScoreforVerse('v', Difficulty.slow)!.score, 300);
     });
   });
 

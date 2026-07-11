@@ -13,19 +13,23 @@ import '../game_internals/level_state.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../play_session/text_progress.dart';
+import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
+import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
 
 class WinGameScreen extends StatelessWidget {
   final Score score;
   final Lesson lesson;
   final LevelState levelState;
+  final Difficulty difficulty;
 
   const WinGameScreen({
     super.key,
     required this.score,
     required this.lesson,
     required this.levelState,
+    required this.difficulty,
   });
 
   @override
@@ -34,6 +38,10 @@ class WinGameScreen extends StatelessWidget {
     final adsRemoved =
         context.watch<InAppPurchaseController?>()?.adRemoval.active ?? false;
     final palette = context.watch<Palette>();
+
+    final earnedStars =
+        VerseProgress.starsForRun(difficulty, levelState.numErrors);
+    final maxStars = VerseProgress.maxStars(difficulty);
 
     const gap = SizedBox(height: 10);
 
@@ -51,18 +59,32 @@ class WinGameScreen extends StatelessWidget {
               ),
             ],
             gap,
-            const Center(
+            Center(
               child: Text(
                 'Gewonnen!',
-                style: TextStyle(fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 50),
+                style: ScriptoriumText.display
+                    .copyWith(fontSize: 50, color: palette.inkFullOpacity),
               ),
+            ),
+            // The stars earned in this run.
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i = 0; i < maxStars; i++)
+                  Icon(
+                    i < earnedStars ? Icons.star : Icons.star_border,
+                    key: i < earnedStars ? Key('won-star-$i') : null,
+                    size: 42,
+                    color: i < earnedStars ? palette.gold : palette.inkFaded,
+                  ),
+              ],
             ),
             gap,
             Center(
               child: Text(
                 lesson.verse,
-                style: const TextStyle(
-                    fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 24),
+                style: ScriptoriumText.verseRef
+                    .copyWith(color: palette.inkFullOpacity),
               ),
             ),
             gap,
@@ -79,8 +101,8 @@ class WinGameScreen extends StatelessWidget {
                 'Score: ${score.score}\n'
                 'Fehler: ${levelState.numErrors}\n'
                 'Zeit: ${score.formattedTime}',
-                style: const TextStyle(
-                    fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 20),
+                textAlign: TextAlign.center,
+                style: ScriptoriumText.label.copyWith(color: palette.inkFaded),
               ),
             ),
           ],

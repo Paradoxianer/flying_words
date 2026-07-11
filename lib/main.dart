@@ -37,6 +37,7 @@ import 'src/settings/settings.dart';
 import 'src/settings/settings_screen.dart';
 import 'src/style/my_transition.dart';
 import 'src/style/palette.dart';
+import 'src/style/scriptorium_text.dart';
 import 'src/style/snack_bar.dart';
 import 'src/win_game/win_game_screen.dart';
 
@@ -254,15 +255,17 @@ class MyApp extends StatelessWidget {
           final palette = context.watch<Palette>();
 
           return MaterialApp.router(
-            title: 'Flutter Demo',
-            theme: ThemeData.from(
+            title: 'Flying Words',
+            theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                seedColor: palette.darkPen,
+                seedColor: palette.gold,
                 surface: palette.backgroundMain,
               ),
+              fontFamily: bodyFontFamily,
               textTheme: TextTheme(
                 bodyMedium: TextStyle(
                   color: palette.ink,
+                  fontFamily: bodyFontFamily,
                 ),
               ),
               useMaterial3: true,

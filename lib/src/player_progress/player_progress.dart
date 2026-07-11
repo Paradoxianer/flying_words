@@ -38,6 +38,46 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
 
   bool finished(Difficulty difficulty) => (this[difficulty]?.score ?? 0) > 0;
 
+  /// Maximum stars for [difficulty]: seal I and II award up to three stars,
+  /// seal III (insane) a single "master star" - finishing it at all is the
+  /// achievement. (Design decision in #39.)
+  static int maxStars(Difficulty difficulty) =>
+      difficulty == Difficulty.insane ? 1 : 3;
+
+  /// Stars earned on [difficulty]:
+  /// three for a flawless run, two for at most two errors, one for
+  /// finishing. Legacy scores without an error count are worth one star.
+  int stars(Difficulty difficulty) {
+    final score = this[difficulty];
+    if (score == null || score.score <= 0) {
+      return 0;
+    }
+    if (difficulty == Difficulty.insane) {
+      return 1;
+    }
+    final errors = score.errors;
+    if (errors == null) {
+      return 1;
+    }
+    if (errors == 0) {
+      return 3;
+    }
+    return errors <= 2 ? 2 : 1;
+  }
+
+  /// A difficulty unlocks once the previous one has at least two stars
+  /// (strict unlocking, design decision in #39). Seal I is always open.
+  bool unlocked(Difficulty difficulty) {
+    switch (difficulty) {
+      case Difficulty.slow:
+        return true;
+      case Difficulty.normal:
+        return stars(Difficulty.slow) >= 2;
+      case Difficulty.insane:
+        return stars(Difficulty.normal) >= 2;
+    }
+  }
+
   int fullScore() {
     int fullScore = 0;
     forEach((key, value) {

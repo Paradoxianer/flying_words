@@ -18,7 +18,12 @@ Map<Difficulty, int> difficultyScoreFactor = {
 class Score {
   final int score;
   final Duration duration;
-  Score({this.score=0,this.duration=Duration.zero});
+
+  /// Number of errors in the run this score came from, or null for
+  /// legacy data saved before errors were recorded.
+  final int? errors;
+
+  Score({this.score = 0, this.duration = Duration.zero, this.errors});
 
   factory Score.fromResult(int level, Difficulty difficulty, Duration duration, int errors) {
     // The higher the difficulty, the higher the score.
@@ -31,17 +36,20 @@ class Score {
     // A won level is always worth at least one point - otherwise it would not
     // count as finished (see VerseProgress.finished).
     if (score < 1) score = 1;
-    return Score(score:score, duration:duration);
+    return Score(score: score, duration: duration, errors: errors);
   }
 
   factory Score.fromJson(Map<String, dynamic> json) => Score(
         score: json['score'] as int? ?? 0,
         duration: Duration(milliseconds: json['duration'] as int? ?? 0),
+        // Older saves don't carry the error count; keep it null then.
+        errors: json['errors'] as int?,
       );
 
   Map<String, dynamic> toJson() => {
         'score': score,
         'duration': duration.inMilliseconds,
+        if (errors != null) 'errors': errors,
       };
 
 

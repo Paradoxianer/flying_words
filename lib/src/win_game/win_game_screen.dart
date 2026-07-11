@@ -54,7 +54,7 @@ class WinGameScreen extends StatelessWidget {
             const Center(
               child: Text(
                 'Gewonnen!',
-                style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
+                style: TextStyle(fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 50),
               ),
             ),
             gap,
@@ -62,7 +62,7 @@ class WinGameScreen extends StatelessWidget {
               child: Text(
                 lesson.verse,
                 style: const TextStyle(
-                    fontFamily: 'Permanent Marker', fontSize: 24),
+                    fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 24),
               ),
             ),
             gap,
@@ -80,7 +80,7 @@ class WinGameScreen extends StatelessWidget {
                 'Fehler: ${levelState.numErrors}\n'
                 'Zeit: ${score.formattedTime}',
                 style: const TextStyle(
-                    fontFamily: 'Permanent Marker', fontSize: 20),
+                    fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 20),
               ),
             ),
           ],

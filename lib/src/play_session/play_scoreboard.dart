@@ -23,7 +23,7 @@ class PlayScoreboard extends StatefulWidget {
 
 class _PlayScoreboardState extends State<PlayScoreboard> {
   static const _textStyle = TextStyle(
-    fontFamily: 'Permanent Marker',
+    fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
     fontSize: 20,
     color: Colors.black87,
   );

@@ -4,34 +4,60 @@
 
 import 'package:flutter/material.dart';
 
-/// A palette of colors to be used in the game.
-///
-/// The reason we're not going with something like Material Design's
-/// `Theme` is simply that this is simpler to work with and yet gives
-/// us everything we need for a game.
-///
-/// Games generally have more radical color palettes than apps. For example,
-/// every level of a game can have radically different colors.
-/// At the same time, games rarely support dark mode.
-///
-/// Colors taken from this fun palette:
-/// https://lospec.com/palette-list/crayola84
+/// The "Scriptorium" design palette (see issue #39): the world of old
+/// manuscripts - parchment, ink, gold and wax seals - combined with
+/// strong game feedback moments.
 ///
 /// Colors here are implemented as getters so that hot reloading works.
-/// In practice, we could just as easily implement the colors
-/// as `static const`. But this way the palette is more malleable:
-/// we could allow players to customize colors, for example,
-/// or even get the colors from the network.
 class Palette {
-  Color get pen => const Color(0xff1d75fb);
-  Color get darkPen => const Color(0xFF0050bc);
-  Color get redPen => const Color(0xFFd10841);
-  Color get inkFullOpacity => const Color(0xff352b42);
-  Color get ink => const Color(0xee352b42);
-  Color get backgroundMain => const Color(0xffffffd1);
-  Color get backgroundLevelSelection => const Color(0xffa2dcc7);
-  Color get backgroundPlaySession => const Color(0xffffebb5);
-  Color get background4 => const Color(0xffffd7ff);
-  Color get backgroundSettings => const Color(0xffbfc8e3);
+  // ----- Core Scriptorium tokens -----
+
+  /// Warm parchment - the main ground of the app.
+  Color get parchment => const Color(0xfff2e7cf);
+
+  /// Lighter parchment for the play area and reading surfaces.
+  Color get parchmentLight => const Color(0xfff8f0dd);
+
+  /// Darker, aged parchment for cards and panels.
+  Color get parchmentDark => const Color(0xffe9dab8);
+
+  /// Writing ink - primary text color.
+  Color get inkFullOpacity => const Color(0xff2b2118);
+
+  /// Ink with a touch of transparency for body text.
+  Color get ink => const Color(0xee2b2118);
+
+  /// Faded ink for secondary text.
+  Color get inkFaded => const Color(0xff5c4a30);
+
+  /// Gold leaf - accents, stars, highlights.
+  Color get gold => const Color(0xffa9802a);
+
+  /// Bright gold for shiny moments (earned stars, celebration).
+  Color get goldBright => const Color(0xffecc95e);
+
+  /// Sealing wax red - errors and warnings.
+  Color get sealRed => const Color(0xff8c2f1b);
+
+  /// Muted olive - success and calm secondary accents.
+  Color get olive => const Color(0xff6b6b45);
+
   Color get trueWhite => const Color(0xffffffff);
+
+  // ----- Wax seal colors (difficulty I/II/III) -----
+
+  Color get sealBronze => const Color(0xff8c5a28);
+  Color get sealSilver => const Color(0xff8d959c);
+  Color get sealGold => const Color(0xffa9802a);
+
+  // ----- Semantic slots used by the screens -----
+
+  Color get pen => const Color(0xff4a3520);
+  Color get darkPen => const Color(0xff2b2118);
+  Color get redPen => const Color(0xff8c2f1b);
+  Color get backgroundMain => parchment;
+  Color get backgroundLevelSelection => parchmentDark;
+  Color get backgroundPlaySession => parchmentLight;
+  Color get background4 => parchment;
+  Color get backgroundSettings => const Color(0xffe7e0c9);
 }

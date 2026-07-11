@@ -34,7 +34,7 @@ class MainMenuScreen extends StatelessWidget {
               'Flying Words',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'Permanent Marker',
+                fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
                 fontSize: 55,
                 height: 1,
               ),

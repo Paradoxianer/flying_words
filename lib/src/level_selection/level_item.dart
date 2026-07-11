@@ -22,7 +22,7 @@ class LevelItem extends StatelessWidget {
             Text(
               level.verse,
               style: const TextStyle(
-                fontFamily: 'Permanent Marker',
+                fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
                 fontSize: 22,
               ),
             ),

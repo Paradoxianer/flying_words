@@ -158,11 +158,11 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 ### Phase 2b — Redesign „Scriptorium" *(Beschluss vom 10.07.2026, siehe #39)*
 *Kleine, reviewbare PRs; #26 und #28 werden hier miterledigt.*
 
-14. **Theme/Token-Modul**: `Palette` zum Design-System erweitern (Pergament/Tinte/Gold/Siegelrot/Oliv, Textstile, Kartendeko), Fonts als Assets bundlen (Cormorant + Source Serif). Technische Vorarbeit: `Score` speichert die **Fehlerzahl** mit (Basis der Sterne-Berechnung, inkl. Migration).
-15. **Versauswahl**: Pergamentkarten, Wachssiegel I/II/III als Stufenwahl, Sterne-Anzeige → erledigt **#28**; Padlock auf gesperrten Siegeln (frei ab ★★ der Vorstufe) → erledigt **#26**.
-16. **Spielfeld**: Pergamentgrund, Tintenwörter, Treffer-/Fehler-Feedback (Wort fliegt in den Vers, Tintenklecks), Scoreboard-Styling.
-17. **Hauptmenü, WinScreen, Settings** im neuen Look.
-18. **Feinschliff**: Combo-Popup, Übergänge, App-Icon-Abgleich.
+14. ✅ **Theme/Token-Modul** (PR #47): Scriptorium-Palette, Cormorant + Source Serif gebundelt (OFL), `Score` speichert die Fehlerzahl, Sterne-/Freischaltungs-Modell implementiert.
+15. ✅ **Versauswahl** (PR #48): Pergamentkarten, Wachssiegel I/II/III, Sterne-Anzeige → **#28** erledigt; Padlock-Freischaltung → **#26** erledigt.
+16. ✅ **Spielfeld** (PR #49): Pergamentgrund, Tintenwörter, Klecks-Feedback (Fehlwort deaktiviert sich), Gold-Popup beim Fangen.
+17. ✅ **Hauptmenü, WinScreen, Settings** (PR #50): Goldlinie/Untertitel im Menü, verdiente Sterne im WinScreen, Settings auf Deutsch. Regel-Fix: Sterne können nie sinken.
+18. ✅ **Feinschliff** (PR #51): Combo-Serie (Scoreboard + Popup), Konfetti in Scriptorium-Farben, Icon-Hintergrund Pergament. Offen bleibt nur das Icon-Motiv selbst (bewusst beim Owner).
 
 ### Phase 3 — Inhalt & Reichweite
 *Ziel: Beliebige Verse, zwei Sprachen, Hilfe.*

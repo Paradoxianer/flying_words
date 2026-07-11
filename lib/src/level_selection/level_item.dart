@@ -11,16 +11,25 @@ import '../style/scriptorium_text.dart';
 import 'wax_seal.dart';
 
 /// One verse in the level selection: a parchment card with the verse,
-/// the three wax seals (difficulties) and the earned stars.
-class LevelItem extends StatelessWidget {
+/// the three wax seals (difficulties), the earned stars and best times.
+/// The eye toggle starts the next run with the verse text hidden, so the
+/// blind bonus can be chosen before the clock runs (#27 follow-up).
+class LevelItem extends StatefulWidget {
   final Lesson level;
   const LevelItem(this.level, {super.key});
+
+  @override
+  State<LevelItem> createState() => _LevelItemState();
+}
+
+class _LevelItemState extends State<LevelItem> {
+  bool _blind = false;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final progress =
-        context.watch<PlayerProgress>().progressForVerse(level.verse);
+        context.watch<PlayerProgress>().progressForVerse(widget.level.verse);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -41,14 +50,40 @@ class LevelItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              level.verse,
-              style:
-                  ScriptoriumText.verseRef.copyWith(color: palette.inkFullOpacity),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.level.verse,
+                    style: ScriptoriumText.verseRef
+                        .copyWith(color: palette.inkFullOpacity),
+                  ),
+                ),
+                // Choose the blind run here, before the clock is ticking.
+                Tooltip(
+                  message: _blind
+                      ? 'Blind spielen: Text verdeckt (Score ×1,5)'
+                      : 'Blind spielen? Text verdecken für Score ×1,5',
+                  child: InkWell(
+                    onTap: () => setState(() => _blind = !_blind),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Icon(
+                        _blind ? Icons.visibility_off : Icons.visibility,
+                        key: Key(
+                            'blind-${widget.level.number}-${_blind ? 'on' : 'off'}'),
+                        size: 24,
+                        color: _blind ? palette.gold : palette.inkFaded,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 4),
             Text(
-              level.text,
+              widget.level.text,
               style: ScriptoriumText.verse
                   .copyWith(fontSize: 14, color: palette.inkFaded),
             ),
@@ -58,14 +93,15 @@ class LevelItem extends StatelessWidget {
               children: [
                 for (final difficulty in Difficulty.values)
                   WaxSeal(
-                    key: Key('seal-${level.number}-${difficulty.name}'),
+                    key: Key('seal-${widget.level.number}-${difficulty.name}'),
                     difficulty: difficulty,
                     progress: progress,
                     onPressed: () {
                       final audioController = context.read<AudioController>();
                       audioController.playSfx(SfxType.buttonTap);
                       GoRouter.of(context).go(
-                          '/play/session/${level.number}/${difficulty.name}');
+                          '/play/session/${widget.level.number}/${difficulty.name}'
+                          '${_blind ? '?blind=1' : ''}');
                     },
                   ),
               ],

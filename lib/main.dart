@@ -152,11 +152,14 @@ class MyApp extends StatelessWidget {
                           Difficulty.slow;
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
+                      final startBlind =
+                          state.uri.queryParameters['blind'] == '1';
                       return buildMyTransition<void>(
                         child: PlaySessionScreen(
                           level,
                           difficulty,
                           key: const Key('play session'),
+                          startBlind: startBlind,
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );
@@ -170,6 +173,7 @@ class MyApp extends StatelessWidget {
                       final levelState = map['levelState'] as LevelState;
                       final lesson = map['lesson'] as Lesson;
                       final difficulty = map['difficulty'] as Difficulty;
+                      final previousBest = map['previousBest'] as Score?;
                       // The celebration verse crossfades into the win
                       // screen instead of being pushed away (#55).
                       return CustomTransitionPage<void>(
@@ -183,6 +187,7 @@ class MyApp extends StatelessWidget {
                           lesson: lesson,
                           levelState: levelState,
                           difficulty: difficulty,
+                          previousBest: previousBest,
                         ),
                       );
                     },

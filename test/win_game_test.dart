@@ -76,5 +76,39 @@ void main() {
     // One error on seal I: two earned stars out of three.
     expect(find.byIcon(Icons.star), findsNWidgets(2));
     expect(find.byIcon(Icons.star_border), findsNWidgets(1));
+    // No previous best passed: this run is the first best time.
+    expect(find.text('Neue Bestzeit!'), findsOneWidget);
+  });
+
+  testWidgets('WinGameScreen compares against the previous best time',
+      (tester) async {
+    Widget screen(Score? previousBest) => MultiProvider(
+          providers: [
+            Provider<AdsController?>.value(value: null),
+            ChangeNotifierProvider<InAppPurchaseController?>.value(value: null),
+            Provider(create: (_) => Palette()),
+          ],
+          child: MaterialApp(
+            home: WinGameScreen(
+              score:
+                  Score(score: 42, duration: const Duration(seconds: 90)),
+              lesson: _lesson(),
+              levelState: _finishedState(),
+              difficulty: Difficulty.slow,
+              previousBest: previousBest,
+            ),
+          ),
+        );
+
+    // Faster than the previous best: celebrate.
+    await tester.pumpWidget(screen(
+        Score(score: 10, duration: const Duration(seconds: 120))));
+    expect(find.text('Neue Bestzeit!'), findsOneWidget);
+
+    // Slower: show what to beat.
+    await tester.pumpWidget(screen(
+        Score(score: 10, duration: const Duration(seconds: 60))));
+    expect(find.text('Bestzeit: 01:00'), findsOneWidget);
+    expect(find.text('Neue Bestzeit!'), findsNothing);
   });
 }

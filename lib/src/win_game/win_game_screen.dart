@@ -24,13 +24,21 @@ class WinGameScreen extends StatelessWidget {
   final LevelState levelState;
   final Difficulty difficulty;
 
+  /// The best stored run on this verse/difficulty before this one,
+  /// for the time comparison; null on the first win.
+  final Score? previousBest;
+
   const WinGameScreen({
     super.key,
     required this.score,
     required this.lesson,
     required this.levelState,
     required this.difficulty,
+    this.previousBest,
   });
+
+  bool get _isNewBestTime =>
+      previousBest == null || score.duration < previousBest!.duration;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +118,17 @@ class WinGameScreen extends StatelessWidget {
                 'Zeit: ${score.formattedTime}',
                 textAlign: TextAlign.center,
                 style: ScriptoriumText.label.copyWith(color: palette.inkFaded),
+              ),
+            ),
+            // Achieved time compared to the best run so far.
+            Center(
+              child: Text(
+                _isNewBestTime
+                    ? 'Neue Bestzeit!'
+                    : 'Bestzeit: ${previousBest!.formattedTime}',
+                style: ScriptoriumText.label.copyWith(
+                  color: _isNewBestTime ? palette.gold : palette.inkFaded,
+                ),
               ),
             ),
           ],

@@ -170,7 +170,13 @@ class MyApp extends StatelessWidget {
                       final levelState = map['levelState'] as LevelState;
                       final lesson = map['lesson'] as Lesson;
                       final difficulty = map['difficulty'] as Difficulty;
-                      return buildMyTransition<void>(
+                      // The celebration verse crossfades into the win
+                      // screen instead of being pushed away (#55).
+                      return CustomTransitionPage<void>(
+                        transitionDuration: const Duration(milliseconds: 500),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(opacity: animation, child: child),
                         child: WinGameScreen(
                           score: score,
                           key: const Key('win game'),
@@ -178,7 +184,6 @@ class MyApp extends StatelessWidget {
                           levelState: levelState,
                           difficulty: difficulty,
                         ),
-                        color: context.watch<Palette>().backgroundPlaySession,
                       );
                     },
                   )

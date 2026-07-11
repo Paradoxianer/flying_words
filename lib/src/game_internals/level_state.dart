@@ -33,6 +33,29 @@ class LevelState extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _textHidden = false;
+  bool _blindRun = false;
+
+  /// Whether the verse text panel is hidden ("no cheat sheet" training, #27).
+  bool get textHidden => _textHidden;
+
+  /// True while the text has been hidden since before the first word was
+  /// solved and never shown again - such a run earns the blind bonus.
+  bool get blindRun => _blindRun && _textHidden;
+
+  void setTextHidden(bool hidden) {
+    if (_textHidden == hidden) return;
+    _textHidden = hidden;
+    if (hidden) {
+      if (_wordIndex == 0) {
+        _blindRun = true;
+      }
+    } else {
+      _blindRun = false;
+    }
+    notifyListeners();
+  }
+
   /// Called when the player catches the right word.
   void registerCatch() {
     _streak++;

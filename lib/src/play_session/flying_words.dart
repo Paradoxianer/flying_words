@@ -177,6 +177,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
               : () {
                   setState(() {
                     if (index == _correctWordIndex) {
+                      widget.state.registerCatch();
                       // Remember where the word was caught for the popup.
                       _caughtWord = _allWords[index];
                       _caughtAlignment = Alignment(dx, dy);
@@ -223,6 +224,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
               _CaughtWordPopup(
                 key: ValueKey(_caughtTick),
                 word: _caughtWord!,
+                combo: widget.state.streak,
                 alignment: _caughtAlignment,
                 color: palette.gold,
               ),
@@ -233,15 +235,18 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   }
 }
 
-/// A short golden "+word" popup where the player caught the right word.
+/// A short golden popup where the player caught the right word; from the
+/// second catch in a row it also celebrates the combo ("x3").
 class _CaughtWordPopup extends StatelessWidget {
   final String word;
+  final int combo;
   final Alignment alignment;
   final Color color;
 
   const _CaughtWordPopup({
     super.key,
     required this.word,
+    required this.combo,
     required this.alignment,
     required this.color,
   });
@@ -262,11 +267,12 @@ class _CaughtWordPopup extends StatelessWidget {
         );
       },
       child: Text(
-        word,
+        combo >= 2 ? '$word  ×$combo' : word,
         style: TextStyle(
           fontFamily: displayFontFamily,
           fontWeight: FontWeight.w700,
-          fontSize: 26,
+          // A long combo pops a little bigger.
+          fontSize: combo >= 2 ? 30 : 26,
           color: color,
           decoration: TextDecoration.none,
         ),

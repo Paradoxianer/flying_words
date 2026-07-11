@@ -10,12 +10,22 @@ class LevelState extends ChangeNotifier {
   final length;
   int _wordIndex = 0;
   final Set<int> _errors = <int>{};
+  int _streak = 0;
 
   LevelState({required this.onWin, required this.length});
   //returns the wortindex at wich we are in the game
   int get wordIndex => _wordIndex;
   int get numErrors => _errors.length;
   Set<int> get Errors => _errors;
+
+  /// Consecutive correctly caught words; any error resets it.
+  int get streak => _streak;
+
+  /// Called when the player catches the right word.
+  void registerCatch() {
+    _streak++;
+    notifyListeners();
+  }
 
   void setWordIndex(int index) {
     _wordIndex = index;
@@ -28,10 +38,10 @@ class LevelState extends ChangeNotifier {
   }
 
   void addErrorIndex(int index) {
+    _streak = 0;
     //only register first mistake on the word... maybe later find a more fancy way to count multiple erros
-    if (_errors.add(index)) {
-      notifyListeners();
-    }
+    _errors.add(index);
+    notifyListeners();
   }
 
   void evaluate() {

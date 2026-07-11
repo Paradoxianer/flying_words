@@ -113,15 +113,19 @@ void guardedMain() {
   //   inAppPurchaseController.restorePurchases();
   // }
 
-  runApp(
-    MyApp(
-      settingsPersistence: LocalStorageSettingsPersistence(),
-      playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
-      inAppPurchaseController: inAppPurchaseController,
-      adsController: adsController,
-      gamesServicesController: gamesServicesController,
-    ),
-  );
+  // Load the curated verses from their JSON asset before starting the app,
+  // so the (synchronous) router and level selection have them ready.
+  loadCuratedVerses().then((_) {
+    runApp(
+      MyApp(
+        settingsPersistence: LocalStorageSettingsPersistence(),
+        playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
+        inAppPurchaseController: inAppPurchaseController,
+        adsController: adsController,
+        gamesServicesController: gamesServicesController,
+      ),
+    );
+  });
 }
 
 Logger _log = Logger('main.dart');

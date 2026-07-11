@@ -4,11 +4,15 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/main.dart';
+import 'package:flying_words/src/level_selection/levels.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
 
 void main() {
   testWidgets('smoke test', (tester) async {
+    // The curated verses are normally loaded before runApp.
+    await loadCuratedVerses();
+
     // Build our game and trigger a frame.
     await tester.pumpWidget(MyApp(
       settingsPersistence: MemoryOnlySettingsPersistence(),
@@ -38,6 +42,6 @@ void main() {
     expect(find.text('Wähle deine Herausforderung'), findsOneWidget);
 
     // The first verse is offered as a lesson.
-    expect(find.text('1. Korinther 12, 6'), findsOneWidget);
+    expect(find.text('1. Korinther 6, 12'), findsOneWidget);
   });
 }

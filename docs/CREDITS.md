@@ -21,6 +21,16 @@ Quelle: https://freemusicarchive.org/music/mr-smith
 Soundeffekte von **Filip Hracek**, CC0 (Public Domain) — keine Attribution
 erforderlich, Nennung trotzdem fair.
 
+## Schriften
+
+Beide unter der [SIL Open Font License 1.1](https://scripts.sil.org/OFL)
+(Lizenztexte liegen in `assets/fonts/`):
+
+- **Cormorant Garamond** — © 2015 The Cormorant Project Authors
+  (github.com/CatharsisFonts/Cormorant)
+- **Source Serif 4** — © 2014 The Source Serif 4 Project Authors
+  (github.com/adobe-fonts/source-serif)
+
 ## Code-Basis
 
 Basiert auf dem [Flutter Casual Games Template](https://github.com/flutter/samples)

@@ -29,7 +29,7 @@ class LevelSelectionScreen extends StatelessWidget {
                 child: Text(
                   'Wähle deine Herausforderung',
                   style:
-                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+                      TextStyle(fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
               ),

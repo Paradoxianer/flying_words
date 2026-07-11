@@ -62,6 +62,7 @@ void main() {
           score: Score(score: 42, duration: const Duration(seconds: 90)),
           lesson: _lesson(),
           levelState: _finishedState(errors: {2}),
+          difficulty: Difficulty.slow,
         ),
       ),
     ));
@@ -72,5 +73,8 @@ void main() {
     expect(find.textContaining('Score: 42'), findsOneWidget);
     expect(find.textContaining('Fehler: 1'), findsOneWidget);
     expect(find.textContaining('Zeit: 01:30'), findsOneWidget);
+    // One error on seal I: two earned stars out of three.
+    expect(find.byIcon(Icons.star), findsNWidgets(2));
+    expect(find.byIcon(Icons.star_border), findsNWidgets(1));
   });
 }

@@ -26,10 +26,10 @@ void main() {
     // Go to the settings.
     await tester.tap(find.text('Einstellungen'));
     await tester.pumpAndSettle();
-    expect(find.text('Music'), findsOneWidget);
+    expect(find.text('Musik'), findsOneWidget);
 
     // Go back to the main menu.
-    await tester.tap(find.text('Back'));
+    await tester.tap(find.text('Zurück'));
     await tester.pumpAndSettle();
 
     // Go to the level selection.

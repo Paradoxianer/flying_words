@@ -11,6 +11,7 @@ import '../audio/sounds.dart';
 import '../games_services/games_services.dart';
 import '../settings/settings.dart';
 import '../style/palette.dart';
+import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -28,17 +29,32 @@ class MainMenuScreen extends StatelessWidget {
       body: ResponsiveScreen(
         mainAreaProminence: 0.45,
         squarishMainArea: Center(
-          child: Transform.rotate(
-            angle: -0.1,
-            child: const Text(
-              'Flying Words',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
-                fontSize: 55,
-                height: 1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Transform.rotate(
+                angle: -0.06,
+                child: Text(
+                  'Flying Words',
+                  textAlign: TextAlign.center,
+                  style: ScriptoriumText.display
+                      .copyWith(color: palette.inkFullOpacity),
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+              // A golden rule line, like an illuminated manuscript.
+              Container(
+                width: 140,
+                height: 2,
+                color: palette.gold,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Bibelverse spielend auswendig lernen',
+                textAlign: TextAlign.center,
+                style: ScriptoriumText.verse.copyWith(color: palette.inkFaded),
+              ),
+            ],
           ),
         ),
         rectangularMenuArea: Column(
@@ -65,7 +81,7 @@ class MainMenuScreen extends StatelessWidget {
                 ready: gamesServicesController.signedIn,
                 child: ElevatedButton(
                   onPressed: () => gamesServicesController.showLeaderboard(),
-                  child: const Text('Leaderboard'),
+                  child: const Text('Bestenliste'),
                 ),
               ),
               _gap,
@@ -88,7 +104,11 @@ class MainMenuScreen extends StatelessWidget {
               ),
             ),
             _gap,
-            const Text('Music von Mr Smith'),
+            Text(
+              'Musik von Mr Smith (CC BY 4.0)',
+              style: ScriptoriumText.verse
+                  .copyWith(fontSize: 13, color: palette.inkFaded),
+            ),
             _gap,
           ],
         ),

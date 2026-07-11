@@ -30,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
           children: [
             _gap,
             const Text(
-              'Settings',
+              'Einstellungen',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
@@ -45,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
             ValueListenableBuilder<bool>(
               valueListenable: settings.soundsOn,
               builder: (context, soundsOn, child) => _SettingsLine(
-                'Sound FX',
+                'Soundeffekte',
                 Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
                 onSelected: () => settings.toggleSoundsOn(),
               ),
@@ -53,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
             ValueListenableBuilder<bool>(
               valueListenable: settings.musicOn,
               builder: (context, musicOn, child) => _SettingsLine(
-                'Music',
+                'Musik',
                 Icon(musicOn ? Icons.music_note : Icons.music_off),
                 onSelected: () => settings.toggleMusicOn(),
               ),
@@ -80,13 +80,13 @@ class SettingsScreen extends StatelessWidget {
                 };
               }
               return _SettingsLine(
-                'Remove ads',
+                'Werbung entfernen',
                 icon,
                 onSelected: callback,
               );
             }),
             _SettingsLine(
-              'Reset progress',
+              'Fortschritt zurücksetzen',
               const Icon(Icons.delete),
               onSelected: () {
                 context.read<PlayerProgress>().reset();
@@ -94,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
                 final messenger = ScaffoldMessenger.of(context);
                 messenger.showSnackBar(
                   const SnackBar(
-                      content: Text('Player progress has been reset.')),
+                      content: Text('Der Fortschritt wurde zurückgesetzt.')),
                 );
               },
             ),
@@ -105,7 +105,7 @@ class SettingsScreen extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).pop();
           },
-          child: const Text('Back'),
+          child: const Text('Zurück'),
         ),
       ),
     );

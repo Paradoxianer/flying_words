@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../game_internals/level_state.dart';
+import '../style/palette.dart';
 
 /// A small live scoreboard shown during a play session: how far the player
 /// is into the verse, the elapsed time and the number of errors so far.
@@ -23,9 +25,9 @@ class PlayScoreboard extends StatefulWidget {
 
 class _PlayScoreboardState extends State<PlayScoreboard> {
   static const _textStyle = TextStyle(
-    fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
+    fontFamily: 'Cormorant Garamond',
+    fontWeight: FontWeight.w700,
     fontSize: 20,
-    color: Colors.black87,
   );
 
   late final Timer _timer;
@@ -64,25 +66,28 @@ class _PlayScoreboardState extends State<PlayScoreboard> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<Palette>();
     final currentWord = min(widget.state.wordIndex + 1, widget.wordCount);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _entry(Icons.menu_book, '$currentWord/${widget.wordCount}'),
-        _entry(Icons.timer_outlined, _formattedTime),
-        _entry(Icons.close, '${widget.state.numErrors}',
-            iconColor: Colors.deepOrangeAccent),
+        _entry(palette, Icons.menu_book, '$currentWord/${widget.wordCount}'),
+        _entry(palette, Icons.timer_outlined, _formattedTime),
+        _entry(palette, Icons.close, '${widget.state.numErrors}',
+            iconColor: palette.sealRed),
       ],
     );
   }
 
-  Widget _entry(IconData icon, String text, {Color? iconColor}) {
+  Widget _entry(Palette palette, IconData icon, String text,
+      {Color? iconColor}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 22, color: iconColor ?? Colors.black54),
+        Icon(icon, size: 22, color: iconColor ?? palette.inkFaded),
         const SizedBox(width: 4),
-        Text(text, style: _textStyle),
+        Text(text,
+            style: _textStyle.copyWith(color: palette.inkFullOpacity)),
       ],
     );
   }

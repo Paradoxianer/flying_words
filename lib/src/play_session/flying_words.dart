@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../game_internals/level_state.dart';
+import '../style/palette.dart';
+import '../style/scriptorium_text.dart';
 
 class FlyingWord extends StatefulWidget {
   final Duration duration;
@@ -15,7 +17,7 @@ class FlyingWord extends StatefulWidget {
   final LevelState state;
   final numberFlyingWords;
 
-  const FlyingWord({super.key, 
+  const FlyingWord({super.key,
     required this.state,
     required this.lesson,
     this.duration = const Duration(seconds: 15),
@@ -35,11 +37,22 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   // Index of the correct word within [_allWords]; set by [_randomWordsList].
   late int _correctWordIndex;
 
+  /// Words of the current round that were tapped although they were wrong:
+  /// they get an ink blot and stop reacting, so the same mistake cannot be
+  /// tapped twice.
+  final Set<int> _misTapped = {};
+
+  // Feedback popup for a correctly caught word.
+  String? _caughtWord;
+  Alignment _caughtAlignment = Alignment.center;
+  int _caughtTick = 0;
+
   double _radius = 0.0;
   List<String> get _words => widget.lesson.words;
 
   void _textWordsList() {
     _allWords = _words;
+    _misTapped.clear();
     _allAngles = List<double>.empty(growable: true);
     final double angleSlice = (2 * pi) / (_allWords.length + 1);
     for (int i = 0; i < _allWords.length + 1; i++) {
@@ -51,6 +64,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
 
   void _randomWordsList(int howMany) {
     final currentWord = _words[widget.state.wordIndex];
+    _misTapped.clear();
     // Draw without replacement so neither the correct word nor any
     // distraction word can show up twice on the screen.
     final candidates =
@@ -127,12 +141,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  Widget _buildWord(int index, double aspectRatio) {
+  Widget _buildWord(int index, double aspectRatio, Palette palette) {
     final audioController = context.read<AudioController>();
     final angle = _allAngles[_wordIndexes[index]];
     // Direction in alignment space; the aspect ratio factor makes the
@@ -146,35 +155,58 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     final edge = max(ux.abs(), uy.abs());
     final dx = _radius * ux / edge;
     final dy = _radius * uy / edge;
+    final misTapped = _misTapped.contains(index);
+
+    final word = Text(
+      _allWords[index],
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontFamily: bodyFontFamily,
+        fontWeight: FontWeight.w600,
+        fontSize: 22,
+        color: misTapped ? palette.sealRed : palette.inkFullOpacity,
+        decoration: TextDecoration.none,
+      ),
+    );
+
     return Align(
         alignment: Alignment(dx, dy),
         child: GestureDetector(
-          onTap: () {
-            setState(() {
-              if (index == _correctWordIndex) {
-                print("correkt Wort");
-                audioController.playSfx(SfxType.swishSwish);
-                _nextWord();
-              } else {
-                print("falsches Wort index: ${widget.state.wordIndex}");
-                widget.state.addErrorIndex(widget.state.wordIndex);
-
-                audioController.playSfx(SfxType.huhsh);
-              }
-            });
-          },
-          child: Text(_allWords[index],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  decoration: TextDecoration.none)),
+          onTap: misTapped
+              ? null
+              : () {
+                  setState(() {
+                    if (index == _correctWordIndex) {
+                      // Remember where the word was caught for the popup.
+                      _caughtWord = _allWords[index];
+                      _caughtAlignment = Alignment(dx, dy);
+                      _caughtTick++;
+                      audioController.playSfx(SfxType.swishSwish);
+                      _nextWord();
+                    } else {
+                      _misTapped.add(index);
+                      widget.state.addErrorIndex(widget.state.wordIndex);
+                      audioController.playSfx(SfxType.huhsh);
+                    }
+                  });
+                },
+          child: misTapped
+              // A wrongly tapped word gets an ink blot and fades out.
+              ? Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: palette.sealRed.withValues(alpha: 0.15),
+                  ),
+                  child: Opacity(opacity: 0.55, child: word),
+                )
+              : word,
         ));
   }
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<Palette>();
     return LayoutBuilder(builder: (context, constraints) {
       // Use the aspect ratio of the actual play area, not of the whole
       // screen - the words fly inside this widget.
@@ -182,14 +214,63 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
           ? constraints.maxWidth / constraints.maxHeight
           : 1.0;
       return Container(
-        color: Colors.white,
+        color: palette.parchmentLight,
         child: Stack(
           children: [
             for (int index = 0; index < _allWords.length; index++)
-              _buildWord(index, aspectRatio),
+              _buildWord(index, aspectRatio, palette),
+            if (_caughtWord != null)
+              _CaughtWordPopup(
+                key: ValueKey(_caughtTick),
+                word: _caughtWord!,
+                alignment: _caughtAlignment,
+                color: palette.gold,
+              ),
           ],
         ),
       );
     });
+  }
+}
+
+/// A short golden "+word" popup where the player caught the right word.
+class _CaughtWordPopup extends StatelessWidget {
+  final String word;
+  final Alignment alignment;
+  final Color color;
+
+  const _CaughtWordPopup({
+    super.key,
+    required this.word,
+    required this.alignment,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeOut,
+      builder: (context, t, child) {
+        return Align(
+          alignment: Alignment(alignment.x, alignment.y - 0.25 * t),
+          child: Opacity(
+            opacity: (1 - t).clamp(0, 1),
+            child: child,
+          ),
+        );
+      },
+      child: Text(
+        word,
+        style: TextStyle(
+          fontFamily: displayFontFamily,
+          fontWeight: FontWeight.w700,
+          fontSize: 26,
+          color: color,
+          decoration: TextDecoration.none,
+        ),
+      ),
+    );
   }
 }

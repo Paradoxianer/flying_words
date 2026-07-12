@@ -28,6 +28,7 @@ import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/help/help_screen.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
+import 'src/leaderboard/local_leaderboard_screen.dart';
 import 'src/legal/impressum_screen.dart';
 import 'src/legal/privacy_screen.dart';
 import 'src/level_selection/level_selection_screen.dart';
@@ -245,6 +246,11 @@ class MyApp extends StatelessWidget {
               path: 'privacy',
               builder: (context, state) =>
                   const PrivacyScreen(key: Key('privacy')),
+            ),
+            GoRoute(
+              path: 'leaderboard',
+              builder: (context, state) =>
+                  const LocalLeaderboardScreen(key: Key('leaderboard')),
             ),
           ]),
     ],

@@ -6,6 +6,13 @@
   "play": "Spielen",
   "achievements": "Erfolge",
   "leaderboard": "Bestenliste",
+  "leaderboardTotalScore": "Gesamtpunktzahl: {score}",
+  "@leaderboardTotalScore": {
+    "placeholders": {
+      "score": {"type": "int"}
+    }
+  },
+  "leaderboardEmpty": "Noch keine Läufe abgeschlossen. Spiele einen Vers, um hier aufzutauchen!",
   "settings": "Einstellungen",
   "musicAttribution": "Musik von Mr Smith (CC BY 4.0)",
 

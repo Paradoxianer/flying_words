@@ -6,6 +6,13 @@
   "play": "Play",
   "achievements": "Achievements",
   "leaderboard": "Leaderboard",
+  "leaderboardTotalScore": "Total score: {score}",
+  "@leaderboardTotalScore": {
+    "placeholders": {
+      "score": {"type": "int"}
+    }
+  },
+  "leaderboardEmpty": "No runs completed yet. Play a verse to show up here!",
   "settings": "Settings",
   "musicAttribution": "Music by Mr Smith (CC BY 4.0)",
 

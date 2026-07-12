@@ -6,9 +6,13 @@ import 'package:provider/provider.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 
-/// After a win the verse assembles itself: the words glide in from the
-/// outside, staggered in verse order, and settle into a readable, centered
-/// text with the missed words marked in sealing-wax red (#55).
+/// After a win the verse assembles itself: every word glides in from the
+/// outside at once and settles into a readable, centered text with the
+/// missed words marked in sealing-wax red (#55).
+///
+/// Words used to fly in staggered, one after another - readable, but slow
+/// to finish on longer verses that players see over and over while
+/// memorizing them (#69), so they now all arrive together instead.
 class CelebrationVerse extends StatelessWidget {
   final List<String> words;
   final Set<int> errors;
@@ -19,6 +23,8 @@ class CelebrationVerse extends StatelessWidget {
     required this.errors,
   });
 
+  static const _duration = Duration(milliseconds: 500);
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
@@ -28,7 +34,8 @@ class CelebrationVerse extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 0, end: 1),
-          duration: Duration(milliseconds: 600 + 90 * wordCount),
+          duration: _duration,
+          curve: Curves.easeOutCubic,
           builder: (context, t, _) {
             return Wrap(
               alignment: WrapAlignment.center,
@@ -46,17 +53,12 @@ class CelebrationVerse extends StatelessWidget {
   }
 
   Widget _word(Palette palette, int index, double t, int wordCount) {
-    // Staggered per-word progress: word i animates within the window
-    // [i, i+3] of the overall timeline (measured in word slots), so the
-    // verse writes itself word by word.
-    final slots = wordCount + 3;
-    final progress = Curves.easeOutCubic
-        .transform(((t * slots - index) / 3).clamp(0.0, 1.0));
-    // Each word flies in from its own direction outside the text.
+    // Each word flies in from its own direction outside the text, all on
+    // the same timeline t.
     final angle = index * 2 * pi / wordCount;
-    final offset = Offset(cos(angle), sin(angle)) * 140 * (1 - progress);
+    final offset = Offset(cos(angle), sin(angle)) * 140 * (1 - t);
     return Opacity(
-      opacity: progress,
+      opacity: t,
       child: Transform.translate(
         offset: offset,
         child: Text(

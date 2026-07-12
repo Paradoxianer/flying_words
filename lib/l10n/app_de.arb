@@ -72,6 +72,7 @@
 
   "paused": "Pausiert",
   "mouseHint": "Tipp: Am flüssigsten spielt sich Flying Words auf einem Touch-Gerät — mit der Maus bekommst du etwas mehr Zeit.",
+  "tapToSkip": "Tippen zum Überspringen",
 
   "blindPlaceholder": "Text verdeckt — aus dem Gedächtnis! (Score ×1,5)",
 
@@ -93,5 +94,17 @@
       "errors": {"type": "int"},
       "time": {"type": "String"}
     }
-  }
+  },
+
+  "help": "Hilfe",
+  "helpHowToPlayTitle": "So wird gespielt",
+  "helpHowToPlayBody": "Ein Bibelvers wird dir Wort für Wort vorgestellt. Danach fliegen mehrere Wörter über den Bildschirm — tippe immer auf das nächste richtige Wort des Verses, um ihn Stück für Stück auswendig zu lernen.",
+  "helpSealsTitle": "Die Siegel I, II, III",
+  "helpSealsBody": "Jeder Vers hat drei Schwierigkeitsstufen: Siegel I (Bronze, langsam), Siegel II (Silber, schneller) und Siegel III (Gold, sehr schnell). Siegel II schaltet sich frei, sobald du in Siegel I mindestens 2 Sterne erreicht hast — Siegel III entsprechend nach 2 Sternen in Siegel II.",
+  "helpStarsTitle": "Sterne",
+  "helpStarsBody": "In Siegel I und II gibt es bis zu 3 Sterne: 3 Sterne für einen fehlerfreien Lauf, 2 Sterne für höchstens 2 Fehler, sonst 1 Stern fürs Schaffen. Siegel III bringt bei Erfolg einen einzelnen Meisterstern.",
+  "helpBlindTitle": "Das Auge — blind spielen",
+  "helpBlindBody": "Über dem Vers kannst du mit dem Augensymbol den Text verbergen und ganz aus dem Gedächtnis spielen. Ein erfolgreicher blinder Lauf bringt 50 % mehr Punkte.",
+  "helpOwnVersesTitle": "Eigene Verse",
+  "helpOwnVersesBody": "Hast du alle vorgegebenen Verse in Siegel I geschafft, kannst du dir eigene Bibelstellen hinzufügen und ebenso spielend auswendig lernen."
 }

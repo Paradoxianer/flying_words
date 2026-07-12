@@ -24,6 +24,7 @@ import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
+import '../style/scriptorium_text.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final Lesson lesson;
@@ -47,6 +48,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   static const _preCelebrationDuration = Duration(milliseconds: 100);
 
   bool _duringCelebration = false;
+
+  /// Resolved early by [_skipCelebration] when the player taps during the
+  /// celebration, so they don't have to sit through it every single win
+  /// (#69) - most useful on longer verses seen many times while practicing.
+  Completer<void>? _celebrationWait;
 
   late DateTime _startOfPlay;
 
@@ -105,6 +111,24 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _setPaused(levelState, false);
   }
 
+  /// Waits for [duration], but resolves early if [_skipCelebration] is
+  /// called in the meantime.
+  Future<void> _waitOrSkip(Duration duration) async {
+    final completer = Completer<void>();
+    _celebrationWait = completer;
+    final timer = Timer(duration, () {
+      if (!completer.isCompleted) completer.complete();
+    });
+    await completer.future;
+    timer.cancel();
+    _celebrationWait = null;
+  }
+
+  void _skipCelebration() {
+    final wait = _celebrationWait;
+    if (wait != null && !wait.isCompleted) wait.complete();
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
@@ -132,76 +156,102 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             if (didPop) return;
             _confirmLeave(context);
           },
-          child: IgnorePointer(
-        ignoring: _duringCelebration,
-        child: Scaffold(
-          backgroundColor: palette.backgroundPlaySession,
-          body: Stack(
-            children: [
-                Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Consumer<LevelState>(
-                              builder: (context, levelState, child) =>
-                                  PlayScoreboard(
-                                state: levelState,
-                                wordCount: widget.lesson.words.length,
+          child: Scaffold(
+            backgroundColor: palette.backgroundPlaySession,
+            body: Stack(
+              children: [
+                IgnorePointer(
+                  ignoring: _duringCelebration,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Consumer<LevelState>(
+                                builder: (context, levelState, child) =>
+                                    PlayScoreboard(
+                                  state: levelState,
+                                  wordCount: widget.lesson.words.length,
+                                ),
                               ),
                             ),
-                          ),
-                          InkResponse(
-                            onTap: () => _openSettings(context),
-                            child: Image.asset(
-                              'assets/images/settings.png',
-                              semanticLabel: l10n.settings,
+                            InkResponse(
+                              onTap: () => _openSettings(context),
+                              child: Image.asset(
+                                'assets/images/settings.png',
+                                semanticLabel: l10n.settings,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Consumer<LevelState>(
-                      builder: (context, levelState, child) => TextProgress(
-                          lesson: widget.lesson, state: levelState),
-                    ),
-                    Consumer<LevelState>(
-                      builder: (context, levelState, child) => Expanded(
-                          child: FlyingWord(
-                              lesson: widget.lesson,
-                              state: levelState,
-                              duration: difficultySpeed[widget.difficulty] ?? Duration(seconds: 7),
-                              numberFlyingWords:
-                                  difficultyWordcount[widget.difficulty])),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () => _confirmLeave(context),
-                          child: Text(l10n.back),
+                      Consumer<LevelState>(
+                        builder: (context, levelState, child) => TextProgress(
+                            lesson: widget.lesson, state: levelState),
+                      ),
+                      Consumer<LevelState>(
+                        builder: (context, levelState, child) => Expanded(
+                          child: Stack(
+                            children: [
+                              FlyingWord(
+                                  lesson: widget.lesson,
+                                  state: levelState,
+                                  duration: difficultySpeed[widget.difficulty] ??
+                                      Duration(seconds: 7),
+                                  numberFlyingWords:
+                                      difficultyWordcount[widget.difficulty]),
+                              // Confined to the play area, not the whole
+                              // screen (#69).
+                              Visibility(
+                                visible: _duringCelebration,
+                                child: IgnorePointer(
+                                  child: Confetti(
+                                    isStopped: !_duringCelebration,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => _confirmLeave(context),
+                            child: Text(l10n.back),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Tapping anywhere skips the fixed celebration wait (#69);
+                // the game controls underneath stay non-interactive during
+                // the celebration either way (see the IgnorePointer above).
+                if (_duringCelebration)
+                  Positioned.fill(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: _skipCelebration,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 24),
+                          child: Text(
+                            l10n.tapToSkip,
+                            style: ScriptoriumText.body
+                                .copyWith(color: palette.inkFaded),
+                          ),
                         ),
                       ),
                     ),
-                  ],
-              ),
-              SizedBox.expand(
-                child: Visibility(
-                  visible: _duringCelebration,
-                  child: IgnorePointer(
-                    child: Confetti(
-                      isStopped: !_duringCelebration,
-                    ),
                   ),
-                ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
           ),
         );
       }),
@@ -269,8 +319,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       await gamesServicesController.submitLeaderboardScore(score);
     }
 
-    /// Give the player some time to see the celebration animation.
-    await Future<void>.delayed(_celebrationDuration);
+    /// Give the player some time to see the celebration animation - unless
+    /// they tap to skip ahead (#69).
+    await _waitOrSkip(_celebrationDuration);
     if (!mounted) return;
 
     GoRouter.of(context).go('/play/won', extra: {

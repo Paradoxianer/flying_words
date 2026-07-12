@@ -93,5 +93,17 @@
       "errors": {"type": "int"},
       "time": {"type": "String"}
     }
-  }
+  },
+
+  "help": "Help",
+  "helpHowToPlayTitle": "How to play",
+  "helpHowToPlayBody": "A Bible verse is shown to you word by word. Then several words fly across the screen — always tap the next correct word of the verse to learn it, piece by piece, by heart.",
+  "helpSealsTitle": "Seals I, II, III",
+  "helpSealsBody": "Every verse has three difficulty levels: Seal I (bronze, slow), Seal II (silver, faster) and Seal III (gold, very fast). Seal II unlocks once you've earned at least 2 stars on Seal I — Seal III unlocks the same way after 2 stars on Seal II.",
+  "helpStarsTitle": "Stars",
+  "helpStarsBody": "Seals I and II offer up to 3 stars: 3 stars for a flawless run, 2 stars for at most 2 mistakes, otherwise 1 star for finishing. Seal III awards a single master star on success.",
+  "helpBlindTitle": "The eye — play blind",
+  "helpBlindBody": "Above the verse, the eye icon lets you hide the text and play entirely from memory. A successful blind run earns 50% more points.",
+  "helpOwnVersesTitle": "Your own verses",
+  "helpOwnVersesBody": "Once you've finished every curated verse on Seal I, you can add your own Bible passages and learn them by heart the same way."
 }

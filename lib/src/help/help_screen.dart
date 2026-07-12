@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
@@ -18,6 +19,7 @@ class HelpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: palette.backgroundSettings,
@@ -26,49 +28,35 @@ class HelpScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 40),
             Text(
-              'Hilfe',
+              l10n.help,
               textAlign: TextAlign.center,
               style:
                   ScriptoriumText.display.copyWith(color: palette.inkFullOpacity),
             ),
             _gap,
             _Section(
-              title: 'So wird gespielt',
-              body: 'Ein Bibelvers wird dir Wort für Wort vorgestellt. '
-                  'Danach fliegen mehrere Wörter über den Bildschirm — tippe '
-                  'immer auf das nächste richtige Wort des Verses, um ihn '
-                  'Stück für Stück auswendig zu lernen.',
+              title: l10n.helpHowToPlayTitle,
+              body: l10n.helpHowToPlayBody,
               palette: palette,
             ),
             _Section(
-              title: 'Die Siegel I, II, III',
-              body: 'Jeder Vers hat drei Schwierigkeitsstufen: Siegel I '
-                  '(Bronze, langsam), Siegel II (Silber, schneller) und '
-                  'Siegel III (Gold, sehr schnell). Siegel II schaltet sich '
-                  'frei, sobald du in Siegel I mindestens 2 Sterne erreicht '
-                  'hast — Siegel III entsprechend nach 2 Sternen in Siegel II.',
+              title: l10n.helpSealsTitle,
+              body: l10n.helpSealsBody,
               palette: palette,
             ),
             _Section(
-              title: 'Sterne',
-              body: 'In Siegel I und II gibt es bis zu 3 Sterne: 3 Sterne für '
-                  'einen fehlerfreien Lauf, 2 Sterne für höchstens 2 Fehler, '
-                  'sonst 1 Stern fürs Schaffen. Siegel III bringt bei '
-                  'Erfolg einen einzelnen Meisterstern.',
+              title: l10n.helpStarsTitle,
+              body: l10n.helpStarsBody,
               palette: palette,
             ),
             _Section(
-              title: 'Das Auge — blind spielen',
-              body: 'Über dem Vers kannst du mit dem Augensymbol den Text '
-                  'verbergen und ganz aus dem Gedächtnis spielen. Ein '
-                  'erfolgreicher blinder Lauf bringt 50 % mehr Punkte.',
+              title: l10n.helpBlindTitle,
+              body: l10n.helpBlindBody,
               palette: palette,
             ),
             _Section(
-              title: 'Eigene Verse',
-              body: 'Hast du alle vorgegebenen Verse in Siegel I geschafft, '
-                  'kannst du dir eigene Bibelstellen hinzufügen und ebenso '
-                  'spielend auswendig lernen.',
+              title: l10n.helpOwnVersesTitle,
+              body: l10n.helpOwnVersesBody,
               palette: palette,
             ),
             _gap,
@@ -78,7 +66,7 @@ class HelpScreen extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).pop();
           },
-          child: const Text('Zurück'),
+          child: Text(l10n.back),
         ),
       ),
     );

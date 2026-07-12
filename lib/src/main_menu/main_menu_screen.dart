@@ -99,7 +99,7 @@ class MainMenuScreen extends StatelessWidget {
                   _gap,
                   ElevatedButton(
                     onPressed: () => GoRouter.of(context).push('/help'),
-                    child: const Text('Hilfe'),
+                    child: Text(l10n.help),
                   ),
                   _gap,
                   Padding(

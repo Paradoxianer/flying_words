@@ -11,6 +11,7 @@ import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
 import 'legal_section.dart';
+import 'provider_info.dart';
 
 class PrivacyScreen extends StatelessWidget {
   const PrivacyScreen({super.key});
@@ -37,7 +38,11 @@ class PrivacyScreen extends StatelessWidget {
             _gap,
             LegalSection(
               title: l10n.privacyControllerTitle,
-              body: l10n.privacyControllerBody,
+              body: l10n.privacyControllerBody(
+                ProviderInfo.name,
+                ProviderInfo.address,
+                ProviderInfo.email,
+              ),
               palette: palette,
             ),
             LegalSection(
@@ -97,7 +102,9 @@ class PrivacyScreen extends StatelessWidget {
             ),
             LegalSection(
               title: l10n.privacyChangesTitle,
-              body: l10n.privacyChangesBody,
+              body: l10n.privacyChangesBody(
+                ProviderInfo.privacyPolicyLastUpdated,
+              ),
               palette: palette,
             ),
             _gap,

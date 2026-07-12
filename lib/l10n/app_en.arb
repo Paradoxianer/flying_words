@@ -110,11 +110,25 @@
 
   "impressum": "Legal Notice",
   "impressumProviderTitle": "Provider",
-  "impressumProviderBody": "[PLACEHOLDER: full name of the individual or organization]\n[PLACEHOLDER: street and house number]\n[PLACEHOLDER: postal code and city]\n[PLACEHOLDER: country]",
+  "impressumProviderBody": "{name}\n{street}\n{zipCity}\n{country}",
+  "@impressumProviderBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "street": {"type": "String"},
+      "zipCity": {"type": "String"},
+      "country": {"type": "String"}
+    }
+  },
   "impressumContactTitle": "Contact",
-  "impressumContactBody": "[PLACEHOLDER: email address]\n[PLACEHOLDER: phone number, if any]",
+  "impressumContactBody": "{email}\n{phone}",
+  "@impressumContactBody": {
+    "placeholders": {
+      "email": {"type": "String"},
+      "phone": {"type": "String"}
+    }
+  },
   "impressumResponsibleTitle": "Responsible for content",
-  "impressumResponsibleBody": "Under German law (§ 18(2) MStV): [PLACEHOLDER: name and address, if different from the provider above]. This entry is only mandatory for editorial content with a certain reach and can otherwise be omitted.",
+  "impressumResponsibleBody": "Unless a different party is named here, the provider named above under 'Provider' is responsible for content under German law (§ 18(2) MStV). This separate entry is only mandatory for editorial content with a certain reach.",
   "impressumDisputeTitle": "Dispute resolution",
   "impressumDisputeBody": "The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr/. You can find our email address above under 'Contact'.\n\nWe are neither obliged nor willing to take part in dispute resolution proceedings before a consumer arbitration board.",
   "impressumLiabilityTitle": "Liability notice",
@@ -123,7 +137,14 @@
   "privacyPolicy": "Privacy Policy",
   "privacyOptions": "Ad privacy options",
   "privacyControllerTitle": "Data controller",
-  "privacyControllerBody": "The controller responsible for data processing under the General Data Protection Regulation (GDPR) is:\n\n[PLACEHOLDER: name/organization]\n[PLACEHOLDER: address]\n[PLACEHOLDER: email address]",
+  "privacyControllerBody": "The controller responsible for data processing under the General Data Protection Regulation (GDPR) is:\n\n{name}\n{address}\n{email}",
+  "@privacyControllerBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "address": {"type": "String"},
+      "email": {"type": "String"}
+    }
+  },
   "privacyOverviewTitle": "General information",
   "privacyOverviewBody": "We only process personal data within the framework of the GDPR's legal provisions. Depending on the processing activity, the legal basis is Art. 6(1)(a) (consent), (b) (contract performance) or (f) (legitimate interest) GDPR, as noted for each activity below. Flying Words does not run its own servers - data is either stored exclusively on your device or transmitted directly to the third-party providers named below.",
   "privacyLocalTitle": "Local storage",
@@ -147,5 +168,10 @@
   "privacyAutomatedTitle": "No automated decision-making",
   "privacyAutomatedBody": "There is no automated decision-making or profiling within the meaning of Art. 22 GDPR that produces legal effects concerning you or similarly significantly affects you.",
   "privacyChangesTitle": "Changes to this privacy policy",
-  "privacyChangesBody": "We will update this privacy policy whenever data processing in the app changes, e.g. when cloud save launches. Last updated: [PLACEHOLDER: date]."
+  "privacyChangesBody": "We will update this privacy policy whenever data processing in the app changes, e.g. when cloud save launches. Last updated: {date}.",
+  "@privacyChangesBody": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  }
 }

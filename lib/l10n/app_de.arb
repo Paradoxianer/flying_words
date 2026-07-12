@@ -110,11 +110,25 @@
 
   "impressum": "Impressum",
   "impressumProviderTitle": "Anbieter",
-  "impressumProviderBody": "[PLATZHALTER: Vor- und Nachname bzw. vollständiger Name der Organisation]\n[PLATZHALTER: Straße und Hausnummer]\n[PLATZHALTER: Postleitzahl und Ort]\n[PLATZHALTER: Land]",
+  "impressumProviderBody": "{name}\n{street}\n{zipCity}\n{country}",
+  "@impressumProviderBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "street": {"type": "String"},
+      "zipCity": {"type": "String"},
+      "country": {"type": "String"}
+    }
+  },
   "impressumContactTitle": "Kontakt",
-  "impressumContactBody": "[PLATZHALTER: E-Mail-Adresse]\n[PLATZHALTER: Telefonnummer, falls vorhanden]",
+  "impressumContactBody": "{email}\n{phone}",
+  "@impressumContactBody": {
+    "placeholders": {
+      "email": {"type": "String"},
+      "phone": {"type": "String"}
+    }
+  },
   "impressumResponsibleTitle": "Verantwortlich für den Inhalt",
-  "impressumResponsibleBody": "Gemäß § 18 Abs. 2 MStV: [PLATZHALTER: Name und Anschrift, falls abweichend vom Anbieter oben]. Diese Angabe ist nur bei journalistisch-redaktionellen Inhalten mit gewisser Reichweite verpflichtend und kann sonst entfallen.",
+  "impressumResponsibleBody": "Sofern hier keine abweichende Person genannt ist, gilt die oben unter „Anbieter“ genannte Person als verantwortlich im Sinne von § 18 Abs. 2 MStV. Diese gesonderte Angabe ist nur bei journalistisch-redaktionellen Inhalten mit gewisser Reichweite verpflichtend.",
   "impressumDisputeTitle": "Streitschlichtung",
   "impressumDisputeBody": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr/. Unsere E-Mail-Adresse findest du oben unter „Kontakt“.\n\nWir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
   "impressumLiabilityTitle": "Haftungshinweis",
@@ -123,7 +137,14 @@
   "privacyPolicy": "Datenschutz",
   "privacyOptions": "Datenschutzeinstellungen für Werbung",
   "privacyControllerTitle": "Verantwortlicher",
-  "privacyControllerBody": "Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:\n\n[PLATZHALTER: Name/Organisation]\n[PLATZHALTER: Anschrift]\n[PLATZHALTER: E-Mail-Adresse]",
+  "privacyControllerBody": "Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:\n\n{name}\n{address}\n{email}",
+  "@privacyControllerBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "address": {"type": "String"},
+      "email": {"type": "String"}
+    }
+  },
   "privacyOverviewTitle": "Allgemeines",
   "privacyOverviewBody": "Wir verarbeiten personenbezogene Daten nur im Rahmen der gesetzlichen Bestimmungen der DSGVO. Die Rechtsgrundlage richtet sich je nach Verarbeitung nach Art. 6 Abs. 1 lit. a (Einwilligung), lit. b (Vertragserfüllung) oder lit. f (berechtigtes Interesse) DSGVO und wird bei den einzelnen Verarbeitungen unten genannt. Flying Words selbst betreibt keine eigenen Server – Daten werden entweder ausschließlich lokal auf deinem Gerät gespeichert oder direkt an die unten genannten Drittanbieter übertragen.",
   "privacyLocalTitle": "Lokale Speicherung",
@@ -147,5 +168,10 @@
   "privacyAutomatedTitle": "Keine automatisierte Entscheidungsfindung",
   "privacyAutomatedBody": "Es findet keine automatisierte Entscheidungsfindung oder ein Profiling im Sinne von Art. 22 DSGVO statt, das dir gegenüber rechtliche Wirkung entfaltet oder dich in ähnlicher Weise erheblich beeinträchtigt.",
   "privacyChangesTitle": "Änderungen dieser Datenschutzerklärung",
-  "privacyChangesBody": "Wir passen diese Datenschutzerklärung an, sobald sich die Datenverarbeitung in der App ändert, z. B. bei Einführung der Cloud-Speicherung. Stand: [PLATZHALTER: Datum]."
+  "privacyChangesBody": "Wir passen diese Datenschutzerklärung an, sobald sich die Datenverarbeitung in der App ändert, z. B. bei Einführung der Cloud-Speicherung. Stand: {date}.",
+  "@privacyChangesBody": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  }
 }

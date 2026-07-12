@@ -11,6 +11,7 @@ import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
 import 'legal_section.dart';
+import 'provider_info.dart';
 
 class ImpressumScreen extends StatelessWidget {
   const ImpressumScreen({super.key});
@@ -37,12 +38,20 @@ class ImpressumScreen extends StatelessWidget {
             _gap,
             LegalSection(
               title: l10n.impressumProviderTitle,
-              body: l10n.impressumProviderBody,
+              body: l10n.impressumProviderBody(
+                ProviderInfo.name,
+                ProviderInfo.street,
+                ProviderInfo.zipCity,
+                ProviderInfo.country,
+              ),
               palette: palette,
             ),
             LegalSection(
               title: l10n.impressumContactTitle,
-              body: l10n.impressumContactBody,
+              body: l10n.impressumContactBody(
+                ProviderInfo.email,
+                ProviderInfo.phone,
+              ),
               palette: palette,
             ),
             LegalSection(

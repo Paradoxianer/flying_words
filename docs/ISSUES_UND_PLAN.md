@@ -209,16 +209,16 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 ### Phase 3d — Backlog: Gameplay-Ausbau *(bündeln, kein Blocker mehr)*
 
 - **#53 + #54** (ein Paket): Daily/Weekly Challenges mit Jokern (Gnade, Sanduhr, Tintenlöscher, Federkiel) + Spielwährung „Goldtinte" als Sink. **Kein Wett-/Einsatz-Modus** (Glücksspiel passt nicht zu den Werten des Herausgebers — dauerhafter Beschluss). Voraussetzungen (Sterne-Modell #39, Vers-Progression #52) sind erfüllt.
-- **#14 (erweitert)**: Bestenliste gestuft — lokal (kein Backend, guter erster Schritt) → Play Games/Game Center → Land/Welt (eigenes Backend, später).
+- **#14 (erweitert)**: ✅ Stufe 1 — lokale Bestenliste ohne Konto (PR #91). ✅ Code-Vorbereitung für Stufe 2 — Play Games/Game Center, drei Kategorien (Gesamtpunktzahl, bester Einzellauf, auswendig gelernte Verse), `LeaderboardIds`-Platzhalter (PR #92). **Offen:** echte Leaderboard-IDs in Play Console/App Store Connect anlegen (Anleitung als Kommentar auf #14), dann `GamesServicesController` in `main.dart` aktivieren. Stufe 3 (Land/Welt, eigenes Backend) bleibt separates, größeres Vorhaben — DSGVO-Prüfung nötig, kein Termin.
 
 ### Phase 4 — Release-Vorbereitung *(blockiert auf externe Ressourcen vom Owner)*
 
-- **#17 + #18** (ein Paket): AdMob + DSGVO/UMP-Consent-Dialog. Blockiert auf ein echtes AdMob-Konto/Unit-IDs.
+- **#17 + #18**: ✅ Code-Teil erledigt — Impressum-/Datenschutz-Screens und AdMob-UMP-Consent-Dialog fertig verdrahtet (PR #86, #87). Anbieter-Identität liegt zentral in `lib/src/legal/provider_info.dart` als Platzhalter vor. **Offen:** echtes AdMob-Konto/Unit-IDs (#17) und die Platzhalter mit echten Angaben befüllen, bevor #18 geschlossen werden kann.
 - **#9 + #10** (ein Paket): Eigene Musik/FX. Blockiert auf produzierte Audio-Assets.
 - **#58**: Neues/besseres App-Icon. Blockiert auf ein Design (`flutter_launcher_icons` ist bereits konfiguriert).
-- **#29 (Rest)**: Nur noch README neu schreiben — Code-Teile (Titel, Logger, Tests) sind erledigt.
+- ✅ **#29**: README komplett neu geschrieben (PR #89) — alle vier Teilpunkte erledigt.
 - **#30 (Rest)**: Audio-Autoplay- und Offline/Service-Worker-Verhalten auf einem echten Gerät testen (Sandbox-seitig nicht verifizierbar).
-- **#14**: Games Services aktivieren (Leaderboard, dann Achievements), falls nicht schon über die lokale Stufe aus Phase 3d abgedeckt.
+- **#14 (Rest)**: Play-Console-/App-Store-Connect-Leaderboards anlegen, IDs in `leaderboard_ids.dart` eintragen, `GamesServicesController` in `main.dart` aktivieren (Anleitung als Kommentar auf #14). Danach optional Achievements.
 
 ### Abhängigkeiten (Kurzfassung)
 
@@ -233,3 +233,13 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 
 - **#7**: Score-Formel — durch #24 + `difficultyScoreFactor` erledigt, mit Tests abgesichert.
 - **#13**: Hilfe-Screen — PR #73.
+- **#69**: UI-Politur (Hauptmenü-Layout 16:9, Feier-Animation/Konfetti, Tap-to-skip) — PR #82, #84.
+- **#29**: Tech-Debt-Aufräumen — PR #89 (README neu geschrieben; Titel/Logger/Tests waren schon erledigt).
+- **#80**: Fertige eigene Verse in eine zuklappbare Sektion verschoben — PR #90.
+
+### Teilerledigt in dieser Runde (2026-07-12) — bleiben offen
+
+- **#18**: Impressum/Datenschutz-Screens + AdMob-Consent-Dialog fertig (PR #86, #87) — offen bis die Anbieter-Platzhalter in `provider_info.dart` echte Daten enthalten.
+- **#87**: Übersetzungs-Lizenzfrage recherchiert + gefundener Bug gefixt (eigene Verse holten immer deutschen Text, PR #88) — die eigentliche freie Übersetzungsauswahl braucht noch eine gemeinsam abgestimmte Whitelist.
+- **#14**: Stufe 1 (lokal, PR #91) und die Code-Vorbereitung für Stufe 2 (PR #92) sind fertig — offen bis echte Play-Games-/Game-Center-Leaderboard-IDs existieren (Anleitung als Kommentar auf #14). Stufe 3 (Land/Welt) weiterhin unbeplant.
+- **#85** (neu angelegt): Cloud-Save des Fortschritts über Play Games/Game Center — noch nicht begonnen.

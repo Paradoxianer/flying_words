@@ -236,11 +236,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     );
 
     final playerProgress = context.read<PlayerProgress>();
+    final progressKey = verseProgressKey(widget.lesson);
     // Remember the best run before this one, for the comparison on the
     // win screen ("Neue Bestzeit!").
     final previousBest =
-        playerProgress.getScoreforVerse(widget.lesson.verse, widget.difficulty);
-    playerProgress.setScoreforVerse(widget.lesson.verse, widget.difficulty, score);
+        playerProgress.getScoreforVerse(progressKey, widget.difficulty);
+    playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);

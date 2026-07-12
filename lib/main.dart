@@ -119,21 +119,25 @@ void guardedMain() {
   //   inAppPurchaseController.restorePurchases();
   // }
 
+  final settingsPersistence = LocalStorageSettingsPersistence();
   final customVersesController = CustomVersesController(
     store: LocalStorageCustomVersesPersistence(),
     api: BollsBibleApiClient(),
   );
 
-  // Load the curated verses from their JSON asset and the player's own
-  // verses before starting the app, so the (synchronous) router and level
-  // selection have them ready.
-  Future.wait([
-    loadCuratedVerses(),
-    customVersesController.loadFromStore(),
-  ]).then((_) {
+  // The curated verses' language follows the player's saved UI language
+  // (#2), so it must be known before loading them. Load the curated verses
+  // from their JSON asset and the player's own verses before starting the
+  // app, so the (synchronous) router and level selection have them ready.
+  settingsPersistence.getLanguageCode().then((languageCode) {
+    return Future.wait([
+      loadCuratedVerses(locale: Locale(languageCode)),
+      customVersesController.loadFromStore(),
+    ]);
+  }).then((_) {
     runApp(
       MyApp(
-        settingsPersistence: LocalStorageSettingsPersistence(),
+        settingsPersistence: settingsPersistence,
         playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
@@ -256,7 +260,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) {
               var progress = PlayerProgress(playerProgressPersistence);
-              progress.getLatestFromStore();
+              progress.getLatestFromStore(
+                knownLessons: [...gameLevels, ...customVersesController.verses],
+              );
               return progress;
             },
           ),

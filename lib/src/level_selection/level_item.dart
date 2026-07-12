@@ -30,8 +30,9 @@ class _LevelItemState extends State<LevelItem> {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final l10n = AppLocalizations.of(context)!;
-    final progress =
-        context.watch<PlayerProgress>().progressForVerse(widget.level.verse);
+    final progress = context
+        .watch<PlayerProgress>()
+        .progressForVerse(verseProgressKey(widget.level));
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),

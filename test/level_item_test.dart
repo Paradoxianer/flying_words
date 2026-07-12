@@ -41,7 +41,7 @@ void main() {
   testWidgets('flawless run on seal I shows three stars and opens seal II',
       (tester) async {
     final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
-    progress.setScoreforVerse('Test 1,1', Difficulty.slow,
+    progress.setScoreforVerse(verseProgressKey(_lesson), Difficulty.slow,
         Score(score: 100, errors: 0, duration: const Duration(seconds: 45)));
 
     await tester.pumpWidget(_wrap(progress));

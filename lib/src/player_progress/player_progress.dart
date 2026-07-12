@@ -107,8 +107,15 @@ class PlayerProgress extends ChangeNotifier {
   int get playerScore => _playerScore;
 
   /// Fetches the latest data from the backing persistence store.
-  Future<void> getLatestFromStore() async {
-    _progress = await _store.getPlayerProgress();
+  ///
+  /// [knownLessons] (curated + custom verses) is used once to migrate
+  /// progress stored under the old, localized display-text keys to the
+  /// stable [verseProgressKey] (#2) - safe to pass every time since already
+  /// migrated keys are left untouched.
+  Future<void> getLatestFromStore({List<Lesson> knownLessons = const []}) async {
+    final stored = await _store.getPlayerProgress();
+    final migrated = _migrateLegacyKeys(stored, knownLessons);
+    _progress = migrated.progress;
     final storedHighscore = await _store.getPlayerHighscore();
     _playerScore = _calculateTotalScore();
     // A stored highscore can be higher than the recalculated one, e.g. after
@@ -118,7 +125,28 @@ class PlayerProgress extends ChangeNotifier {
     } else if (storedHighscore < _playerScore) {
       await _store.savePlayerHighscore(_playerScore);
     }
+    if (migrated.changed) {
+      unawaited(_store.savePlayerProgress(_progress));
+    }
     notifyListeners();
+  }
+
+  /// Remaps any key in [stored] that matches a known lesson's old, localized
+  /// display text to that lesson's stable [verseProgressKey]; keys that are
+  /// already stable (or match nothing known) are left as they are.
+  ({Map<String, VerseProgress> progress, bool changed}) _migrateLegacyKeys(
+      Map<String, VerseProgress> stored, List<Lesson> knownLessons) {
+    final keyForDisplay = {
+      for (final lesson in knownLessons) lesson.verse: verseProgressKey(lesson),
+    };
+    var changed = false;
+    final result = <String, VerseProgress>{};
+    stored.forEach((key, value) {
+      final newKey = keyForDisplay[key];
+      if (newKey != null && newKey != key) changed = true;
+      result[newKey ?? key] = value;
+    });
+    return (progress: result, changed: changed);
   }
 
   /// Resets the player's progress so it's like if they just started

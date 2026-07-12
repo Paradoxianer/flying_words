@@ -71,7 +71,7 @@ void main() {
     final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
     // Third curated verse finished on seal I.
     progress.setScoreforVerse(
-        gameLevels[2].verse, Difficulty.slow, Score(score: 10));
+        verseProgressKey(gameLevels[2]), Difficulty.slow, Score(score: 10));
 
     await tester.pumpWidget(_wrap(progress));
     await tester.pump();
@@ -88,7 +88,8 @@ void main() {
     useTallSurface(tester);
     final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
     for (final level in gameLevels) {
-      progress.setScoreforVerse(level.verse, Difficulty.slow, Score(score: 10));
+      progress.setScoreforVerse(
+          verseProgressKey(level), Difficulty.slow, Score(score: 10));
     }
 
     await tester.pumpWidget(_wrap(progress));

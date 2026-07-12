@@ -87,3 +87,11 @@ class Lesson{
   List<String> get words => _words;
 
 }
+
+/// The key under which [lesson]'s progress is stored in [PlayerProgress].
+///
+/// The display text ([Lesson.verse]) is localized and therefore changes
+/// with the UI language (#2), so it cannot be used as a stable key - the
+/// lesson's [Lesson.number] is language-independent and stays the same
+/// across curated verse files for the same verse.
+String verseProgressKey(Lesson lesson) => lesson.number.toString();

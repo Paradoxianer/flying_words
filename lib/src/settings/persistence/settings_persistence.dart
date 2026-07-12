@@ -15,6 +15,9 @@ abstract class SettingsPersistence {
 
   Future<bool> getSoundsOn();
 
+  /// The app's UI language code ('de' or 'en'); defaults to 'de'.
+  Future<String> getLanguageCode();
+
   Future<void> saveMusicOn(bool value);
 
   Future<void> saveMuted(bool value);
@@ -22,4 +25,6 @@ abstract class SettingsPersistence {
   Future<void> savePlayerName(String value);
 
   Future<void> saveSoundsOn(bool value);
+
+  Future<void> saveLanguageCode(String value);
 }

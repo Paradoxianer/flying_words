@@ -10,6 +10,8 @@ import 'package:flying_words/src/verses/persistence/memory_custom_verses_persist
 import 'package:flying_words/src/verses/verse_picker.dart';
 import 'package:provider/provider.dart';
 
+import 'helpers/localized_material_app.dart';
+
 class FakeBibleApiClient implements BibleApiClient {
   @override
   String get defaultTranslation => 'MB';
@@ -35,7 +37,7 @@ void main() {
         ChangeNotifierProvider.value(value: progress),
         Provider(create: (_) => Palette()),
       ],
-      child: MaterialApp(
+      child: LocalizedMaterialApp(
         home: Builder(
           builder: (context) => Scaffold(
             body: Center(

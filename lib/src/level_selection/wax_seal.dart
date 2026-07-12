@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
@@ -43,6 +44,7 @@ class WaxSeal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
     final color = _sealColor(palette);
     final stars = progress.stars(difficulty);
     final maxStars = VerseProgress.maxStars(difficulty);
@@ -82,8 +84,9 @@ class WaxSeal extends StatelessWidget {
     return Semantics(
       button: true,
       enabled: unlocked,
-      label: 'Siegel ${_sealNumerals[difficulty]}'
-          '${unlocked ? '' : ', gesperrt'}',
+      label: unlocked
+          ? l10n.sealLabelUnlocked(_sealNumerals[difficulty]!)
+          : l10n.sealLabelLocked(_sealNumerals[difficulty]!),
       child: InkWell(
         onTap: unlocked ? onPressed : null,
         borderRadius: BorderRadius.circular(12),

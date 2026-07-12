@@ -8,6 +8,8 @@ import 'package:flying_words/src/player_progress/player_progress.dart';
 import 'package:flying_words/src/style/palette.dart';
 import 'package:provider/provider.dart';
 
+import 'helpers/localized_material_app.dart';
+
 final _lesson = Lesson(number: 1, verse: 'Test 1,1', text: 'Alpha Beta Gamma');
 
 Widget _wrap(PlayerProgress progress) {
@@ -16,7 +18,7 @@ Widget _wrap(PlayerProgress progress) {
       Provider(create: (_) => Palette()),
       ChangeNotifierProvider.value(value: progress),
     ],
-    child: MaterialApp(home: Scaffold(body: LevelItem(_lesson))),
+    child: LocalizedMaterialApp(home: Scaffold(body: LevelItem(_lesson))),
   );
 }
 

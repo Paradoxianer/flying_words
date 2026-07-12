@@ -3,6 +3,7 @@ import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../player_progress/player_progress.dart';
@@ -28,6 +29,7 @@ class _LevelItemState extends State<LevelItem> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
     final progress =
         context.watch<PlayerProgress>().progressForVerse(widget.level.verse);
 
@@ -61,9 +63,7 @@ class _LevelItemState extends State<LevelItem> {
                 ),
                 // Choose the blind run here, before the clock is ticking.
                 Tooltip(
-                  message: _blind
-                      ? 'Blind spielen: Text verdeckt (Score ×1,5)'
-                      : 'Blind spielen? Text verdecken für Score ×1,5',
+                  message: _blind ? l10n.blindOn : l10n.blindOff,
                   child: InkWell(
                     onTap: () => setState(() => _blind = !_blind),
                     borderRadius: BorderRadius.circular(8),

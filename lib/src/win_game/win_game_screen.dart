@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../ads/ads_controller.dart';
 import '../ads/banner_ad_widget.dart';
 import '../game_internals/lesson.dart';
@@ -48,6 +49,7 @@ class WinGameScreen extends StatelessWidget {
     final adsRemoved =
         context.watch<InAppPurchaseController?>()?.adRemoval.active ?? false;
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
 
     final earnedStars =
         VerseProgress.starsForRun(difficulty, levelState.numErrors);
@@ -71,7 +73,7 @@ class WinGameScreen extends StatelessWidget {
             gap,
             Center(
               child: Text(
-                'Gewonnen!',
+                l10n.won,
                 style: ScriptoriumText.display
                     .copyWith(fontSize: 50, color: palette.inkFullOpacity),
               ),
@@ -92,7 +94,7 @@ class WinGameScreen extends StatelessWidget {
             if (levelState.blindRun)
               Center(
                 child: Text(
-                  'Blind geschafft — Score ×1,5!',
+                  l10n.blindBonusEarned,
                   style: ScriptoriumText.label.copyWith(color: palette.gold),
                 ),
               ),
@@ -115,9 +117,8 @@ class WinGameScreen extends StatelessWidget {
             gap,
             Center(
               child: Text(
-                'Score: ${score.score}\n'
-                'Fehler: ${levelState.numErrors}\n'
-                'Zeit: ${score.formattedTime}',
+                l10n.statsBlock(
+                    score.score, levelState.numErrors, score.formattedTime),
                 textAlign: TextAlign.center,
                 style: ScriptoriumText.label.copyWith(color: palette.inkFaded),
               ),
@@ -126,8 +127,8 @@ class WinGameScreen extends StatelessWidget {
             Center(
               child: Text(
                 _isNewBestTime
-                    ? 'Neue Bestzeit!'
-                    : 'Bestzeit: ${previousBest!.formattedTime}',
+                    ? l10n.newBestTime
+                    : l10n.bestTime(previousBest!.formattedTime),
                 style: ScriptoriumText.label.copyWith(
                   color: _isNewBestTime ? palette.gold : palette.inkFaded,
                 ),
@@ -150,7 +151,7 @@ class WinGameScreen extends StatelessWidget {
                   Share.share(text);
                 },
                 icon: const Icon(Icons.share),
-                label: const Text('Teilen'),
+                label: Text(l10n.share),
               ),
             ),
             const SizedBox(width: 10),
@@ -159,7 +160,7 @@ class WinGameScreen extends StatelessWidget {
                 onPressed: () {
                   GoRouter.of(context).go('/play');
                 },
-                child: const Text('Weiter'),
+                child: Text(l10n.continueLabel),
               ),
             ),
           ],

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
@@ -22,6 +23,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsController>();
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: palette.backgroundSettings,
@@ -29,23 +31,21 @@ class SettingsScreen extends StatelessWidget {
         squarishMainArea: ListView(
           children: [
             _gap,
-            const Text(
-              'Einstellungen',
+            Text(
+              l10n.settings,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700,
                 fontSize: 55,
                 height: 1,
               ),
             ),
             _gap,
-            const _NameChangeLine(
-              'Name',
-            ),
+            _NameChangeLine(l10n.name),
             ValueListenableBuilder<bool>(
               valueListenable: settings.soundsOn,
               builder: (context, soundsOn, child) => _SettingsLine(
-                'Soundeffekte',
+                l10n.soundEffects,
                 Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
                 onSelected: () => settings.toggleSoundsOn(),
               ),
@@ -53,9 +53,19 @@ class SettingsScreen extends StatelessWidget {
             ValueListenableBuilder<bool>(
               valueListenable: settings.musicOn,
               builder: (context, musicOn, child) => _SettingsLine(
-                'Musik',
+                l10n.music,
                 Icon(musicOn ? Icons.music_note : Icons.music_off),
                 onSelected: () => settings.toggleMusicOn(),
+              ),
+            ),
+            ValueListenableBuilder<Locale>(
+              valueListenable: settings.locale,
+              builder: (context, locale, child) => _SettingsLine(
+                l10n.language,
+                Text(locale.languageCode == 'de' ? 'Deutsch' : 'English'),
+                onSelected: () => settings.setLocale(
+                  Locale(locale.languageCode == 'de' ? 'en' : 'de'),
+                ),
               ),
             ),
             Consumer<InAppPurchaseController?>(
@@ -80,21 +90,20 @@ class SettingsScreen extends StatelessWidget {
                 };
               }
               return _SettingsLine(
-                'Werbung entfernen',
+                l10n.removeAds,
                 icon,
                 onSelected: callback,
               );
             }),
             _SettingsLine(
-              'Fortschritt zurücksetzen',
+              l10n.resetProgress,
               const Icon(Icons.delete),
               onSelected: () {
                 context.read<PlayerProgress>().reset();
 
                 final messenger = ScaffoldMessenger.of(context);
                 messenger.showSnackBar(
-                  const SnackBar(
-                      content: Text('Der Fortschritt wurde zurückgesetzt.')),
+                  SnackBar(content: Text(l10n.progressResetConfirmation)),
                 );
               },
             ),
@@ -105,7 +114,7 @@ class SettingsScreen extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).pop();
           },
-          child: const Text('Zurück'),
+          child: Text(l10n.back),
         ),
       ),
     );

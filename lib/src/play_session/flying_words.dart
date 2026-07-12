@@ -6,6 +6,7 @@ import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/random_words.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import 'celebration_verse.dart';
@@ -67,8 +68,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     InputDevice.register(kind);
     if (!wasMouse && InputDevice.usesMouse && !_mouseHintShown) {
       _mouseHintShown = true;
-      showSnackBar('Tipp: Am flüssigsten spielt sich Flying Words auf einem '
-          'Touch-Gerät — mit der Maus bekommst du etwas mehr Zeit.');
+      showSnackBar(AppLocalizations.of(context)!.mouseHint);
     }
   }
 
@@ -245,7 +245,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         color: palette.parchmentLight,
         alignment: Alignment.center,
         child: Text(
-          'Pausiert',
+          AppLocalizations.of(context)!.paused,
           style: ScriptoriumText.heading.copyWith(color: palette.inkFaded),
         ),
       );

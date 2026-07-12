@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../game_internals/level_state.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
@@ -100,7 +101,7 @@ class _TextProgressState extends State<TextProgress> {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Text(
-                      'Text verdeckt — aus dem Gedächtnis! (Score ×1,5)',
+                      AppLocalizations.of(context)!.blindPlaceholder,
                       style: ScriptoriumText.verse
                           .copyWith(color: palette.inkFaded),
                     ),

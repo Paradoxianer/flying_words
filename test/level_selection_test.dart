@@ -17,6 +17,8 @@ import 'package:flying_words/src/verses/custom_verses_controller.dart';
 import 'package:flying_words/src/verses/persistence/memory_custom_verses_persistence.dart';
 import 'package:provider/provider.dart';
 
+import 'helpers/localized_material_app.dart';
+
 Widget _wrap(PlayerProgress progress) {
   return MultiProvider(
     providers: [
@@ -34,7 +36,7 @@ Widget _wrap(PlayerProgress progress) {
       ),
       Provider<AudioController>(create: (_) => AudioController()),
     ],
-    child: const MaterialApp(home: LevelSelectionScreen()),
+    child: const LocalizedMaterialApp(home: LevelSelectionScreen()),
   );
 }
 

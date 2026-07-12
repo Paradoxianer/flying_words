@@ -30,7 +30,8 @@ class FakeBibleApiClient implements BibleApiClient {
 }
 
 void main() {
-  Widget host(CustomVersesController controller, PlayerProgress progress) {
+  Widget host(CustomVersesController controller, PlayerProgress progress,
+      {Locale locale = const Locale('de')}) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: controller),
@@ -38,6 +39,7 @@ void main() {
         Provider(create: (_) => Palette()),
       ],
       child: LocalizedMaterialApp(
+        locale: locale,
         home: Builder(
           builder: (context) => Scaffold(
             body: Center(
@@ -112,5 +114,26 @@ void main() {
 
     expect(api.lastRequest!.verseEnd, 26);
     expect(controller.verses.single.verse, 'Johannes 6, 24-26');
+  });
+
+  testWidgets('in English, the reference uses "Chapter:Verse" style (#2)',
+      (tester) async {
+    final api = FakeBibleApiClient();
+    final controller = CustomVersesController(
+        store: MemoryCustomVersesPersistence(), api: api);
+    final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+
+    await tester.pumpWidget(
+        host(controller, progress, locale: const Locale('en')));
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key('chapter-field')), '6');
+    await tester.enterText(find.byKey(const Key('from-field')), '24');
+    await tester.enterText(find.byKey(const Key('to-field')), '26');
+    await tester.tap(find.text('Add'));
+    await tester.pumpAndSettle();
+
+    expect(controller.verses.single.verse, 'John 6:24-26');
   });
 }

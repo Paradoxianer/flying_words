@@ -3,18 +3,18 @@
   "translation": "WEB",
   "verses": [
     {
-      "number": 1,
-      "reference": { "book": "1CO", "chapter": 6, "verseStart": 12 },
-      "display": "1 Corinthians 6:12",
-      "translation": "WEB",
-      "text": "“All things are lawful for me,” but not all things are expedient. “All things are lawful for me,” but I will not be brought under the power of anything."
-    },
-    {
       "number": 2,
       "reference": { "book": "JHN", "chapter": 3, "verseStart": 16 },
       "display": "John 3:16",
       "translation": "WEB",
       "text": "For God so loved the world, that he gave his one and only Son, that whoever believes in him should not perish, but have eternal life."
+    },
+    {
+      "number": 1,
+      "reference": { "book": "1CO", "chapter": 6, "verseStart": 12 },
+      "display": "1 Corinthians 6:12",
+      "translation": "WEB",
+      "text": "“All things are lawful for me,” but not all things are expedient. “All things are lawful for me,” but I will not be brought under the power of anything."
     },
     {
       "number": 3,

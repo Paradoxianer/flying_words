@@ -3,16 +3,16 @@
   "translation": "unbestimmt",
   "verses": [
     {
-      "number": 1,
-      "reference": { "book": "1CO", "chapter": 6, "verseStart": 12 },
-      "display": "1. Korinther 6, 12",
-      "text": "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen."
-    },
-    {
       "number": 2,
       "reference": { "book": "JHN", "chapter": 3, "verseStart": 16 },
       "display": "Johannes 3, 16",
       "text": "Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab, auf daß jeder, der an ihn glaubt, nicht verloren gehe, sondern ewiges Leben habe."
+    },
+    {
+      "number": 1,
+      "reference": { "book": "1CO", "chapter": 6, "verseStart": 12 },
+      "display": "1. Korinther 6, 12",
+      "text": "Alles ist mir erlaubt, aber nicht alles ist nützlich. Alles ist mir erlaubt, aber ich will mich von keinem überwältigen lassen."
     },
     {
       "number": 3,

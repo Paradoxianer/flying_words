@@ -7,6 +7,9 @@ import 'package:flying_words/main.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
+import 'package:flying_words/src/verses/bolls_bible_api_client.dart';
+import 'package:flying_words/src/verses/custom_verses_controller.dart';
+import 'package:flying_words/src/verses/persistence/memory_custom_verses_persistence.dart';
 
 void main() {
   testWidgets('smoke test', (tester) async {
@@ -20,6 +23,10 @@ void main() {
       adsController: null,
       gamesServicesController: null,
       inAppPurchaseController: null,
+      customVersesController: CustomVersesController(
+        store: MemoryCustomVersesPersistence(),
+        api: BollsBibleApiClient(),
+      ),
     ));
 
     // Verify the main menu is shown.

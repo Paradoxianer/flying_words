@@ -29,6 +29,7 @@ dependencies:
   google_mobile_ads: ^9.0.0  # Ads
   in_app_purchase: ^3.0.1  # In-app purchases
   quiver: ^3.2.1
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:

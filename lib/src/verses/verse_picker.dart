@@ -56,7 +56,8 @@ class _VersePickerDialogState extends State<VersePickerDialog> {
     super.dispose();
   }
 
-  Future<void> _add(AppLocalizations l10n, Map<String, String> bookNames) async {
+  Future<void> _add(AppLocalizations l10n, Map<String, String> bookNames,
+      Locale locale) async {
     final chapter = int.tryParse(_chapter.text.trim());
     final from = int.tryParse(_from.text.trim());
     final to = _to.text.trim().isEmpty ? null : int.tryParse(_to.text.trim());
@@ -67,7 +68,9 @@ class _VersePickerDialogState extends State<VersePickerDialog> {
 
     final reference = BibleReference(
         book: _book, chapter: chapter, verseStart: from, verseEnd: to);
-    final display = '${bookNames[_book]} $chapter, $from'
+    // English cites "Book Chapter:Verse", German "Book Chapter, Verse" (#2).
+    final separator = locale.languageCode == 'en' ? ':' : ', ';
+    final display = '${bookNames[_book]} $chapter$separator$from'
         '${to != null && to > from ? '-$to' : ''}';
 
     setState(() {
@@ -94,7 +97,8 @@ class _VersePickerDialogState extends State<VersePickerDialog> {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final l10n = AppLocalizations.of(context)!;
-    final bookNames = bookNamesFor(Localizations.localeOf(context));
+    final locale = Localizations.localeOf(context);
+    final bookNames = bookNamesFor(locale);
     return AlertDialog(
       backgroundColor: palette.parchmentLight,
       title: Text(l10n.addOwnVerseTitle,
@@ -164,7 +168,7 @@ class _VersePickerDialogState extends State<VersePickerDialog> {
           child: Text(l10n.cancel),
         ),
         FilledButton(
-          onPressed: _loading ? null : () => _add(l10n, bookNames),
+          onPressed: _loading ? null : () => _add(l10n, bookNames, locale),
           child: _loading
               ? const SizedBox(
                   width: 18,

@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../ads/ads_controller.dart';
 import '../ads/banner_ad_widget.dart';
@@ -17,6 +18,7 @@ import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
+import 'win_share.dart';
 
 class WinGameScreen extends StatelessWidget {
   final Score score;
@@ -133,11 +135,34 @@ class WinGameScreen extends StatelessWidget {
             ),
           ],
         ),
-        rectangularMenuArea: FilledButton(
-          onPressed: () {
-            GoRouter.of(context).go('/play');
-          },
-          child: const Text('Weiter'),
+        rectangularMenuArea: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  final text = winShareText(
+                    verse: lesson.verse,
+                    stars: earnedStars,
+                    maxStars: maxStars,
+                    score: score.score,
+                    blindRun: levelState.blindRun,
+                  );
+                  Share.share(text);
+                },
+                icon: const Icon(Icons.share),
+                label: const Text('Teilen'),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: FilledButton(
+                onPressed: () {
+                  GoRouter.of(context).go('/play');
+                },
+                child: const Text('Weiter'),
+              ),
+            ),
+          ],
         ),
       ),
     );

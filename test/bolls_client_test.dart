@@ -33,6 +33,13 @@ void main() {
       expect(cleanVerseText('a <br/> b'), 'a b');
       expect(cleanVerseText('Recht &amp; Gnade'), 'Recht & Gnade');
     });
+
+    test('drops the quotation brackets » « › ‹', () {
+      // Real Menge verse 24 of Numbers 6 starts with an orphaned ›.
+      expect(cleanVerseText('›Der HERR segne dich und behüte dich!'),
+          'Der HERR segne dich und behüte dich!');
+      expect(cleanVerseText('»Gib Acht!«'), 'Gib Acht!');
+    });
   });
 
   group('bollsBookNumbers', () {
@@ -68,17 +75,37 @@ void main() {
       expect(result.text.contains('<i>'), isFalse);
     });
 
-    test('range: verses are joined in order', () async {
+    test('range: real Menge Numbers 6:24-26 is joined and cleaned', () async {
+      // Verbatim from the live get-text/MB/4/6/ response: the blessing is
+      // wrapped in › ‹ quotation brackets and verse 26 carries an <i> gloss.
       final client = clientReturning([
-        {'pk': 1, 'verse': 24, 'text': 'Der HERR segne dich'},
-        {'pk': 2, 'verse': 25, 'text': 'und sei dir gnädig'},
-        {'pk': 3, 'verse': 26, 'text': 'und gebe dir Frieden'},
-        {'pk': 4, 'verse': 27, 'text': 'ausserhalb'},
+        {'pk': 1, 'verse': 23, 'text': '»Gib Aaron … folgende Weisung:'},
+        {'pk': 2, 'verse': 24, 'text': '›Der HERR segne dich und behüte dich!'},
+        {
+          'pk': 3,
+          'verse': 25,
+          'text': 'Der HERR lasse sein Angesicht leuchten über dir und sei '
+              'dir gnädig!'
+        },
+        {
+          'pk': 4,
+          'verse': 26,
+          'text': 'Der HERR erhebe sein Angesicht zu dir hin '
+              '<i>(oder: auf dich)</i>  und gewähre dir Frieden!‹'
+        },
+        {'pk': 5, 'verse': 27, 'text': 'Wenn sie so meinen Namen …'},
       ]);
       final result = await client.fetchPassage(const BibleReference(
           book: 'NUM', chapter: 6, verseStart: 24, verseEnd: 26));
-      expect(result.text,
-          'Der HERR segne dich und sei dir gnädig und gebe dir Frieden');
+      expect(
+        result.text,
+        'Der HERR segne dich und behüte dich! '
+        'Der HERR lasse sein Angesicht leuchten über dir und sei dir gnädig! '
+        'Der HERR erhebe sein Angesicht zu dir hin und gewähre dir Frieden!',
+      );
+      // No orphaned brackets, glosses or empty words.
+      expect(result.text.contains(RegExp('[»«›‹<]')), isFalse);
+      expect(result.text.split(' ').where((w) => w.isEmpty), isEmpty);
     });
 
     test('unknown book throws before any request', () async {

@@ -25,6 +25,10 @@ String cleanVerseText(String raw) {
   text = text.replaceAll(RegExp(r'<i\b[^>]*>.*?</i>', dotAll: true), ' ');
   // Strip any remaining tags but keep their text.
   text = text.replaceAll(RegExp(r'<[^>]*>'), ' ');
+  // Menge frames quoted speech with typographic brackets » « › ‹. When a
+  // verse range is sliced out of a larger quotation (e.g. the blessing in
+  // Numbers 6:24-26) these end up orphaned and stuck to words, so drop them.
+  text = text.replaceAll(RegExp('[»«›‹]'), ' ');
   // Decode the few HTML entities that can slip through (\u escapes are
   // already handled by json.decode).
   const entities = {

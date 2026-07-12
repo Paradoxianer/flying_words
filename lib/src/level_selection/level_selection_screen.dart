@@ -75,7 +75,28 @@ class LevelSelectionScreen extends StatelessWidget {
                             .copyWith(color: palette.inkFullOpacity),
                       ),
                     ),
-                    for (final verse in customVerses.verses) LevelItem(verse),
+                    for (final verse in customVerses.verses)
+                      // Fully mastered (Seal III) verses collapse into a
+                      // closed section instead - with no cap on how many
+                      // verses can be added, the list otherwise just keeps
+                      // growing with verses the player no longer needs to
+                      // see at a glance (#80).
+                      if (!playerProgress
+                          .progressForVerse(verseProgressKey(verse))
+                          .finished(Difficulty.insane))
+                        LevelItem(verse),
+                    if (customVerses.verses.any((verse) => playerProgress
+                        .progressForVerse(verseProgressKey(verse))
+                        .finished(Difficulty.insane)))
+                      _FinishedOwnVerses(
+                        verses: customVerses.verses
+                            .where((verse) => playerProgress
+                                .progressForVerse(verseProgressKey(verse))
+                                .finished(Difficulty.insane))
+                            .toList(),
+                        l10n: l10n,
+                        palette: palette,
+                      ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
@@ -105,6 +126,37 @@ class LevelSelectionScreen extends StatelessWidget {
           },
           child: Text(l10n.back),
         ),
+      ),
+    );
+  }
+}
+
+/// A closed-by-default section for own verses already mastered on Seal
+/// III, so a long history of finished verses doesn't crowd out the ones
+/// still being practiced (#80).
+class _FinishedOwnVerses extends StatelessWidget {
+  final List<Lesson> verses;
+  final AppLocalizations l10n;
+  final Palette palette;
+
+  const _FinishedOwnVerses({
+    required this.verses,
+    required this.l10n,
+    required this.palette,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      // ExpansionTile's default divider lines don't fit the parchment look.
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        key: const Key('finished-own-verses'),
+        title: Text(
+          l10n.finishedOwnVerses(verses.length),
+          style: ScriptoriumText.heading.copyWith(color: palette.inkFaded),
+        ),
+        children: [for (final verse in verses) LevelItem(verse)],
       ),
     );
   }

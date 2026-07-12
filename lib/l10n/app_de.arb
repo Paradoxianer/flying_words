@@ -24,6 +24,12 @@
   "ownVerses": "Eigene Verse",
   "addVerse": "Vers hinzufügen",
   "finishOpenOwnVersesFirst": "Erst die offenen eigenen Verse schaffen",
+  "finishedOwnVerses": "Abgeschlossen ({count})",
+  "@finishedOwnVerses": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
 
   "sealedHint": "Schaffe den vorigen Vers (Siegel I), um diese Seite zu öffnen.",
   "sealed": "Versiegelt",

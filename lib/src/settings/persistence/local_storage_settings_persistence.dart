@@ -37,9 +37,9 @@ class LocalStorageSettingsPersistence extends SettingsPersistence {
   }
 
   @override
-  Future<String> getLanguageCode() async {
+  Future<String?> getLanguageCode() async {
     final prefs = await instanceFuture;
-    return prefs.getString('languageCode') ?? 'de';
+    return prefs.getString('languageCode');
   }
 
   @override

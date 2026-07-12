@@ -7,6 +7,21 @@ import 'package:flutter/widgets.dart';
 
 import 'persistence/settings_persistence.dart';
 
+/// Languages the app ships translations for (#2); keep in sync with
+/// `AppLocalizations.supportedLocales` (lib/l10n/app_*.arb).
+const supportedLanguageCodes = <String>{'de', 'en'};
+
+/// Resolves the UI language to start with: the player's own previous
+/// choice if there is one, otherwise the device's language if the app
+/// supports it, otherwise German (#2).
+Locale resolveInitialLocale(String? storedLanguageCode, {Locale? deviceLocale}) {
+  if (storedLanguageCode != null) return Locale(storedLanguageCode);
+  final code =
+      (deviceLocale ?? WidgetsBinding.instance.platformDispatcher.locale)
+          .languageCode;
+  return Locale(supportedLanguageCodes.contains(code) ? code : 'de');
+}
+
 /// An class that holds settings like [playerName] or [musicOn],
 /// and saves them to an injected persistence store.
 class SettingsController {
@@ -43,7 +58,7 @@ class SettingsController {
       _persistence.getPlayerName().then((value) => playerName.value = value),
       _persistence
           .getLanguageCode()
-          .then((value) => locale.value = Locale(value)),
+          .then((value) => locale.value = resolveInitialLocale(value)),
     ]);
   }
 

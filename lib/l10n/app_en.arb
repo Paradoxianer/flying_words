@@ -1,0 +1,97 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Flying Words",
+  "mainMenuTagline": "Learn Bible verses by playing",
+  "play": "Play",
+  "achievements": "Achievements",
+  "leaderboard": "Leaderboard",
+  "settings": "Settings",
+  "musicAttribution": "Music by Mr Smith (CC BY 4.0)",
+
+  "name": "Name",
+  "soundEffects": "Sound effects",
+  "music": "Music",
+  "removeAds": "Remove ads",
+  "resetProgress": "Reset progress",
+  "progressResetConfirmation": "Progress has been reset.",
+  "back": "Back",
+  "language": "Language",
+  "changeName": "Change name",
+  "close": "Close",
+
+  "chooseChallenge": "Choose your challenge",
+  "ownVerses": "Your own verses",
+  "addVerse": "Add verse",
+  "finishOpenOwnVersesFirst": "Finish your open verses first",
+
+  "sealedHint": "Complete the previous verse (Seal I) to unlock this page.",
+  "sealed": "Sealed",
+
+  "blindOn": "Playing blind: text hidden (Score ×1.5)",
+  "blindOff": "Play blind? Hide text for Score ×1.5",
+
+  "sealLabelLocked": "Seal {numeral}, locked",
+  "@sealLabelLocked": {
+    "placeholders": {
+      "numeral": {"type": "String"}
+    }
+  },
+  "sealLabelUnlocked": "Seal {numeral}",
+  "@sealLabelUnlocked": {
+    "placeholders": {
+      "numeral": {"type": "String"}
+    }
+  },
+
+  "addOwnVerseTitle": "Add your own verse",
+  "book": "Book",
+  "chapter": "Chapter",
+  "verseLabel": "Verse",
+  "toOptional": "to (optional)",
+  "cancel": "Cancel",
+  "add": "Add",
+  "invalidChapterVerse": "Please enter a valid chapter/verse.",
+  "verseFetchFailed": "Could not load the verse: {message}",
+  "@verseFetchFailed": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+  "genericError": "Error: {error}",
+  "@genericError": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "endRoundTitle": "End the round?",
+  "endRoundBody": "This round's progress will be lost.",
+  "keepPlaying": "Keep playing",
+  "endRound": "End",
+
+  "paused": "Paused",
+  "mouseHint": "Tip: Flying Words plays most smoothly on a touch device — with a mouse you get a bit more time.",
+
+  "blindPlaceholder": "Text hidden — from memory! (Score ×1.5)",
+
+  "won": "You won!",
+  "blindBonusEarned": "Blind run complete — Score ×1.5!",
+  "newBestTime": "New best time!",
+  "bestTime": "Best time: {time}",
+  "@bestTime": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "share": "Share",
+  "continueLabel": "Continue",
+  "statsBlock": "Score: {score}\nErrors: {errors}\nTime: {time}",
+  "@statsBlock": {
+    "placeholders": {
+      "score": {"type": "int"},
+      "errors": {"type": "int"},
+      "time": {"type": "String"}
+    }
+  }
+}

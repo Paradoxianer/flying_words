@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 
@@ -15,6 +16,7 @@ class SealedVerseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -35,9 +37,7 @@ class SealedVerseCard extends StatelessWidget {
             const SizedBox(width: 14),
             Expanded(
               child: Text(
-                isNext
-                    ? 'Schaffe den vorigen Vers (Siegel I), um diese Seite zu öffnen.'
-                    : 'Versiegelt',
+                isNext ? l10n.sealedHint : l10n.sealed,
                 style: ScriptoriumText.verse.copyWith(color: palette.inkFaded),
               ),
             ),

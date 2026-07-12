@@ -17,6 +17,8 @@ import 'package:flying_words/src/verses/custom_verses_controller.dart';
 import 'package:flying_words/src/verses/persistence/memory_custom_verses_persistence.dart';
 import 'package:provider/provider.dart';
 
+import 'helpers/localized_material_app.dart';
+
 Widget _wrap(PlayerProgress progress) {
   return MultiProvider(
     providers: [
@@ -34,7 +36,7 @@ Widget _wrap(PlayerProgress progress) {
       ),
       Provider<AudioController>(create: (_) => AudioController()),
     ],
-    child: const MaterialApp(home: LevelSelectionScreen()),
+    child: const LocalizedMaterialApp(home: LevelSelectionScreen()),
   );
 }
 
@@ -69,7 +71,7 @@ void main() {
     final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
     // Third curated verse finished on seal I.
     progress.setScoreforVerse(
-        gameLevels[2].verse, Difficulty.slow, Score(score: 10));
+        verseProgressKey(gameLevels[2]), Difficulty.slow, Score(score: 10));
 
     await tester.pumpWidget(_wrap(progress));
     await tester.pump();
@@ -86,7 +88,8 @@ void main() {
     useTallSurface(tester);
     final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
     for (final level in gameLevels) {
-      progress.setScoreforVerse(level.verse, Difficulty.slow, Score(score: 10));
+      progress.setScoreforVerse(
+          verseProgressKey(level), Difficulty.slow, Score(score: 10));
     }
 
     await tester.pumpWidget(_wrap(progress));

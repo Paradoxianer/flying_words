@@ -10,6 +10,8 @@ import 'package:flying_words/src/style/palette.dart';
 import 'package:flying_words/src/win_game/win_game_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'helpers/localized_material_app.dart';
+
 Lesson _lesson() =>
     Lesson(number: 1, verse: 'Test 1,1', text: 'Alpha Beta Gamma');
 
@@ -27,7 +29,7 @@ void main() {
       (tester) async {
     await tester.pumpWidget(Provider(
       create: (_) => Palette(),
-      child: MaterialApp(
+      child: LocalizedMaterialApp(
         home: Scaffold(
           body:
               TextProgress(lesson: _lesson(), state: _finishedState(errors: {1})),
@@ -57,7 +59,7 @@ void main() {
         ChangeNotifierProvider<InAppPurchaseController?>.value(value: null),
         Provider(create: (_) => Palette()),
       ],
-      child: MaterialApp(
+      child: LocalizedMaterialApp(
         home: WinGameScreen(
           score: Score(score: 42, duration: const Duration(seconds: 90)),
           lesson: _lesson(),
@@ -88,7 +90,7 @@ void main() {
             ChangeNotifierProvider<InAppPurchaseController?>.value(value: null),
             Provider(create: (_) => Palette()),
           ],
-          child: MaterialApp(
+          child: LocalizedMaterialApp(
             home: WinGameScreen(
               score:
                   Score(score: 42, duration: const Duration(seconds: 90)),

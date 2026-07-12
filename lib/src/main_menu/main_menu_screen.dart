@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../games_services/games_services.dart';
@@ -23,6 +24,7 @@ class MainMenuScreen extends StatelessWidget {
     final gamesServicesController = context.watch<GamesServicesController?>();
     final settingsController = context.watch<SettingsController>();
     final audioController = context.watch<AudioController>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -35,7 +37,7 @@ class MainMenuScreen extends StatelessWidget {
               Transform.rotate(
                 angle: -0.06,
                 child: Text(
-                  'Flying Words',
+                  l10n.appTitle,
                   textAlign: TextAlign.center,
                   style: ScriptoriumText.display
                       .copyWith(color: palette.inkFullOpacity),
@@ -50,7 +52,7 @@ class MainMenuScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Bibelverse spielend auswendig lernen',
+                l10n.mainMenuTagline,
                 textAlign: TextAlign.center,
                 style: ScriptoriumText.verse.copyWith(color: palette.inkFaded),
               ),
@@ -65,7 +67,7 @@ class MainMenuScreen extends StatelessWidget {
                 audioController.playSfx(SfxType.buttonTap);
                 GoRouter.of(context).go('/play');
               },
-              child: const Text('Spielen'),
+              child: Text(l10n.play),
             ),
             _gap,
             if (gamesServicesController != null) ...[
@@ -73,7 +75,7 @@ class MainMenuScreen extends StatelessWidget {
                 ready: gamesServicesController.signedIn,
                 child: ElevatedButton(
                   onPressed: () => gamesServicesController.showAchievements(),
-                  child: const Text('Erfolge'),
+                  child: Text(l10n.achievements),
                 ),
               ),
               _gap,
@@ -81,14 +83,19 @@ class MainMenuScreen extends StatelessWidget {
                 ready: gamesServicesController.signedIn,
                 child: ElevatedButton(
                   onPressed: () => gamesServicesController.showLeaderboard(),
-                  child: const Text('Bestenliste'),
+                  child: Text(l10n.leaderboard),
                 ),
               ),
               _gap,
             ],
             ElevatedButton(
               onPressed: () => GoRouter.of(context).push('/settings'),
-              child: const Text('Einstellungen'),
+              child: Text(l10n.settings),
+            ),
+            _gap,
+            ElevatedButton(
+              onPressed: () => GoRouter.of(context).push('/help'),
+              child: const Text('Hilfe'),
             ),
             _gap,
             Padding(
@@ -105,7 +112,7 @@ class MainMenuScreen extends StatelessWidget {
             ),
             _gap,
             Text(
-              'Musik von Mr Smith (CC BY 4.0)',
+              l10n.musicAttribution,
               style: ScriptoriumText.verse
                   .copyWith(fontSize: 13, color: palette.inkFaded),
             ),

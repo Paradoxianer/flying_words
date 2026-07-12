@@ -3,8 +3,24 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import 'persistence/settings_persistence.dart';
+
+/// Languages the app ships translations for (#2); keep in sync with
+/// `AppLocalizations.supportedLocales` (lib/l10n/app_*.arb).
+const supportedLanguageCodes = <String>{'de', 'en'};
+
+/// Resolves the UI language to start with: the player's own previous
+/// choice if there is one, otherwise the device's language if the app
+/// supports it, otherwise German (#2).
+Locale resolveInitialLocale(String? storedLanguageCode, {Locale? deviceLocale}) {
+  if (storedLanguageCode != null) return Locale(storedLanguageCode);
+  final code =
+      (deviceLocale ?? WidgetsBinding.instance.platformDispatcher.locale)
+          .languageCode;
+  return Locale(supportedLanguageCodes.contains(code) ? code : 'de');
+}
 
 /// An class that holds settings like [playerName] or [musicOn],
 /// and saves them to an injected persistence store.
@@ -20,6 +36,9 @@ class SettingsController {
   ValueNotifier<bool> soundsOn = ValueNotifier(false);
 
   ValueNotifier<bool> musicOn = ValueNotifier(false);
+
+  /// The app's UI language (#2); defaults to German.
+  ValueNotifier<Locale> locale = ValueNotifier(const Locale('de'));
 
   /// Creates a new instance of [SettingsController] backed by [persistence].
   SettingsController({required SettingsPersistence persistence})
@@ -37,12 +56,20 @@ class SettingsController {
       _persistence.getSoundsOn().then((value) => soundsOn.value = value),
       _persistence.getMusicOn().then((value) => musicOn.value = value),
       _persistence.getPlayerName().then((value) => playerName.value = value),
+      _persistence
+          .getLanguageCode()
+          .then((value) => locale.value = resolveInitialLocale(value)),
     ]);
   }
 
   void setPlayerName(String name) {
     playerName.value = name;
     _persistence.savePlayerName(playerName.value);
+  }
+
+  void setLocale(Locale value) {
+    locale.value = value;
+    _persistence.saveLanguageCode(value.languageCode);
   }
 
   void toggleMusicOn() {

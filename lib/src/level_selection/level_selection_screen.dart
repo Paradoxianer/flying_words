@@ -7,6 +7,8 @@ import 'package:flying_words/src/level_selection/level_item.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
+import '../game_internals/lesson.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
@@ -24,7 +26,10 @@ class LevelSelectionScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final playerProgress = context.watch<PlayerProgress>();
     final customVerses = context.watch<CustomVersesController>();
-    final orderedVerses = [for (final level in gameLevels) level.verse];
+    final l10n = AppLocalizations.of(context)!;
+    final orderedVerses = [
+      for (final level in gameLevels) verseProgressKey(level)
+    ];
     final unlockedCount = playerProgress.unlockedVerseCount(orderedVerses);
     // Own verses open once the whole curated list is finished on seal I.
     final ownVersesUnlocked =
@@ -35,13 +40,13 @@ class LevelSelectionScreen extends StatelessWidget {
       body: ResponsiveScreen(
         squarishMainArea: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Center(
                 child: Text(
-                  'Wähle deine Herausforderung',
-                  style:
-                      TextStyle(fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 30),
+                  l10n.chooseChallenge,
+                  style: const TextStyle(
+                      fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -65,7 +70,7 @@ class LevelSelectionScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                       child: Text(
-                        'Eigene Verse',
+                        l10n.ownVerses,
                         style: ScriptoriumText.heading
                             .copyWith(color: palette.inkFullOpacity),
                       ),
@@ -83,8 +88,8 @@ class LevelSelectionScreen extends StatelessWidget {
                         icon: const Icon(Icons.add),
                         label: Text(
                           customVerses.canAddMore(playerProgress)
-                              ? 'Vers hinzufügen'
-                              : 'Erst die offenen eigenen Verse schaffen',
+                              ? l10n.addVerse
+                              : l10n.finishOpenOwnVersesFirst,
                         ),
                       ),
                     ),
@@ -98,7 +103,7 @@ class LevelSelectionScreen extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).go('/');
           },
-          child: const Text('Zurück'),
+          child: Text(l10n.back),
         ),
       ),
     );

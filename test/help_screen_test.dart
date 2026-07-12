@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/main.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
@@ -12,11 +13,17 @@ import 'package:flying_words/src/verses/custom_verses_controller.dart';
 import 'package:flying_words/src/verses/persistence/memory_custom_verses_persistence.dart';
 
 void main() {
-  testWidgets('smoke test', (tester) async {
-    // The curated verses are normally loaded before runApp.
+  testWidgets('the help screen explains the rules and can be reached and left',
+      (tester) async {
+    // A tall surface so every help section is laid out, not just the
+    // ones visible in a default-sized viewport.
+    tester.view.physicalSize = const Size(800, 4000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await loadCuratedVerses();
 
-    // Build our game and trigger a frame.
     await tester.pumpWidget(MyApp(
       // Explicit language so this test doesn't depend on the test
       // runner's platform locale (#2).
@@ -32,26 +39,18 @@ void main() {
       ),
     ));
 
-    // Verify the main menu is shown.
-    expect(find.text('Flying Words'), findsOneWidget);
-    expect(find.text('Spielen'), findsOneWidget);
-    expect(find.text('Einstellungen'), findsOneWidget);
-
-    // Go to the settings.
-    await tester.tap(find.text('Einstellungen'));
+    // From the main menu, open the help screen.
+    await tester.tap(find.text('Hilfe'));
     await tester.pumpAndSettle();
-    expect(find.text('Musik'), findsOneWidget);
 
-    // Go back to the main menu.
+    expect(find.text('Hilfe'), findsOneWidget);
+    expect(find.text('Die Siegel I, II, III'), findsOneWidget);
+    expect(find.text('Das Auge — blind spielen'), findsOneWidget);
+    expect(find.text('Eigene Verse'), findsOneWidget);
+
+    // And back to the main menu again.
     await tester.tap(find.text('Zurück'));
     await tester.pumpAndSettle();
-
-    // Go to the level selection.
-    await tester.tap(find.text('Spielen'));
-    await tester.pumpAndSettle();
-    expect(find.text('Wähle deine Herausforderung'), findsOneWidget);
-
-    // The first verse is offered as a lesson.
-    expect(find.text('1. Korinther 6, 12'), findsOneWidget);
+    expect(find.text('Spielen'), findsOneWidget);
   });
 }

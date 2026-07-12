@@ -1,6 +1,9 @@
 # Neue Issues & Implementierungsplan
 
-Stand: 2026-07-10 · Basis: Code-Analyse von `main` (Commit 904b27d) und Review der 12 offenen Issues.
+Stand: 2026-07-12 · Phasen 1–3 sind abgeschlossen (siehe unten). Aktuelle
+offene Arbeit: Phase 3b/3c (kleine Polish-Reste) und Phase 3d/4 (größere,
+z. T. auf externe Ressourcen blockierte Themen) — Details im entsprechenden
+Abschnitt weiter unten.
 
 Die Issues aus Teil 1 wurden inzwischen angelegt:
 A=#21, B=#22, C=#23, D=#24, E=#25, F=#26, G=#27, H=#28, I=#29.
@@ -171,15 +174,15 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 3. ✅ **#55** (PR #62): Feier — Vers setzt sich lesbar zusammen (Wrap-Layout), WinScreen blendet über (Fade).
 4. ✅ **#27** (PR #63): Eye-Button; Blind-Lauf (vor dem ersten Wort verdeckt, nie gespickt) = Score ×1,5.
 
-### Phase 3 — Inhalt & Reichweite *(nächste Phase, Start nach Merge von #60–#63)*
+### Phase 3 — Inhalt & Reichweite ✅ abgeschlossen (Stand 2026-07-12)
 *Ziel: Beliebige Verse in sauberem Datenmodell, dann Sprache & Reichweite.*
 
-1. **#15a — Datenmodell**: `Lesson` bekommt Buch/Kapitel/Vers-Referenzen statt nur Text-String; kuratierte Liste als JSON-Asset (~10 Verse, **Menge-Bibel**-Text) statt hardcoded Dart. Grundlage für alles Weitere.
-2. **#52 — Vers-Progression**: 3 Verse offen, Kette bis alle offen (`PlayerProgress.unlockedVerseCount`), versiegelte Karten in der Auswahl.
-3. **#15b — Bibel-API**: `VerseRepository` gegen bolls.life (`MB`), Caching für Offline/PWA, Vers-Auswahl-UI (Buch/Kapitel/Vers); „Eigene Verse" in 3er-Paketen nach Abschluss der kuratierten Liste (#52-Regel).
-4. **#2 — Lokalisierung**: ARB/`flutter_localizations` DE/EN; Verse pro Sprache über Übersetzungs-Mapping (`de`→MB, `en`→WEB).
-5. **#13 — Hilfe-Screen**: Spielregeln, Siegel/Sterne-System, Joker (sobald vorhanden).
-6. **#6 — Share on Winning**: `share_plus`, Vers + Score als Text.
+1. ✅ **#15a — Datenmodell** (PR #66): `Lesson` mit Buch/Kapitel/Vers-Referenz (`BibleReference`, OSIS-Codes); kuratierte Liste als JSON-Asset.
+2. ✅ **#52 — Vers-Progression** (PR #67): 3 Verse offen, Ketten-Freischaltung, versiegelte Karten.
+3. ✅ **#15b — Bibel-API** (PR #68–#71): `BibleApiClient`/`BollsBibleApiClient` gegen bolls.life (Menge `MB`), Vers-Auswahl-UI, „Eigene Verse" in 3er-Paketen.
+4. ✅ **#2 — Lokalisierung** (PR #73–#76): `flutter_localizations`/ARB DE/EN, alle UI-Strings extrahiert, Sprachumschaltung folgt beim ersten Start dem Gerät/Browser (sonst gespeicherte Wahl). Englische Vers-Inhalte (World English Bible, gemeinfrei) für die 6 kuratierten Verse, gegen echte API-Daten verifiziert. Fortschritt ist jetzt über die sprachunabhängige Versnummer gespeichert (nicht mehr über den Anzeigetext), inkl. automatischer Migration alter Spielstände. **Offen:** Hilfe-Screen (#13) selbst ist noch nicht lokalisiert.
+5. ✅ **#13 — Hilfe-Screen** (PR #73): Spielregeln, Siegel/Sterne-System, blinder Modus, eigene Verse.
+6. ✅ **#6 — Share on Winning** (PR #72): `share_plus`, Vers + Sterne + Score als Text. **Offen:** Screenshot statt/zusätzlich zu reinem Text (Kommentar auf #6).
 
 ### Phase 2c — Gameplay-Ausbau *(Ideen-Backlog, nach Phase 2d/3)*
 
@@ -191,29 +194,42 @@ Issues #38–#40 sind eingeplant bzw. schon als PR umgesetzt.
 - **#57**: Maus/Touchpad-Ausgleich für die Desktop-PWA (+40–50 % Flugzeit bei Maus-Eingabe, einmaliger Hinweis).
 - **#14 (erweitert)**: Bestenliste gestuft — lokal → Play Games/Game Center → Land/Welt (eigenes Backend).
 
-### Phase 3 — Inhalt & Reichweite
-*Ziel: Beliebige Verse, zwei Sprachen, Hilfe.*
+### Phase 3b — Polish-Nachzügler aus Phase 3 *(neu, Stand 2026-07-12)*
+*Kleine, in sich abgeschlossene Reste aus Phase 3 — kein Blocker mehr offen.*
 
-16. **#15**: Bibel-API-Anbindung — Datenschicht (`VerseRepository`), Vers-Auswahl-UI (Buch/Kapitel/Vers), Caching für Offline-Betrieb; kuratierte Standardliste bleibt als Einstieg. Muss CORS-tauglich sein (PWA!).
-17. **#2**: Lokalisierung DE/EN (ARB-Dateien, hardcodierte Strings extrahieren).
-18. **#13**: Hilfe-Screen in der App (Spielregeln, Difficulties, Scoring).
-19. **#6**: Share on Winning (`share_plus`, Score + Vers als Text).
-20. **#30 (Rest)**: PWA-Feinschliff — Deploy läuft ✅ (PR #37); offen: Audio-/Offline-Verhalten testen, Icons/Theme-Farben.
+- **#6 (Rest)**: Screenshot statt/zusätzlich zu Text beim Teilen (`RenderRepaintBoundary` + `Share.shareXFiles`).
+- **#2 (Rest)**: Hilfe-Screen (#13) lokalisieren, sobald beide PRs stabil sind.
+- **#59**: Reihenfolge der kuratierten Verse — Johannes 3 soll der erste Vers sein. *Rückfrage offen: Vers 16 (der bekannteste, vermutlich gemeint) oder wirklich Vers 1?* Technisch trivial (nur Array-Reihenfolge in `curated_de.json`/`curated_en.json`, die `number`-IDs bleiben stabil → kein Risiko für bestehenden Fortschritt).
 
-### Phase 4 — Release-Vorbereitung
-21. **#14**: Games Services aktivieren (Leaderboard, dann Achievements — TODO in `lesson.dart`/`player_progress.dart`).
-22. **#17 + #18**: AdMob + DSGVO/UMP-Consent-Dialog als Paket.
-23. **#9/#10**: Eigene Musik/FX einbinden, sobald Assets vorliegen.
-24. **#29 (Rest)**: App-Titel/Branding, print() → Logger, README neu, Store-Metadaten.
+### Phase 3c — UI-Politur *(#69, neu)*
+
+- **PR 1** (`flying_words.dart`/`celebration_verse.dart`): Feier-Wörter gleichzeitig statt gestaffelt einfliegen (+ Tap-to-skip bei langen Versen), Konfetti auf den Spielbereich begrenzen, Übergang in den WinScreen so, dass der Vers stehen bleibt statt hart zu schneiden (Weiterentwicklung von #55).
+- **PR 2** (`main_menu_screen.dart`/`responsive_screen.dart`): Layout auf 16:9 reparieren (Titel/Buttonliste falsch angeordnet).
+
+### Phase 3d — Backlog: Gameplay-Ausbau *(bündeln, kein Blocker mehr)*
+
+- **#53 + #54** (ein Paket): Daily/Weekly Challenges mit Jokern (Gnade, Sanduhr, Tintenlöscher, Federkiel) + Spielwährung „Goldtinte" als Sink. **Kein Wett-/Einsatz-Modus** (Glücksspiel passt nicht zu den Werten des Herausgebers — dauerhafter Beschluss). Voraussetzungen (Sterne-Modell #39, Vers-Progression #52) sind erfüllt.
+- **#14 (erweitert)**: Bestenliste gestuft — lokal (kein Backend, guter erster Schritt) → Play Games/Game Center → Land/Welt (eigenes Backend, später).
+
+### Phase 4 — Release-Vorbereitung *(blockiert auf externe Ressourcen vom Owner)*
+
+- **#17 + #18** (ein Paket): AdMob + DSGVO/UMP-Consent-Dialog. Blockiert auf ein echtes AdMob-Konto/Unit-IDs.
+- **#9 + #10** (ein Paket): Eigene Musik/FX. Blockiert auf produzierte Audio-Assets.
+- **#58**: Neues/besseres App-Icon. Blockiert auf ein Design (`flutter_launcher_icons` ist bereits konfiguriert).
+- **#29 (Rest)**: Nur noch README neu schreiben — Code-Teile (Titel, Logger, Tests) sind erledigt.
+- **#30 (Rest)**: Audio-Autoplay- und Offline/Service-Worker-Verhalten auf einem echten Gerät testen (Sandbox-seitig nicht verifizierbar).
+- **#14**: Games Services aktivieren (Leaderboard, dann Achievements), falls nicht schon über die lokale Stufe aus Phase 3d abgedeckt.
 
 ### Abhängigkeiten (Kurzfassung)
 
 ```
-#21 ─┬─> #22 ─┬─> #26, #28 (Freischaltung & Anzeige brauchen gespeicherten Fortschritt) ✅ erfüllt
-     │        └─> #14 Leaderboard (braucht korrekten, stabilen Score)
-#24/#7 ────────┘
-#36 Flutter-Upgrade ─> vor Phase 2 (sonst doppelte Migration)
-#39 Karten-Layout ─> #28 Fortschrittsanzeige
-#15 API ─> #2 Lokalisierung der Verse
+✅ Phase 1–3 abgeschlossen (siehe oben), keine offenen Blocker mehr zwischen den Phasen
+#53 ─> #54 (Joker zuerst, Goldtinte ist ihr Sink)
 #17 <─> #18 (Ads nur mit Consent)
+#9 <─> #10 (gleiche Asset-Abhängigkeit, ein Paket)
 ```
+
+### Geschlossen in dieser Runde (2026-07-12)
+
+- **#7**: Score-Formel — durch #24 + `difficultyScoreFactor` erledigt, mit Tests abgesichert.
+- **#13**: Hilfe-Screen — PR #73.

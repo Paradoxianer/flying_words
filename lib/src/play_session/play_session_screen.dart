@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
+import '../../l10n/gen/app_localizations.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
@@ -69,19 +70,20 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     if (_duringCelebration) return;
     final levelState = context.read<LevelState>();
     _setPaused(levelState, true);
+    final l10n = AppLocalizations.of(context)!;
     final leave = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Runde beenden?'),
-        content: const Text('Der Fortschritt dieser Runde geht verloren.'),
+        title: Text(l10n.endRoundTitle),
+        content: Text(l10n.endRoundBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Weiterspielen'),
+            child: Text(l10n.keepPlaying),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Beenden'),
+            child: Text(l10n.endRound),
           ),
         ],
       ),
@@ -106,6 +108,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
 
     return MultiProvider(
       providers: [
@@ -155,7 +158,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                             onTap: () => _openSettings(context),
                             child: Image.asset(
                               'assets/images/settings.png',
-                              semanticLabel: 'Einstellungen',
+                              semanticLabel: l10n.settings,
                             ),
                           ),
                         ],
@@ -180,7 +183,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () => _confirmLeave(context),
-                          child: const Text('Zurück'),
+                          child: Text(l10n.back),
                         ),
                       ),
                     ),
@@ -233,11 +236,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     );
 
     final playerProgress = context.read<PlayerProgress>();
+    final progressKey = verseProgressKey(widget.lesson);
     // Remember the best run before this one, for the comparison on the
     // win screen ("Neue Bestzeit!").
     final previousBest =
-        playerProgress.getScoreforVerse(widget.lesson.verse, widget.difficulty);
-    playerProgress.setScoreforVerse(widget.lesson.verse, widget.difficulty, score);
+        playerProgress.getScoreforVerse(progressKey, widget.difficulty);
+    playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);

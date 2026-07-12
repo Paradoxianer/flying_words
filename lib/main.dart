@@ -11,11 +11,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+
+import 'l10n/gen/app_localizations.dart';
 
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
@@ -23,6 +26,7 @@ import 'src/audio/audio_controller.dart';
 import 'src/crashlytics/crashlytics.dart';
 import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
+import 'src/help/help_screen.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
 import 'src/level_selection/level_selection_screen.dart';
 import 'src/level_selection/levels.dart';
@@ -116,21 +120,27 @@ void guardedMain() {
   //   inAppPurchaseController.restorePurchases();
   // }
 
+  final settingsPersistence = LocalStorageSettingsPersistence();
   final customVersesController = CustomVersesController(
     store: LocalStorageCustomVersesPersistence(),
     api: BollsBibleApiClient(),
   );
 
-  // Load the curated verses from their JSON asset and the player's own
-  // verses before starting the app, so the (synchronous) router and level
-  // selection have them ready.
-  Future.wait([
-    loadCuratedVerses(),
-    customVersesController.loadFromStore(),
-  ]).then((_) {
+  // The curated verses' language follows the player's saved UI language,
+  // falling back to the device's language (#2), so it must be known before
+  // loading them. Load the curated verses from their JSON asset and the
+  // player's own verses before starting the app, so the (synchronous)
+  // router and level selection have them ready.
+  settingsPersistence.getLanguageCode().then((languageCode) {
+    final locale = resolveInitialLocale(languageCode);
+    return Future.wait([
+      loadCuratedVerses(locale: locale),
+      customVersesController.loadFromStore(),
+    ]);
+  }).then((_) {
     runApp(
       MyApp(
-        settingsPersistence: LocalStorageSettingsPersistence(),
+        settingsPersistence: settingsPersistence,
         playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
@@ -219,6 +229,11 @@ class MyApp extends StatelessWidget {
               builder: (context, state) =>
                   const SettingsScreen(key: Key('settings')),
             ),
+            GoRoute(
+              path: 'help',
+              builder: (context, state) =>
+                  const HelpScreen(key: Key('help')),
+            ),
           ]),
     ],
   );
@@ -253,7 +268,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) {
               var progress = PlayerProgress(playerProgressPersistence);
-              progress.getLatestFromStore();
+              progress.getLatestFromStore(
+                knownLessons: [...gameLevels, ...customVersesController.verses],
+              );
               return progress;
             },
           ),
@@ -291,27 +308,39 @@ class MyApp extends StatelessWidget {
         ],
         child: Builder(builder: (context) {
           final palette = context.watch<Palette>();
+          final settings = context.watch<SettingsController>();
 
-          return MaterialApp.router(
-            title: 'Flying Words',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: palette.gold,
-                surface: palette.backgroundMain,
-              ),
-              fontFamily: bodyFontFamily,
-              textTheme: TextTheme(
-                bodyMedium: TextStyle(
-                  color: palette.ink,
-                  fontFamily: bodyFontFamily,
+          return ValueListenableBuilder<Locale>(
+            valueListenable: settings.locale,
+            builder: (context, locale, child) => MaterialApp.router(
+              title: 'Flying Words',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: palette.gold,
+                  surface: palette.backgroundMain,
                 ),
+                fontFamily: bodyFontFamily,
+                textTheme: TextTheme(
+                  bodyMedium: TextStyle(
+                    color: palette.ink,
+                    fontFamily: bodyFontFamily,
+                  ),
+                ),
+                useMaterial3: true,
               ),
-              useMaterial3: true,
+              locale: locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              routeInformationProvider: _router.routeInformationProvider,
+              routeInformationParser: _router.routeInformationParser,
+              routerDelegate: _router.routerDelegate,
+              scaffoldMessengerKey: scaffoldMessengerKey,
             ),
-            routeInformationProvider: _router.routeInformationProvider,
-            routeInformationParser: _router.routeInformationParser,
-            routerDelegate: _router.routerDelegate,
-            scaffoldMessengerKey: scaffoldMessengerKey,
           );
         }),
       ),

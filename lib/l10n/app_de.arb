@@ -1,0 +1,97 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "Flying Words",
+  "mainMenuTagline": "Bibelverse spielend auswendig lernen",
+  "play": "Spielen",
+  "achievements": "Erfolge",
+  "leaderboard": "Bestenliste",
+  "settings": "Einstellungen",
+  "musicAttribution": "Musik von Mr Smith (CC BY 4.0)",
+
+  "name": "Name",
+  "soundEffects": "Soundeffekte",
+  "music": "Musik",
+  "removeAds": "Werbung entfernen",
+  "resetProgress": "Fortschritt zurücksetzen",
+  "progressResetConfirmation": "Der Fortschritt wurde zurückgesetzt.",
+  "back": "Zurück",
+  "language": "Sprache",
+  "changeName": "Name ändern",
+  "close": "Schließen",
+
+  "chooseChallenge": "Wähle deine Herausforderung",
+  "ownVerses": "Eigene Verse",
+  "addVerse": "Vers hinzufügen",
+  "finishOpenOwnVersesFirst": "Erst die offenen eigenen Verse schaffen",
+
+  "sealedHint": "Schaffe den vorigen Vers (Siegel I), um diese Seite zu öffnen.",
+  "sealed": "Versiegelt",
+
+  "blindOn": "Blind spielen: Text verdeckt (Score ×1,5)",
+  "blindOff": "Blind spielen? Text verdecken für Score ×1,5",
+
+  "sealLabelLocked": "Siegel {numeral}, gesperrt",
+  "@sealLabelLocked": {
+    "placeholders": {
+      "numeral": {"type": "String"}
+    }
+  },
+  "sealLabelUnlocked": "Siegel {numeral}",
+  "@sealLabelUnlocked": {
+    "placeholders": {
+      "numeral": {"type": "String"}
+    }
+  },
+
+  "addOwnVerseTitle": "Eigenen Vers hinzufügen",
+  "book": "Buch",
+  "chapter": "Kapitel",
+  "verseLabel": "Vers",
+  "toOptional": "bis (optional)",
+  "cancel": "Abbrechen",
+  "add": "Hinzufügen",
+  "invalidChapterVerse": "Bitte gültige Kapitel-/Versangaben eingeben.",
+  "verseFetchFailed": "Vers konnte nicht geladen werden: {message}",
+  "@verseFetchFailed": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+  "genericError": "Fehler: {error}",
+  "@genericError": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "endRoundTitle": "Runde beenden?",
+  "endRoundBody": "Der Fortschritt dieser Runde geht verloren.",
+  "keepPlaying": "Weiterspielen",
+  "endRound": "Beenden",
+
+  "paused": "Pausiert",
+  "mouseHint": "Tipp: Am flüssigsten spielt sich Flying Words auf einem Touch-Gerät — mit der Maus bekommst du etwas mehr Zeit.",
+
+  "blindPlaceholder": "Text verdeckt — aus dem Gedächtnis! (Score ×1,5)",
+
+  "won": "Gewonnen!",
+  "blindBonusEarned": "Blind geschafft — Score ×1,5!",
+  "newBestTime": "Neue Bestzeit!",
+  "bestTime": "Bestzeit: {time}",
+  "@bestTime": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "share": "Teilen",
+  "continueLabel": "Weiter",
+  "statsBlock": "Score: {score}\nFehler: {errors}\nZeit: {time}",
+  "@statsBlock": {
+    "placeholders": {
+      "score": {"type": "int"},
+      "errors": {"type": "int"},
+      "time": {"type": "String"}
+    }
+  }
+}

@@ -13,13 +13,13 @@ import 'bible_api_client.dart';
 import 'persistence/custom_verses_persistence.dart';
 
 /// Whether the "own verses" feature is unlocked: every curated verse must
-/// be finished on seal I first (#52/#15). [curatedVerses] are the display
-/// references in play order.
+/// be finished on seal I first (#52/#15). [curatedVerseKeys] are the
+/// verses' [verseProgressKey]s in play order.
 bool customVersesUnlocked(
-    List<String> curatedVerses, PlayerProgress progress) {
-  if (curatedVerses.isEmpty) return false;
-  return curatedVerses.every(
-      (verse) => progress.progressForVerse(verse).finished(Difficulty.slow));
+    List<String> curatedVerseKeys, PlayerProgress progress) {
+  if (curatedVerseKeys.isEmpty) return false;
+  return curatedVerseKeys.every(
+      (key) => progress.progressForVerse(key).finished(Difficulty.slow));
 }
 
 /// Manages the verses the player added themselves. New verses come in
@@ -48,8 +48,8 @@ class CustomVersesController extends ChangeNotifier {
 
   /// Custom verses not yet finished on seal I.
   int unfinishedCount(PlayerProgress progress) => _verses
-      .where(
-          (l) => !progress.progressForVerse(l.verse).finished(Difficulty.slow))
+      .where((l) =>
+          !progress.progressForVerse(verseProgressKey(l)).finished(Difficulty.slow))
       .length;
 
   /// A new custom verse may be added while fewer than [packSize] existing

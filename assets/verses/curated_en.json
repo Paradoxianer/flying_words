@@ -1,0 +1,48 @@
+{
+  "_note": "Curated standard verses, World English Bible (WEB) - deliberately public domain, modern English. Verified against real bolls.life API responses (get-verse/get-text). References are translation-independent (OSIS book codes) and match curated_de.json's verse numbers so progress carries over across languages (#2). Numbers 6:24-26's leading/trailing quotation marks were dropped (they only mark the surrounding narration as direct speech, same edit already made for the German text). Romans 12:12 is a continuation of a longer WEB sentence starting at v9; capitalized and given a closing period for standalone display, no words changed.",
+  "translation": "WEB",
+  "verses": [
+    {
+      "number": 2,
+      "reference": { "book": "JHN", "chapter": 3, "verseStart": 16 },
+      "display": "John 3:16",
+      "translation": "WEB",
+      "text": "For God so loved the world, that he gave his one and only Son, that whoever believes in him should not perish, but have eternal life."
+    },
+    {
+      "number": 1,
+      "reference": { "book": "1CO", "chapter": 6, "verseStart": 12 },
+      "display": "1 Corinthians 6:12",
+      "translation": "WEB",
+      "text": "“All things are lawful for me,” but not all things are expedient. “All things are lawful for me,” but I will not be brought under the power of anything."
+    },
+    {
+      "number": 3,
+      "reference": { "book": "1CO", "chapter": 13, "verseStart": 4, "verseEnd": 5 },
+      "display": "1 Corinthians 13:4-5",
+      "translation": "WEB",
+      "text": "Love is patient and is kind; love doesn’t envy. Love doesn’t brag, is not proud, doesn’t behave itself inappropriately, doesn’t seek its own way, is not provoked, takes no account of evil;"
+    },
+    {
+      "number": 4,
+      "reference": { "book": "1TH", "chapter": 5, "verseStart": 16, "verseEnd": 18 },
+      "display": "1 Thessalonians 5:16-18",
+      "translation": "WEB",
+      "text": "Rejoice always. Pray without ceasing. In everything give thanks, for this is the will of God in Christ Jesus toward you."
+    },
+    {
+      "number": 5,
+      "reference": { "book": "NUM", "chapter": 6, "verseStart": 24, "verseEnd": 26 },
+      "display": "Numbers 6:24-26",
+      "translation": "WEB",
+      "text": "Yahweh bless you, and keep you. Yahweh make his face to shine on you, and be gracious to you. Yahweh lift up his face toward you, and give you peace."
+    },
+    {
+      "number": 6,
+      "reference": { "book": "ROM", "chapter": 12, "verseStart": 12 },
+      "display": "Romans 12:12",
+      "translation": "WEB",
+      "text": "Rejoicing in hope; enduring in troubles; continuing steadfastly in prayer."
+    }
+  ]
+}

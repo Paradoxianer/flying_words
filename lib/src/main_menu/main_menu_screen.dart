@@ -82,16 +82,15 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                     ),
                     _gap,
-                    _hideUntilReady(
-                      ready: gamesServicesController.signedIn,
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            gamesServicesController.showLeaderboard(),
-                        child: Text(l10n.leaderboard),
-                      ),
-                    ),
-                    _gap,
                   ],
+                  // The device-local leaderboard needs no account, so it's
+                  // always available - unlike Play Games/Game Center's
+                  // online one, which is a later step (#14 "Stufe 2").
+                  ElevatedButton(
+                    onPressed: () => GoRouter.of(context).push('/leaderboard'),
+                    child: Text(l10n.leaderboard),
+                  ),
+                  _gap,
                   ElevatedButton(
                     onPressed: () => GoRouter.of(context).push('/settings'),
                     child: Text(l10n.settings),

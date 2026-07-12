@@ -126,13 +126,15 @@ void guardedMain() {
     api: BollsBibleApiClient(),
   );
 
-  // The curated verses' language follows the player's saved UI language
-  // (#2), so it must be known before loading them. Load the curated verses
-  // from their JSON asset and the player's own verses before starting the
-  // app, so the (synchronous) router and level selection have them ready.
+  // The curated verses' language follows the player's saved UI language,
+  // falling back to the device's language (#2), so it must be known before
+  // loading them. Load the curated verses from their JSON asset and the
+  // player's own verses before starting the app, so the (synchronous)
+  // router and level selection have them ready.
   settingsPersistence.getLanguageCode().then((languageCode) {
+    final locale = resolveInitialLocale(languageCode);
     return Future.wait([
-      loadCuratedVerses(locale: Locale(languageCode)),
+      loadCuratedVerses(locale: locale),
       customVersesController.loadFromStore(),
     ]);
   }).then((_) {

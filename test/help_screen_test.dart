@@ -25,7 +25,10 @@ void main() {
     await loadCuratedVerses();
 
     await tester.pumpWidget(MyApp(
-      settingsPersistence: MemoryOnlySettingsPersistence(),
+      // Explicit language so this test doesn't depend on the test
+      // runner's platform locale (#2).
+      settingsPersistence: MemoryOnlySettingsPersistence()
+        ..languageCode = 'de',
       playerProgressPersistence: MemoryOnlyPlayerProgressPersistence(),
       adsController: null,
       gamesServicesController: null,

@@ -13,6 +13,12 @@
     }
   },
   "leaderboardEmpty": "Noch keine Läufe abgeschlossen. Spiele einen Vers, um hier aufzutauchen!",
+  "leaderboardMemorizedVerses": "Auswendig gelernte Verse: {count}",
+  "@leaderboardMemorizedVerses": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "settings": "Einstellungen",
   "musicAttribution": "Musik von Mr Smith (CC BY 4.0)",
 

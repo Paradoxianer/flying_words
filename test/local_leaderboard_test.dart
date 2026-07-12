@@ -41,6 +41,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Gesamtpunktzahl: 0'), findsOneWidget);
+    expect(find.text('Auswendig gelernte Verse: 0'), findsOneWidget);
     expect(find.byKey(const Key('leaderboard-list')), findsNothing);
     expect(
         find.textContaining('Noch keine Läufe abgeschlossen'), findsOneWidget);
@@ -72,6 +73,20 @@ void main() {
     expect(texts.indexOf('50'), lessThan(texts.indexOf('20')));
 
     // Flush the simulated async persistence writes.
+    await tester.pump(const Duration(milliseconds: 600));
+  });
+
+  testWidgets('shows how many verses are memorized (3 stars on Seal II)',
+      (tester) async {
+    final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+    progress.setScoreforVerse(verseProgressKey(gameLevels[0]),
+        Difficulty.normal, Score(score: 50, errors: 0));
+
+    await tester.pumpWidget(_wrap(progress));
+    await tester.pump();
+
+    expect(find.text('Auswendig gelernte Verse: 1'), findsOneWidget);
+
     await tester.pump(const Duration(milliseconds: 600));
   });
 }

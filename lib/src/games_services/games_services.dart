@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:games_services/games_services.dart' as gs;
 import 'package:logging/logging.dart';
 
-import 'score.dart';
+import 'leaderboard_ids.dart';
 
 /// Allows awarding achievements and leaderboard scores,
 /// and also showing the platforms' UI overlays for achievements
@@ -76,44 +76,57 @@ class GamesServicesController {
     }
   }
 
-  /// Launches the platform's UI overlay with leaderboard(s).
-  Future<void> showLeaderboard() async {
+  /// Launches the platform's UI overlay listing every leaderboard (#14) -
+  /// an empty leaderboard ID shows the full list rather than a single
+  /// board.
+  Future<void> showLeaderboards() async {
     if (!await signedIn) {
-      _log.severe('Trying to show leaderboard when not logged in.');
+      _log.severe('Trying to show leaderboards when not logged in.');
       return;
     }
 
     try {
-      await gs.GamesServices.showLeaderboards(
-        // TODO: When ready, change both these leaderboard IDs.
-        iOSLeaderboardID: "some_id_from_app_store",
-        androidLeaderboardID: "sOmE_iD_fRoM_gPlAy",
-      );
+      await gs.GamesServices.showLeaderboards();
     } catch (e) {
-      _log.severe('Cannot show leaderboard: $e');
+      _log.severe('Cannot show leaderboards: $e');
     }
   }
 
-  /// Submits [score] to the leaderboard.
-  Future<void> submitLeaderboardScore(Score score) async {
+  /// Submits [value] to the [category] leaderboard (#14).
+  Future<void> submitLeaderboardScore(
+      LeaderboardCategory category, int value) async {
     if (!await signedIn) {
       _log.warning('Trying to submit leaderboard when not logged in.');
       return;
     }
 
-    _log.info('Submitting $score to leaderboard.');
+    _log.info('Submitting $value to the $category leaderboard.');
 
     try {
       await gs.GamesServices.submitScore(
         score: gs.Score(
-          // TODO: When ready, change these leaderboard IDs.
-          iOSLeaderboardID: 'some_id_from_app_store',
-          androidLeaderboardID: 'sOmE_iD_fRoM_gPlAy',
-          value: score.score,
+          iOSLeaderboardID: LeaderboardIds.ios(category),
+          androidLeaderboardID: LeaderboardIds.android(category),
+          value: value,
         ),
       );
     } catch (e) {
-      _log.severe('Cannot submit leaderboard score: $e');
+      _log.severe('Cannot submit $category leaderboard score: $e');
     }
+  }
+
+  /// Submits the current standing in all three leaderboards (#14): total
+  /// score, best single run, and how many verses are memorized. Meant to
+  /// be called once after each finished run.
+  Future<void> submitAllLeaderboardScores({
+    required int totalScore,
+    required int bestSingleRunScore,
+    required int memorizedVerseCount,
+  }) async {
+    await submitLeaderboardScore(LeaderboardCategory.totalScore, totalScore);
+    await submitLeaderboardScore(
+        LeaderboardCategory.bestSingleRun, bestSingleRunScore);
+    await submitLeaderboardScore(
+        LeaderboardCategory.versesMemorized, memorizedVerseCount);
   }
 }

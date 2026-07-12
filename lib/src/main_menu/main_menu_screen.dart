@@ -13,7 +13,6 @@ import '../games_services/games_services.dart';
 import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
-import '../style/responsive_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -26,98 +25,106 @@ class MainMenuScreen extends StatelessWidget {
     final audioController = context.watch<AudioController>();
     final l10n = AppLocalizations.of(context)!;
 
+    // Always a single centered, stacked column - unlike most other screens,
+    // the main menu is short enough that ResponsiveScreen's landscape split
+    // (title on the left, buttons pinned to the bottom-right) just leaves
+    // most of a wide/16:9 window empty instead of helping (#69).
     return Scaffold(
       backgroundColor: palette.backgroundMain,
-      body: ResponsiveScreen(
-        mainAreaProminence: 0.45,
-        squarishMainArea: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Transform.rotate(
-                angle: -0.06,
-                child: Text(
-                  l10n.appTitle,
-                  textAlign: TextAlign.center,
-                  style: ScriptoriumText.display
-                      .copyWith(color: palette.inkFullOpacity),
-                ),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.rotate(
+                    angle: -0.06,
+                    child: Text(
+                      l10n.appTitle,
+                      textAlign: TextAlign.center,
+                      style: ScriptoriumText.display
+                          .copyWith(color: palette.inkFullOpacity),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // A golden rule line, like an illuminated manuscript.
+                  Container(
+                    width: 140,
+                    height: 2,
+                    color: palette.gold,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    l10n.mainMenuTagline,
+                    textAlign: TextAlign.center,
+                    style:
+                        ScriptoriumText.verse.copyWith(color: palette.inkFaded),
+                  ),
+                  const SizedBox(height: 48),
+                  ElevatedButton(
+                    onPressed: () {
+                      audioController.playSfx(SfxType.buttonTap);
+                      GoRouter.of(context).go('/play');
+                    },
+                    child: Text(l10n.play),
+                  ),
+                  _gap,
+                  if (gamesServicesController != null) ...[
+                    _hideUntilReady(
+                      ready: gamesServicesController.signedIn,
+                      child: ElevatedButton(
+                        onPressed: () =>
+                            gamesServicesController.showAchievements(),
+                        child: Text(l10n.achievements),
+                      ),
+                    ),
+                    _gap,
+                    _hideUntilReady(
+                      ready: gamesServicesController.signedIn,
+                      child: ElevatedButton(
+                        onPressed: () =>
+                            gamesServicesController.showLeaderboard(),
+                        child: Text(l10n.leaderboard),
+                      ),
+                    ),
+                    _gap,
+                  ],
+                  ElevatedButton(
+                    onPressed: () => GoRouter.of(context).push('/settings'),
+                    child: Text(l10n.settings),
+                  ),
+                  _gap,
+                  ElevatedButton(
+                    onPressed: () => GoRouter.of(context).push('/help'),
+                    child: const Text('Hilfe'),
+                  ),
+                  _gap,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: settingsController.muted,
+                      builder: (context, muted, child) {
+                        return IconButton(
+                          onPressed: () => settingsController.toggleMuted(),
+                          icon:
+                              Icon(muted ? Icons.volume_off : Icons.volume_up),
+                        );
+                      },
+                    ),
+                  ),
+                  _gap,
+                  Text(
+                    l10n.musicAttribution,
+                    style: ScriptoriumText.verse
+                        .copyWith(fontSize: 13, color: palette.inkFaded),
+                  ),
+                ],
               ),
-              const SizedBox(height: 10),
-              // A golden rule line, like an illuminated manuscript.
-              Container(
-                width: 140,
-                height: 2,
-                color: palette.gold,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                l10n.mainMenuTagline,
-                textAlign: TextAlign.center,
-                style: ScriptoriumText.verse.copyWith(color: palette.inkFaded),
-              ),
-            ],
+            ),
           ),
-        ),
-        rectangularMenuArea: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                audioController.playSfx(SfxType.buttonTap);
-                GoRouter.of(context).go('/play');
-              },
-              child: Text(l10n.play),
-            ),
-            _gap,
-            if (gamesServicesController != null) ...[
-              _hideUntilReady(
-                ready: gamesServicesController.signedIn,
-                child: ElevatedButton(
-                  onPressed: () => gamesServicesController.showAchievements(),
-                  child: Text(l10n.achievements),
-                ),
-              ),
-              _gap,
-              _hideUntilReady(
-                ready: gamesServicesController.signedIn,
-                child: ElevatedButton(
-                  onPressed: () => gamesServicesController.showLeaderboard(),
-                  child: Text(l10n.leaderboard),
-                ),
-              ),
-              _gap,
-            ],
-            ElevatedButton(
-              onPressed: () => GoRouter.of(context).push('/settings'),
-              child: Text(l10n.settings),
-            ),
-            _gap,
-            ElevatedButton(
-              onPressed: () => GoRouter.of(context).push('/help'),
-              child: const Text('Hilfe'),
-            ),
-            _gap,
-            Padding(
-              padding: const EdgeInsets.only(top: 32),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: settingsController.muted,
-                builder: (context, muted, child) {
-                  return IconButton(
-                    onPressed: () => settingsController.toggleMuted(),
-                    icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
-                  );
-                },
-              ),
-            ),
-            _gap,
-            Text(
-              l10n.musicAttribution,
-              style: ScriptoriumText.verse
-                  .copyWith(fontSize: 13, color: palette.inkFaded),
-            ),
-            _gap,
-          ],
         ),
       ),
     );

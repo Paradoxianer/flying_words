@@ -12,6 +12,9 @@ import 'package:flying_words/src/player_progress/player_progress.dart';
 import 'package:flying_words/src/settings/settings.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
 import 'package:flying_words/src/style/palette.dart';
+import 'package:flying_words/src/verses/bolls_bible_api_client.dart';
+import 'package:flying_words/src/verses/custom_verses_controller.dart';
+import 'package:flying_words/src/verses/persistence/memory_custom_verses_persistence.dart';
 import 'package:provider/provider.dart';
 
 Widget _wrap(PlayerProgress progress) {
@@ -19,6 +22,12 @@ Widget _wrap(PlayerProgress progress) {
     providers: [
       Provider(create: (_) => Palette()),
       ChangeNotifierProvider.value(value: progress),
+      ChangeNotifierProvider(
+        create: (_) => CustomVersesController(
+          store: MemoryCustomVersesPersistence(),
+          api: BollsBibleApiClient(),
+        ),
+      ),
       Provider<SettingsController>(
         create: (_) => SettingsController(
             persistence: MemoryOnlySettingsPersistence()),
@@ -69,6 +78,26 @@ void main() {
     expect(find.byType(SealedVerseCard), findsNWidgets(gameLevels.length - 4));
 
     // Flush the simulated async persistence writes.
+    await tester.pump(const Duration(milliseconds: 600));
+  });
+
+  testWidgets('own verses section appears once all curated verses are done',
+      (tester) async {
+    useTallSurface(tester);
+    final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+    for (final level in gameLevels) {
+      progress.setScoreforVerse(level.verse, Difficulty.slow, Score(score: 10));
+    }
+
+    await tester.pumpWidget(_wrap(progress));
+    await tester.pump();
+
+    expect(find.text('Eigene Verse'), findsOneWidget);
+    expect(find.byKey(const Key('add-verse')), findsOneWidget);
+    expect(find.text('Vers hinzufügen'), findsOneWidget);
+    // No sealed cards left.
+    expect(find.byType(SealedVerseCard), findsNothing);
+
     await tester.pump(const Duration(milliseconds: 600));
   });
 }

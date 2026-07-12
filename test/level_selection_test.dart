@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/audio/audio_controller.dart';
+import 'package:flying_words/src/game_internals/bible_reference.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/score.dart';
 import 'package:flying_words/src/level_selection/level_item.dart';
@@ -12,6 +13,7 @@ import 'package:flying_words/src/player_progress/player_progress.dart';
 import 'package:flying_words/src/settings/settings.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
 import 'package:flying_words/src/style/palette.dart';
+import 'package:flying_words/src/verses/bible_api_client.dart';
 import 'package:flying_words/src/verses/bolls_bible_api_client.dart';
 import 'package:flying_words/src/verses/custom_verses_controller.dart';
 import 'package:flying_words/src/verses/persistence/memory_custom_verses_persistence.dart';
@@ -19,16 +21,28 @@ import 'package:provider/provider.dart';
 
 import 'helpers/localized_material_app.dart';
 
-Widget _wrap(PlayerProgress progress) {
+/// A fake API client so custom verses can be seeded without a network.
+class _FakeBibleApiClient implements BibleApiClient {
+  @override
+  String get defaultTranslation => 'MB';
+
+  @override
+  Future<FetchedVerse> fetchPassage(BibleReference reference,
+          {String? translation}) async =>
+      FetchedVerse(text: 'eins zwei drei', translation: 'MB');
+}
+
+Widget _wrap(PlayerProgress progress, {CustomVersesController? customVerses}) {
   return MultiProvider(
     providers: [
       Provider(create: (_) => Palette()),
       ChangeNotifierProvider.value(value: progress),
-      ChangeNotifierProvider(
-        create: (_) => CustomVersesController(
-          store: MemoryCustomVersesPersistence(),
-          api: BollsBibleApiClient(),
-        ),
+      ChangeNotifierProvider.value(
+        value: customVerses ??
+            CustomVersesController(
+              store: MemoryCustomVersesPersistence(),
+              api: BollsBibleApiClient(),
+            ),
       ),
       Provider<SettingsController>(
         create: (_) => SettingsController(
@@ -100,6 +114,51 @@ void main() {
     expect(find.text('Vers hinzufügen'), findsOneWidget);
     // No sealed cards left.
     expect(find.byType(SealedVerseCard), findsNothing);
+
+    await tester.pump(const Duration(milliseconds: 600));
+  });
+
+  testWidgets(
+      'own verses mastered on Seal III collapse into a closed section (#80)',
+      (tester) async {
+    useTallSurface(tester);
+    final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+    for (final level in gameLevels) {
+      progress.setScoreforVerse(
+          verseProgressKey(level), Difficulty.slow, Score(score: 10));
+    }
+
+    final customVerses = CustomVersesController(
+        store: MemoryCustomVersesPersistence(), api: _FakeBibleApiClient());
+    final mastered = await customVerses.addFromReference(
+      reference: const BibleReference(book: 'JHN', chapter: 3, verseStart: 16),
+      display: 'Mastered verse',
+      progress: progress,
+    );
+    final inProgress = await customVerses.addFromReference(
+      reference: const BibleReference(book: 'JHN', chapter: 3, verseStart: 17),
+      display: 'In-progress verse',
+      progress: progress,
+    );
+    // Only the first verse is fully mastered (Seal III / insane done).
+    progress.setScoreforVerse(
+        verseProgressKey(mastered), Difficulty.insane, Score(score: 10));
+    progress.setScoreforVerse(
+        verseProgressKey(inProgress), Difficulty.slow, Score(score: 10));
+
+    await tester.pumpWidget(_wrap(progress, customVerses: customVerses));
+    await tester.pump();
+
+    // The mastered verse is tucked away, the in-progress one stays visible.
+    expect(find.text('In-progress verse'), findsOneWidget);
+    expect(find.text('Mastered verse'), findsNothing);
+    expect(find.byKey(const Key('finished-own-verses')), findsOneWidget);
+    expect(find.text('Abgeschlossen (1)'), findsOneWidget);
+
+    // Expanding it reveals the mastered verse too.
+    await tester.tap(find.byKey(const Key('finished-own-verses')));
+    await tester.pumpAndSettle();
+    expect(find.text('Mastered verse'), findsOneWidget);
 
     await tester.pump(const Duration(milliseconds: 600));
   });

@@ -24,6 +24,12 @@
   "ownVerses": "Your own verses",
   "addVerse": "Add verse",
   "finishOpenOwnVersesFirst": "Finish your open verses first",
+  "finishedOwnVerses": "Finished ({count})",
+  "@finishedOwnVerses": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
 
   "sealedHint": "Complete the previous verse (Seal I) to unlock this page.",
   "sealed": "Sealed",

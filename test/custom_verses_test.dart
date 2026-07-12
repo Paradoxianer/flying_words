@@ -85,10 +85,12 @@ void main() {
       final c = controller(api);
       final progress = freshProgress();
 
+      Lesson? first;
       for (var i = 0; i < 3; i++) {
         expect(c.canAddMore(progress), isTrue);
-        await c.addFromReference(
+        final lesson = await c.addFromReference(
             reference: ref, display: 'v$i', progress: progress);
+        first ??= lesson;
       }
       // Three unfinished custom verses block the fourth.
       expect(c.canAddMore(progress), isFalse);
@@ -98,7 +100,8 @@ void main() {
       );
 
       // Finishing one on seal I frees a slot.
-      progress.setScoreforVerse('v0', Difficulty.slow, Score(score: 10));
+      progress.setScoreforVerse(
+          verseProgressKey(first!), Difficulty.slow, Score(score: 10));
       expect(c.canAddMore(progress), isTrue);
     });
 

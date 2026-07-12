@@ -11,11 +11,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+
+import 'l10n/gen/app_localizations.dart';
 
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
@@ -291,27 +294,39 @@ class MyApp extends StatelessWidget {
         ],
         child: Builder(builder: (context) {
           final palette = context.watch<Palette>();
+          final settings = context.watch<SettingsController>();
 
-          return MaterialApp.router(
-            title: 'Flying Words',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: palette.gold,
-                surface: palette.backgroundMain,
-              ),
-              fontFamily: bodyFontFamily,
-              textTheme: TextTheme(
-                bodyMedium: TextStyle(
-                  color: palette.ink,
-                  fontFamily: bodyFontFamily,
+          return ValueListenableBuilder<Locale>(
+            valueListenable: settings.locale,
+            builder: (context, locale, child) => MaterialApp.router(
+              title: 'Flying Words',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: palette.gold,
+                  surface: palette.backgroundMain,
                 ),
+                fontFamily: bodyFontFamily,
+                textTheme: TextTheme(
+                  bodyMedium: TextStyle(
+                    color: palette.ink,
+                    fontFamily: bodyFontFamily,
+                  ),
+                ),
+                useMaterial3: true,
               ),
-              useMaterial3: true,
+              locale: locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              routeInformationProvider: _router.routeInformationProvider,
+              routeInformationParser: _router.routeInformationParser,
+              routerDelegate: _router.routerDelegate,
+              scaffoldMessengerKey: scaffoldMessengerKey,
             ),
-            routeInformationProvider: _router.routeInformationProvider,
-            routeInformationParser: _router.routeInformationParser,
-            routerDelegate: _router.routerDelegate,
-            scaffoldMessengerKey: scaffoldMessengerKey,
           );
         }),
       ),

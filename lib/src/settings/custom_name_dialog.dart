@@ -5,6 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import '../../l10n/gen/app_localizations.dart';
 import 'settings.dart';
 
 void showCustomNameDialog(BuildContext context) {
@@ -28,13 +30,14 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ScaleTransition(
       scale: CurvedAnimation(
         parent: widget.animation,
         curve: Curves.easeOutCubic,
       ),
       child: SimpleDialog(
-        title: const Text('Name ändern'),
+        title: Text(l10n.changeName),
         children: [
           TextField(
             controller: _controller,
@@ -54,7 +57,7 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Schließen'),
+            child: Text(l10n.close),
           ),
         ],
       ),

@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import 'persistence/settings_persistence.dart';
 
@@ -21,6 +22,9 @@ class SettingsController {
 
   ValueNotifier<bool> musicOn = ValueNotifier(false);
 
+  /// The app's UI language (#2); defaults to German.
+  ValueNotifier<Locale> locale = ValueNotifier(const Locale('de'));
+
   /// Creates a new instance of [SettingsController] backed by [persistence].
   SettingsController({required SettingsPersistence persistence})
       : _persistence = persistence;
@@ -37,12 +41,20 @@ class SettingsController {
       _persistence.getSoundsOn().then((value) => soundsOn.value = value),
       _persistence.getMusicOn().then((value) => musicOn.value = value),
       _persistence.getPlayerName().then((value) => playerName.value = value),
+      _persistence
+          .getLanguageCode()
+          .then((value) => locale.value = Locale(value)),
     ]);
   }
 
   void setPlayerName(String name) {
     playerName.value = name;
     _persistence.savePlayerName(playerName.value);
+  }
+
+  void setLocale(Locale value) {
+    locale.value = value;
+    _persistence.saveLanguageCode(value.languageCode);
   }
 
   void toggleMusicOn() {

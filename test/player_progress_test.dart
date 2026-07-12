@@ -131,5 +131,37 @@ void main() {
       expect(progress.getScoreforVerse('v', Difficulty.slow)!.score, 30);
       expect(progress.playerScore, 30);
     });
+
+    test(
+        'migrates progress stored under an old, localized display key to '
+        'the stable verse number (#2)', () async {
+      final store = MemoryOnlyPlayerProgressPersistence();
+      final seed = VerseProgress();
+      seed[Difficulty.slow] = Score(score: 30);
+      // Simulates progress persisted before the #2 key migration, keyed by
+      // the (localized, unstable) display text instead of the verse number.
+      await store.savePlayerProgress({'Johannes 3, 16': seed});
+      final lesson =
+          Lesson(number: 2, verse: 'Johannes 3, 16', text: 'Denn also');
+
+      final progress = PlayerProgress(store);
+      await progress.getLatestFromStore(knownLessons: [lesson]);
+
+      expect(progress.getScoreforVerse('Johannes 3, 16', Difficulty.slow),
+          isNull);
+      expect(
+          progress.getScoreforVerse(verseProgressKey(lesson), Difficulty.slow)!
+              .score,
+          30);
+
+      // The migration is persisted, not just applied in memory.
+      final reloaded = PlayerProgress(store);
+      await reloaded.getLatestFromStore();
+      expect(
+          reloaded
+              .getScoreforVerse(verseProgressKey(lesson), Difficulty.slow)!
+              .score,
+          30);
+    });
   });
 }

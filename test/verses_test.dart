@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/game_internals/bible_reference.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
@@ -68,6 +69,40 @@ void main() {
       final first = gameLevels.singleWhere((l) => l.number == 1);
       expect(first.reference!.chapter, 6);
       expect(first.reference!.verseStart, 12);
+    });
+
+    test('the English curated verses load too, with the WEB translation',
+        () async {
+      await loadCuratedVerses(locale: const Locale('en'));
+      expect(gameLevels, isNotEmpty);
+      for (final lesson in gameLevels) {
+        expect(lesson.translation, 'WEB');
+        expect(lesson.text.trim(), isNotEmpty);
+      }
+      final john = gameLevels.singleWhere((l) => l.number == 2);
+      expect(john.verse, 'John 3:16');
+      expect(john.text, contains('eternal life'));
+    });
+
+    test('curated verse numbers and references match across languages (#2)',
+        () async {
+      await loadCuratedVerses();
+      final german = {for (final l in gameLevels) l.number: l.reference};
+
+      await loadCuratedVerses(locale: const Locale('en'));
+      final english = {for (final l in gameLevels) l.number: l.reference};
+
+      expect(english.keys.toSet(), german.keys.toSet(),
+          reason: 'progress must key by number across languages (#2)');
+      for (final number in german.keys) {
+        expect(english[number].toString(), german[number].toString(),
+            reason: 'verse $number should point at the same passage in '
+                'both languages');
+      }
+
+      // Leave gameLevels in the default language for any test that runs
+      // after this one in the same process.
+      await loadCuratedVerses();
     });
   });
 }

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/gen/app_localizations.dart';
+import '../game_internals/lesson.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
@@ -26,7 +27,9 @@ class LevelSelectionScreen extends StatelessWidget {
     final playerProgress = context.watch<PlayerProgress>();
     final customVerses = context.watch<CustomVersesController>();
     final l10n = AppLocalizations.of(context)!;
-    final orderedVerses = [for (final level in gameLevels) level.verse];
+    final orderedVerses = [
+      for (final level in gameLevels) verseProgressKey(level)
+    ];
     final unlockedCount = playerProgress.unlockedVerseCount(orderedVerses);
     // Own verses open once the whole curated list is finished on seal I.
     final ownVersesUnlocked =

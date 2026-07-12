@@ -11,14 +11,21 @@ import 'package:flying_words/l10n/gen/app_localizations.dart';
 class LocalizedMaterialApp extends StatelessWidget {
   final Widget home;
 
-  const LocalizedMaterialApp({super.key, required this.home});
+  /// Matches the app's own default (SettingsController.locale) so tests see
+  /// German text regardless of the test runner's platform locale, unless a
+  /// test explicitly needs English.
+  final Locale locale;
+
+  const LocalizedMaterialApp({
+    super.key,
+    required this.home,
+    this.locale = const Locale('de'),
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Matches the app's own default (SettingsController.locale) so tests
-      // see German text regardless of the test runner's platform locale.
-      locale: const Locale('de'),
+      locale: locale,
       home: home,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

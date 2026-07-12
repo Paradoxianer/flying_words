@@ -10,6 +10,9 @@ import 'package:provider/provider.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
+import '../style/scriptorium_text.dart';
+import '../verses/custom_verses_controller.dart';
+import '../verses/verse_picker.dart';
 import 'levels.dart';
 import 'sealed_verse_card.dart';
 
@@ -20,8 +23,12 @@ class LevelSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final playerProgress = context.watch<PlayerProgress>();
+    final customVerses = context.watch<CustomVersesController>();
     final orderedVerses = [for (final level in gameLevels) level.verse];
     final unlockedCount = playerProgress.unlockedVerseCount(orderedVerses);
+    // Own verses open once the whole curated list is finished on seal I.
+    final ownVersesUnlocked =
+        customVersesUnlocked(orderedVerses, playerProgress);
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
@@ -54,6 +61,34 @@ class LevelSelectionScreen extends StatelessWidget {
                         // The very next verse hints at how to open it.
                         isNext: i == unlockedCount,
                       ),
+                  if (ownVersesUnlocked) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                      child: Text(
+                        'Eigene Verse',
+                        style: ScriptoriumText.heading
+                            .copyWith(color: palette.inkFullOpacity),
+                      ),
+                    ),
+                    for (final verse in customVerses.verses) LevelItem(verse),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      child: FilledButton.icon(
+                        key: const Key('add-verse'),
+                        onPressed:
+                            customVerses.canAddMore(playerProgress)
+                                ? () => showVersePicker(context)
+                                : null,
+                        icon: const Icon(Icons.add),
+                        label: Text(
+                          customVerses.canAddMore(playerProgress)
+                              ? 'Vers hinzufügen'
+                              : 'Erst die offenen eigenen Verse schaffen',
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

@@ -39,6 +39,9 @@ import 'src/style/my_transition.dart';
 import 'src/style/palette.dart';
 import 'src/style/scriptorium_text.dart';
 import 'src/style/snack_bar.dart';
+import 'src/verses/bolls_bible_api_client.dart';
+import 'src/verses/custom_verses_controller.dart';
+import 'src/verses/persistence/local_storage_custom_verses_persistence.dart';
 import 'src/win_game/win_game_screen.dart';
 
 Future<void> main() async {
@@ -113,9 +116,18 @@ void guardedMain() {
   //   inAppPurchaseController.restorePurchases();
   // }
 
-  // Load the curated verses from their JSON asset before starting the app,
-  // so the (synchronous) router and level selection have them ready.
-  loadCuratedVerses().then((_) {
+  final customVersesController = CustomVersesController(
+    store: LocalStorageCustomVersesPersistence(),
+    api: BollsBibleApiClient(),
+  );
+
+  // Load the curated verses from their JSON asset and the player's own
+  // verses before starting the app, so the (synchronous) router and level
+  // selection have them ready.
+  Future.wait([
+    loadCuratedVerses(),
+    customVersesController.loadFromStore(),
+  ]).then((_) {
     runApp(
       MyApp(
         settingsPersistence: LocalStorageSettingsPersistence(),
@@ -123,6 +135,7 @@ void guardedMain() {
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
+        customVersesController: customVersesController,
       ),
     );
   });
@@ -154,7 +167,11 @@ class MyApp extends StatelessWidget {
                       final Difficulty difficulty = Difficulty.values
                               .asNameMap()[state.pathParameters['difficulty']!] ??
                           Difficulty.slow;
-                      final level = gameLevels
+                      // Look up the verse among the curated ones and the
+                      // player's own custom verses.
+                      final custom =
+                          context.read<CustomVersesController>().verses;
+                      final level = [...gameLevels, ...custom]
                           .singleWhere((e) => e.number == levelNumber);
                       final startBlind =
                           state.uri.queryParameters['blind'] == '1';
@@ -216,12 +233,15 @@ class MyApp extends StatelessWidget {
 
   final AdsController? adsController;
 
+  final CustomVersesController customVersesController;
+
   const MyApp({
     required this.playerProgressPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
     required this.gamesServicesController,
+    required this.customVersesController,
     super.key,
   });
 
@@ -239,6 +259,8 @@ class MyApp extends StatelessWidget {
           ),
           Provider<GamesServicesController?>.value(
               value: gamesServicesController),
+          ChangeNotifierProvider<CustomVersesController>.value(
+              value: customVersesController),
           Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController),

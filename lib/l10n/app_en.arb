@@ -106,5 +106,72 @@
   "helpBlindTitle": "The eye — play blind",
   "helpBlindBody": "Above the verse, the eye icon lets you hide the text and play entirely from memory. A successful blind run earns 50% more points.",
   "helpOwnVersesTitle": "Your own verses",
-  "helpOwnVersesBody": "Once you've finished every curated verse on Seal I, you can add your own Bible passages and learn them by heart the same way."
+  "helpOwnVersesBody": "Once you've finished every curated verse on Seal I, you can add your own Bible passages and learn them by heart the same way.",
+
+  "impressum": "Legal Notice",
+  "impressumProviderTitle": "Provider",
+  "impressumProviderBody": "{name}\n{street}\n{zipCity}\n{country}",
+  "@impressumProviderBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "street": {"type": "String"},
+      "zipCity": {"type": "String"},
+      "country": {"type": "String"}
+    }
+  },
+  "impressumContactTitle": "Contact",
+  "impressumContactBody": "{email}\n{phone}",
+  "@impressumContactBody": {
+    "placeholders": {
+      "email": {"type": "String"},
+      "phone": {"type": "String"}
+    }
+  },
+  "impressumResponsibleTitle": "Responsible for content",
+  "impressumResponsibleBody": "Unless a different party is named here, the provider named above under 'Provider' is responsible for content under German law (§ 18(2) MStV). This separate entry is only mandatory for editorial content with a certain reach.",
+  "impressumDisputeTitle": "Dispute resolution",
+  "impressumDisputeBody": "The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr/. You can find our email address above under 'Contact'.\n\nWe are neither obliged nor willing to take part in dispute resolution proceedings before a consumer arbitration board.",
+  "impressumLiabilityTitle": "Liability notice",
+  "impressumLiabilityBody": "The Bible texts shown in this app are retrieved through the bolls.life interface. Despite careful review, we cannot guarantee the accuracy, completeness or timeliness of the translations. The operators of linked external sites (e.g. Google, Apple) are solely responsible for their own content.",
+
+  "privacyPolicy": "Privacy Policy",
+  "privacyOptions": "Ad privacy options",
+  "privacyControllerTitle": "Data controller",
+  "privacyControllerBody": "The controller responsible for data processing under the General Data Protection Regulation (GDPR) is:\n\n{name}\n{address}\n{email}",
+  "@privacyControllerBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "address": {"type": "String"},
+      "email": {"type": "String"}
+    }
+  },
+  "privacyOverviewTitle": "General information",
+  "privacyOverviewBody": "We only process personal data within the framework of the GDPR's legal provisions. Depending on the processing activity, the legal basis is Art. 6(1)(a) (consent), (b) (contract performance) or (f) (legitimate interest) GDPR, as noted for each activity below. Flying Words does not run its own servers - data is either stored exclusively on your device or transmitted directly to the third-party providers named below.",
+  "privacyLocalTitle": "Local storage",
+  "privacyLocalBody": "Your game progress (unlocked seals, best times, stars), your language setting and your chosen player name are stored exclusively on your device (technically: shared_preferences, or the browser's local storage on the web). This data never leaves your device and is not transmitted to us. Legal basis: Art. 6(1)(f) GDPR (legitimate interest in a working app).",
+  "privacyVerseApiTitle": "Bible verse lookup",
+  "privacyVerseApiBody": "To load Bible text for freely chosen custom verses, the app contacts the public bolls.life API. Only book, chapter and verse are sent, no personal data. The bolls.life privacy policy applies.",
+  "privacyAdsTitle": "Advertising (Google AdMob)",
+  "privacyAdsBody": "To offer the app for free, we show ads through Google AdMob (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland). Your device's advertising identifier and other technical data may be processed to display ads and measure their effectiveness; with your consent, also to personalize ads.\n\nOn first launch we ask for your consent via a consent dialog (Google User Messaging Platform) where legally required. You can change or withdraw your choice at any time under Settings -> 'Ad privacy options'.\n\nLegal basis: Art. 6(1)(a) GDPR (consent) for personalized ads, otherwise Art. 6(1)(f) GDPR. More information: https://policies.google.com/privacy and https://policies.google.com/technologies/partner-sites.",
+  "privacyGameServicesTitle": "Player account & leaderboard",
+  "privacyGameServicesBody": "For achievements and leaderboards you can sign in with your existing game account: Google Play Games Services (Google Ireland Limited) on Android, Apple Game Center (Apple Distribution International, Hollyhill Industrial Estate, Cork, Ireland) on iOS. This transmits your player ID or player name plus achievements and scores to the respective provider, which processes them under its own privacy policy.\n\nSigning in is optional; without it the game works fully offline and locally. Legal basis: Art. 6(1)(a) GDPR (consent through actively signing in).\n\nMore information: https://policies.google.com/privacy (Google) and https://www.apple.com/legal/privacy/ (Apple).",
+  "privacyCloudSaveTitle": "Planned cloud save (in preparation)",
+  "privacyCloudSaveBody": "We plan to optionally back up your game progress across devices using the same game account (Google Play Games or Apple Game Center, see above). This feature is not active yet; this privacy policy will be updated once it launches.",
+  "privacyThirdCountryTitle": "Transfers to third countries",
+  "privacyThirdCountryBody": "Google and Apple may also process data in countries outside the EU/EEA, in particular the USA. Both providers are contractually bound to comply with the EU Standard Contractual Clauses or comparable safeguards.",
+  "privacyRetentionTitle": "Storage duration",
+  "privacyRetentionBody": "Locally stored data stays on your device until you uninstall the app or delete it yourself via 'Reset progress'. Storage duration at Google and Apple is governed by their own privacy policies.",
+  "privacyRightsTitle": "Your rights",
+  "privacyRightsBody": "Under the GDPR you have the right to access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and objection to processing (Art. 21). You can withdraw any consent at any time with future effect (Art. 7(3) GDPR), e.g. via Settings -> 'Ad privacy options'.",
+  "privacyComplaintTitle": "Right to complain",
+  "privacyComplaintBody": "You have the right to lodge a complaint with a data protection supervisory authority, in particular in the member state of your habitual residence, workplace, or the place of the alleged infringement.",
+  "privacyAutomatedTitle": "No automated decision-making",
+  "privacyAutomatedBody": "There is no automated decision-making or profiling within the meaning of Art. 22 GDPR that produces legal effects concerning you or similarly significantly affects you.",
+  "privacyChangesTitle": "Changes to this privacy policy",
+  "privacyChangesBody": "We will update this privacy policy whenever data processing in the app changes, e.g. when cloud save launches. Last updated: {date}.",
+  "@privacyChangesBody": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  }
 }

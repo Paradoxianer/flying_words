@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/gen/app_localizations.dart';
+import '../ads/ads_controller.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
@@ -106,6 +107,33 @@ class SettingsScreen extends StatelessWidget {
                   SnackBar(content: Text(l10n.progressResetConfirmation)),
                 );
               },
+            ),
+            Consumer<AdsController?>(builder: (context, adsController, child) {
+              if (adsController == null) {
+                // Ads aren't enabled yet (#17); nothing to reopen.
+                return const SizedBox.shrink();
+              }
+              return FutureBuilder<bool>(
+                future: adsController.privacyOptionsRequired,
+                builder: (context, snapshot) {
+                  if (snapshot.data != true) return const SizedBox.shrink();
+                  return _SettingsLine(
+                    l10n.privacyOptions,
+                    const Icon(Icons.privacy_tip_outlined),
+                    onSelected: () => adsController.showPrivacyOptionsForm(),
+                  );
+                },
+              );
+            }),
+            _SettingsLine(
+              l10n.impressum,
+              const Icon(Icons.description_outlined),
+              onSelected: () => GoRouter.of(context).push('/impressum'),
+            ),
+            _SettingsLine(
+              l10n.privacyPolicy,
+              const Icon(Icons.policy_outlined),
+              onSelected: () => GoRouter.of(context).push('/privacy'),
             ),
             _gap,
           ],

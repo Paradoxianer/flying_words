@@ -106,5 +106,72 @@
   "helpBlindTitle": "Das Auge — blind spielen",
   "helpBlindBody": "Über dem Vers kannst du mit dem Augensymbol den Text verbergen und ganz aus dem Gedächtnis spielen. Ein erfolgreicher blinder Lauf bringt 50 % mehr Punkte.",
   "helpOwnVersesTitle": "Eigene Verse",
-  "helpOwnVersesBody": "Hast du alle vorgegebenen Verse in Siegel I geschafft, kannst du dir eigene Bibelstellen hinzufügen und ebenso spielend auswendig lernen."
+  "helpOwnVersesBody": "Hast du alle vorgegebenen Verse in Siegel I geschafft, kannst du dir eigene Bibelstellen hinzufügen und ebenso spielend auswendig lernen.",
+
+  "impressum": "Impressum",
+  "impressumProviderTitle": "Anbieter",
+  "impressumProviderBody": "{name}\n{street}\n{zipCity}\n{country}",
+  "@impressumProviderBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "street": {"type": "String"},
+      "zipCity": {"type": "String"},
+      "country": {"type": "String"}
+    }
+  },
+  "impressumContactTitle": "Kontakt",
+  "impressumContactBody": "{email}\n{phone}",
+  "@impressumContactBody": {
+    "placeholders": {
+      "email": {"type": "String"},
+      "phone": {"type": "String"}
+    }
+  },
+  "impressumResponsibleTitle": "Verantwortlich für den Inhalt",
+  "impressumResponsibleBody": "Sofern hier keine abweichende Person genannt ist, gilt die oben unter „Anbieter“ genannte Person als verantwortlich im Sinne von § 18 Abs. 2 MStV. Diese gesonderte Angabe ist nur bei journalistisch-redaktionellen Inhalten mit gewisser Reichweite verpflichtend.",
+  "impressumDisputeTitle": "Streitschlichtung",
+  "impressumDisputeBody": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr/. Unsere E-Mail-Adresse findest du oben unter „Kontakt“.\n\nWir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+  "impressumLiabilityTitle": "Haftungshinweis",
+  "impressumLiabilityBody": "Die in dieser App angezeigten Bibeltexte werden über die Schnittstelle von bolls.life bezogen. Für die Richtigkeit, Vollständigkeit und Aktualität der Übersetzungen können wir trotz sorgfältiger Prüfung keine Gewähr übernehmen. Für Inhalte verlinkter externer Seiten (z. B. Google, Apple) sind ausschließlich deren Betreiber verantwortlich.",
+
+  "privacyPolicy": "Datenschutz",
+  "privacyOptions": "Datenschutzeinstellungen für Werbung",
+  "privacyControllerTitle": "Verantwortlicher",
+  "privacyControllerBody": "Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:\n\n{name}\n{address}\n{email}",
+  "@privacyControllerBody": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "address": {"type": "String"},
+      "email": {"type": "String"}
+    }
+  },
+  "privacyOverviewTitle": "Allgemeines",
+  "privacyOverviewBody": "Wir verarbeiten personenbezogene Daten nur im Rahmen der gesetzlichen Bestimmungen der DSGVO. Die Rechtsgrundlage richtet sich je nach Verarbeitung nach Art. 6 Abs. 1 lit. a (Einwilligung), lit. b (Vertragserfüllung) oder lit. f (berechtigtes Interesse) DSGVO und wird bei den einzelnen Verarbeitungen unten genannt. Flying Words selbst betreibt keine eigenen Server – Daten werden entweder ausschließlich lokal auf deinem Gerät gespeichert oder direkt an die unten genannten Drittanbieter übertragen.",
+  "privacyLocalTitle": "Lokale Speicherung",
+  "privacyLocalBody": "Dein Spielfortschritt (freigeschaltete Siegel, Bestzeiten, Sterne), deine Spracheinstellung und dein gewählter Spielername werden ausschließlich lokal auf deinem Gerät gespeichert (technisch: shared_preferences, im Web der Local Storage des Browsers). Diese Daten verlassen dein Gerät nicht und werden nicht an uns übertragen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionierenden App).",
+  "privacyVerseApiTitle": "Bibelvers-Abruf",
+  "privacyVerseApiBody": "Zum Laden von Bibeltexten für frei wählbare eigene Verse kontaktiert die App die öffentliche Programmierschnittstelle von bolls.life. Dabei werden nur Buch, Kapitel und Vers übermittelt, keine personenbezogenen Daten. Es gilt die Datenschutzerklärung von bolls.life.",
+  "privacyAdsTitle": "Werbung (Google AdMob)",
+  "privacyAdsBody": "Um die App kostenlos anbieten zu können, zeigen wir Werbung über den Dienst Google AdMob (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Dabei können die Werbekennung deines Geräts und weitere technische Daten verarbeitet werden, um Werbung anzuzeigen und deren Wirksamkeit zu messen; bei erteilter Einwilligung auch zur Personalisierung der Werbung.\n\nBeim ersten Start fragen wir dich über einen Consent-Dialog (Google User Messaging Platform), sofern gesetzlich erforderlich, um deine Einwilligung. Du kannst deine Auswahl jederzeit über Einstellungen → „Datenschutzeinstellungen für Werbung“ ändern oder widerrufen.\n\nRechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) für personalisierte Werbung, sonst Art. 6 Abs. 1 lit. f DSGVO. Weitere Informationen: https://policies.google.com/privacy und https://policies.google.com/technologies/partner-sites.",
+  "privacyGameServicesTitle": "Spielerkonto & Bestenliste",
+  "privacyGameServicesBody": "Für Erfolge und Bestenlisten kannst du dich mit deinem bestehenden Spielekonto anmelden: unter Android mit Google Play Games Services (Google Ireland Limited), unter iOS mit Apple Game Center (Apple Distribution International, Hollyhill Industrial Estate, Cork, Irland). Dabei werden deine Spieler-ID bzw. dein Spielername sowie Erfolge und Punktestände an den jeweiligen Anbieter übertragen und dort gemäß dessen eigener Datenschutzerklärung verarbeitet.\n\nDie Anmeldung ist freiwillig; ohne sie ist das Spiel vollständig offline und lokal nutzbar. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktive Anmeldung).\n\nWeitere Informationen: https://policies.google.com/privacy (Google) bzw. https://www.apple.com/legal/privacy/de-ww/ (Apple).",
+  "privacyCloudSaveTitle": "Geplante Cloud-Speicherung (in Vorbereitung)",
+  "privacyCloudSaveBody": "Wir planen, den Spielfortschritt optional geräteübergreifend über dasselbe Spielekonto (Google Play Games bzw. Apple Game Center, siehe oben) zu sichern. Diese Funktion ist noch nicht aktiv; diese Datenschutzerklärung wird aktualisiert, sobald sie eingeführt wird.",
+  "privacyThirdCountryTitle": "Übermittlung in Drittländer",
+  "privacyThirdCountryBody": "Google und Apple können Daten auch in Ländern außerhalb der EU/des EWR, insbesondere den USA, verarbeiten. Beide Anbieter haben sich vertraglich zur Einhaltung der EU-Standardvertragsklauseln bzw. vergleichbarer Garantien verpflichtet.",
+  "privacyRetentionTitle": "Speicherdauer",
+  "privacyRetentionBody": "Lokal gespeicherte Daten bleiben bis zur Deinstallation der App bzw. bis du sie über „Fortschritt zurücksetzen“ selbst löschst auf deinem Gerät. Für die Speicherdauer bei Google und Apple gelten deren eigene Datenschutzerklärungen.",
+  "privacyRightsTitle": "Deine Rechte",
+  "privacyRightsBody": "Dir stehen nach der DSGVO folgende Rechte zu: Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie Widerspruch gegen die Verarbeitung (Art. 21). Erteilte Einwilligungen kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO), z. B. über Einstellungen → „Datenschutzeinstellungen für Werbung“.",
+  "privacyComplaintTitle": "Beschwerderecht",
+  "privacyComplaintBody": "Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, insbesondere in dem Mitgliedstaat deines Aufenthaltsorts, Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.",
+  "privacyAutomatedTitle": "Keine automatisierte Entscheidungsfindung",
+  "privacyAutomatedBody": "Es findet keine automatisierte Entscheidungsfindung oder ein Profiling im Sinne von Art. 22 DSGVO statt, das dir gegenüber rechtliche Wirkung entfaltet oder dich in ähnlicher Weise erheblich beeinträchtigt.",
+  "privacyChangesTitle": "Änderungen dieser Datenschutzerklärung",
+  "privacyChangesBody": "Wir passen diese Datenschutzerklärung an, sobald sich die Datenverarbeitung in der App ändert, z. B. bei Einführung der Cloud-Speicherung. Stand: {date}.",
+  "@privacyChangesBody": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  }
 }

@@ -82,6 +82,9 @@ class _VersePickerDialogState extends State<VersePickerDialog> {
             reference: reference,
             display: display,
             progress: context.read<PlayerProgress>(),
+            // Without this, custom verses always came back in German (the
+            // API client's default), even with the UI set to English (#87).
+            translation: locale.languageCode == 'en' ? 'WEB' : 'MB',
           );
       if (mounted) Navigator.pop(context, true);
     } on VerseFetchException catch (e) {

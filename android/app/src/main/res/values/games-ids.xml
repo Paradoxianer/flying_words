@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Google Play Games Services IDs (#14). AndroidManifest.xml references
+    @string/app_id directly, so this file must exist for the app to build.
+
+    Replace app_id with the real value: Play Console -> Play Games Services
+    -> Setup and management -> Configuration -> Credentials -> the Android
+    credential -> "Ressourcen abrufen" downloads this exact file.-->
+<resources>
+    <!--app_id-->
+    <string name="app_id" translatable="false">PLATZHALTER_APP_ID</string>
+    <!--package_name-->
+    <string name="package_name" translatable="false">de.heilsarmee.flying_words</string>
+</resources>

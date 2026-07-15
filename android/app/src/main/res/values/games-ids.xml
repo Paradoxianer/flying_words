@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Google Play Games Services IDs (#14). AndroidManifest.xml references
-    @string/app_id directly, so this file must exist for the app to build.
-
-    Replace app_id with the real value: Play Console -> Play Games Services
-    -> Setup and management -> Configuration -> Credentials -> the Android
-    credential -> "Ressourcen abrufen" downloads this exact file.-->
+<!--Google Play game services IDs. Save this file as res/values/games-ids.xml in your project.-->
 <resources>
-    <!--app_id-->
-    <string name="app_id" translatable="false">PLATZHALTER_APP_ID</string>
-    <!--package_name-->
-    <string name="package_name" translatable="false">de.heilsarmee.flying_words</string>
+  <!--app_id-->
+  <string name="app_id" translatable="false">409624773433</string>
+  <!--package_name-->
+  <string name="package_name" translatable="false">de.heilsarmee.flying_words</string>
+  <!--leaderboard Gesamtpunktzahl-->
+  <string name="leaderboard_gesamtpunktzahl" translatable="false">CgkIuYao_PULEAIQAQ</string>
+  <!--leaderboard Bester Einzellauf-->
+  <string name="leaderboard_bester_einzellauf" translatable="false">CgkIuYao_PULEAIQAg</string>
+  <!--leaderboard Auswendig gelernte Verse-->
+  <string name="leaderboard_auswendig_gelernte_verse" translatable="false">CgkIuYao_PULEAIQAw</string>
 </resources>

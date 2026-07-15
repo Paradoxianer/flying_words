@@ -127,24 +127,19 @@
     }
   },
 
-  "jokerGraceName": "Grace",
-  "jokerGraceDescription": "Forgives your next mistake.",
+  "jokerPickerLabel": "Jokers for this round",
   "jokerSanduhrName": "Hourglass",
-  "jokerSanduhrDescription": "Slows the words down for the rest of the run.",
-  "jokerTintenloescherName": "Ink Eraser",
-  "jokerTintenloescherDescription": "Wipes three wrong words off the screen.",
-  "jokerFederkielName": "Quill",
-  "jokerFederkielDescription": "Writes the current word automatically.",
+  "jokerSanduhrDescription": "All words fly 50% slower for the whole round.",
+  "jokerVergebungName": "Grace",
+  "jokerVergebungDescription": "One wrong word in the round doesn't count.",
+  "jokerKlarheitName": "Clarity",
+  "jokerKlarheitDescription": "Removes about a third of the wrong words from the round.",
+  "jokerBonuszeitName": "Bonus Time",
+  "jokerBonuszeitDescription": "Every word stays visible 3 seconds longer.",
   "jokerOwnedCount": "{count}×",
   "@jokerOwnedCount": {
     "placeholders": {
       "count": {"type": "int"}
-    }
-  },
-  "jokerNoneOwned": "No {joker} left.",
-  "@jokerNoneOwned": {
-    "placeholders": {
-      "joker": {"type": "String"}
     }
   },
 

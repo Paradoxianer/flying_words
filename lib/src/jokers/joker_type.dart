@@ -2,18 +2,21 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// The four Jokers a player can use during a run (#53). Each one calls a
-/// matching `LevelState.useX()` method that carries out its effect.
+/// The four Jokers a player can bring into a run (#53). Chosen from the
+/// inventory before the round starts (in the level selection) - there is
+/// no in-play activation, since there is no time to spare while catching
+/// words.
 enum JokerType {
-  /// "Gnade": forgives the next mistake instead of counting it as an error.
-  grace,
-
-  /// "Sanduhr": stretches the flight time of the words that follow by 50%.
+  /// "Sanduhr": the words fly noticeably slower for the whole round.
   sanduhr,
 
-  /// "Tintenlöscher": clears a few wrong words off the screen.
-  tintenloescher,
+  /// "Vergebung": one wrong word in the round doesn't count as an error.
+  vergebung,
 
-  /// "Federkiel": auto-writes the current word.
-  federkiel,
+  /// "Klarheit": about a third of the wrong word options are removed for
+  /// the whole round.
+  klarheit,
+
+  /// "Bonuszeit": every word stays visible a few seconds longer.
+  bonuszeit,
 }

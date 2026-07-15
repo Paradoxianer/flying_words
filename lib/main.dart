@@ -33,6 +33,7 @@ import 'src/games_services/score.dart';
 import 'src/help/help_screen.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
 import 'src/jokers/joker_inventory.dart';
+import 'src/jokers/joker_type.dart';
 import 'src/jokers/persistence/joker_inventory_persistence.dart';
 import 'src/jokers/persistence/local_storage_joker_inventory_persistence.dart';
 import 'src/leaderboard/local_leaderboard_screen.dart';
@@ -200,12 +201,23 @@ class MyApp extends StatelessWidget {
                           .singleWhere((e) => e.number == levelNumber);
                       final startBlind =
                           state.uri.queryParameters['blind'] == '1';
+                      // Jokers chosen in the level selection before this
+                      // round (#53).
+                      final jokersParam = state.uri.queryParameters['jokers'];
+                      final selectedJokers = jokersParam == null ||
+                              jokersParam.isEmpty
+                          ? const <JokerType>{}
+                          : jokersParam
+                              .split(',')
+                              .map(JokerType.values.byName)
+                              .toSet();
                       return buildMyTransition<void>(
                         child: PlaySessionScreen(
                           level,
                           difficulty,
                           key: const Key('play session'),
                           startBlind: startBlind,
+                          selectedJokers: selectedJokers,
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );

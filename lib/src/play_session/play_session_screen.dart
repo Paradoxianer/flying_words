@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/play_session/flying_words.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
-import 'package:flying_words/src/play_session/joker_tray.dart';
 import 'package:flying_words/src/play_session/play_scoreboard.dart';
 import 'package:flying_words/src/play_session/text_progress.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +22,8 @@ import '../currency/gold_ink.dart';
 import '../games_services/games_services.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
+import '../jokers/joker_inventory.dart';
+import '../jokers/joker_type.dart';
 import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
@@ -38,8 +39,13 @@ class PlaySessionScreen extends StatefulWidget {
   /// level selection) - the run qualifies for the blind bonus from word one.
   final bool startBlind;
 
+  /// Jokers chosen in the level selection before this round started (#53) -
+  /// spent from the inventory and applied for the whole round in
+  /// [initState]; there is no in-play activation.
+  final Set<JokerType> selectedJokers;
+
   const PlaySessionScreen(this.lesson, this.difficulty,
-      {super.key, this.startBlind = false});
+      {super.key, this.startBlind = false, this.selectedJokers = const {}});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -59,6 +65,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   Completer<void>? _celebrationWait;
 
   late DateTime _startOfPlay;
+
+  late final LevelState _levelState;
 
   // Time spent in pause dialogs/settings; subtracted from the run time so
   // pausing neither helps nor hurts the score.
@@ -140,18 +148,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) {
-            final state = LevelState(
-              length: widget.lesson.words.length,
-              onWin: _playerWon,
-            );
-            if (widget.startBlind) {
-              state.setTextHidden(true);
-            }
-            return state;
-          },
-        ),
+        ChangeNotifierProvider<LevelState>.value(value: _levelState),
       ],
       child: Builder(builder: (context) {
         return PopScope(
@@ -194,10 +191,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       Consumer<LevelState>(
                         builder: (context, levelState, child) => TextProgress(
                             lesson: widget.lesson, state: levelState),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
-                        child: JokerTray(),
                       ),
                       Consumer<LevelState>(
                         builder: (context, levelState, child) => Expanded(
@@ -271,6 +264,21 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     super.initState();
 
     _startOfPlay = DateTime.now();
+
+    _levelState = LevelState(
+      length: widget.lesson.words.length,
+      onWin: _playerWon,
+    );
+    if (widget.startBlind) {
+      _levelState.setTextHidden(true);
+    }
+    if (widget.selectedJokers.isNotEmpty) {
+      final inventory = context.read<JokerInventoryController>();
+      for (final type in widget.selectedJokers) {
+        inventory.use(type);
+      }
+      _levelState.applyJokers(widget.selectedJokers);
+    }
 
     // Preload ad for the win screen.
     final adsRemoved =

@@ -16,29 +16,29 @@ void main() {
     test('add() increases the count for that Joker only', () {
       final controller =
           JokerInventoryController(MemoryOnlyJokerInventoryPersistence());
-      controller.add(JokerType.grace, 2);
-      expect(controller.countOf(JokerType.grace), 2);
+      controller.add(JokerType.vergebung, 2);
+      expect(controller.countOf(JokerType.vergebung), 2);
       expect(controller.countOf(JokerType.sanduhr), 0);
 
-      controller.add(JokerType.grace);
-      expect(controller.countOf(JokerType.grace), 3);
+      controller.add(JokerType.vergebung);
+      expect(controller.countOf(JokerType.vergebung), 3);
     });
 
     test('use() spends one if owned and returns true', () {
       final controller =
           JokerInventoryController(MemoryOnlyJokerInventoryPersistence());
-      controller.add(JokerType.federkiel, 1);
+      controller.add(JokerType.bonuszeit, 1);
 
-      expect(controller.use(JokerType.federkiel), isTrue);
-      expect(controller.countOf(JokerType.federkiel), 0);
+      expect(controller.use(JokerType.bonuszeit), isTrue);
+      expect(controller.countOf(JokerType.bonuszeit), 0);
     });
 
     test('use() returns false and leaves the count untouched when empty',
         () {
       final controller =
           JokerInventoryController(MemoryOnlyJokerInventoryPersistence());
-      expect(controller.use(JokerType.tintenloescher), isFalse);
-      expect(controller.countOf(JokerType.tintenloescher), 0);
+      expect(controller.use(JokerType.klarheit), isFalse);
+      expect(controller.countOf(JokerType.klarheit), 0);
     });
 
     test('add() and use() persist the new counts', () async {
@@ -56,24 +56,24 @@ void main() {
     test('getLatestFromStore loads previously persisted counts', () async {
       final store = MemoryOnlyJokerInventoryPersistence();
       await store.saveCounts({
-        JokerType.grace: 1,
+        JokerType.vergebung: 1,
         JokerType.sanduhr: 0,
-        JokerType.tintenloescher: 4,
-        JokerType.federkiel: 0,
+        JokerType.klarheit: 4,
+        JokerType.bonuszeit: 0,
       });
 
       final controller = JokerInventoryController(store);
       await controller.getLatestFromStore();
-      expect(controller.countOf(JokerType.grace), 1);
-      expect(controller.countOf(JokerType.tintenloescher), 4);
+      expect(controller.countOf(JokerType.vergebung), 1);
+      expect(controller.countOf(JokerType.klarheit), 4);
     });
 
     test('add() ignores non-positive amounts', () {
       final controller =
           JokerInventoryController(MemoryOnlyJokerInventoryPersistence());
-      controller.add(JokerType.grace, 0);
-      controller.add(JokerType.grace, -3);
-      expect(controller.countOf(JokerType.grace), 0);
+      controller.add(JokerType.vergebung, 0);
+      controller.add(JokerType.vergebung, -3);
+      expect(controller.countOf(JokerType.vergebung), 0);
     });
   });
 }

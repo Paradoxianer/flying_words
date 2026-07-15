@@ -127,24 +127,19 @@
     }
   },
 
-  "jokerGraceName": "Gnade",
-  "jokerGraceDescription": "Verzeiht den nächsten Fehler.",
+  "jokerPickerLabel": "Joker für diese Runde",
   "jokerSanduhrName": "Sanduhr",
-  "jokerSanduhrDescription": "Verlangsamt die Wörter für den Rest des Laufs.",
-  "jokerTintenloescherName": "Tintenlöscher",
-  "jokerTintenloescherDescription": "Wischt drei falsche Wörter vom Bildschirm.",
-  "jokerFederkielName": "Federkiel",
-  "jokerFederkielDescription": "Schreibt das aktuelle Wort automatisch.",
+  "jokerSanduhrDescription": "Alle Wörter fliegen die ganze Runde über 50 % langsamer.",
+  "jokerVergebungName": "Vergebung",
+  "jokerVergebungDescription": "Ein falsches Wort in der Runde zählt nicht.",
+  "jokerKlarheitName": "Klarheit",
+  "jokerKlarheitDescription": "Entfernt etwa ein Drittel der falschen Wörter aus der Runde.",
+  "jokerBonuszeitName": "Bonuszeit",
+  "jokerBonuszeitDescription": "Jedes Wort bleibt 3 Sekunden länger sichtbar.",
   "jokerOwnedCount": "{count}×",
   "@jokerOwnedCount": {
     "placeholders": {
       "count": {"type": "int"}
-    }
-  },
-  "jokerNoneOwned": "Keine {joker} übrig.",
-  "@jokerNoneOwned": {
-    "placeholders": {
-      "joker": {"type": "String"}
     }
   },
 

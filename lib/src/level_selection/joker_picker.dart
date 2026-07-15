@@ -6,107 +6,100 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/gen/app_localizations.dart';
-import '../game_internals/level_state.dart';
 import '../jokers/joker_inventory.dart';
 import '../jokers/joker_type.dart';
 import '../style/palette.dart';
-import '../style/snack_bar.dart';
+import '../style/scriptorium_text.dart';
 
-/// The Joker tray shown during play (#53): one button per [JokerType],
-/// showing how many the player owns. Tapping spends one from the
-/// inventory and triggers the matching effect on [LevelState].
-class JokerTray extends StatelessWidget {
-  const JokerTray({super.key});
+/// Lets the player pick which Jokers (#53) to bring into the next round,
+/// right here in the level selection - before the round starts, since
+/// there is no time to activate them once the words start flying.
+/// Mirrors the blind-run eye toggle next to it in [LevelItem].
+class JokerPicker extends StatelessWidget {
+  final Set<JokerType> selected;
+  final ValueChanged<JokerType> onToggle;
+
+  const JokerPicker({
+    super.key,
+    required this.selected,
+    required this.onToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<JokerInventoryController, LevelState>(
-      builder: (context, inventory, levelState, child) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    final palette = context.watch<Palette>();
+    final l10n = AppLocalizations.of(context)!;
+    return Consumer<JokerInventoryController>(
+      builder: (context, inventory, child) => Row(
         children: [
+          Text(
+            l10n.jokerPickerLabel,
+            style: ScriptoriumText.label.copyWith(color: palette.inkFaded),
+          ),
+          const SizedBox(width: 8),
           for (final type in JokerType.values)
-            _JokerButton(
+            _JokerToggle(
               type: type,
               owned: inventory.countOf(type),
-              onUse: () => _use(context, inventory, levelState, type),
+              isSelected: selected.contains(type),
+              onTap: () => onToggle(type),
             ),
         ],
       ),
     );
   }
-
-  void _use(BuildContext context, JokerInventoryController inventory,
-      LevelState levelState, JokerType type) {
-    final l10n = AppLocalizations.of(context)!;
-    if (!inventory.use(type)) {
-      showSnackBar(l10n.jokerNoneOwned(_nameOf(l10n, type)));
-      return;
-    }
-    switch (type) {
-      case JokerType.grace:
-        levelState.useGrace();
-        break;
-      case JokerType.sanduhr:
-        levelState.useSanduhr();
-        break;
-      case JokerType.tintenloescher:
-        levelState.useTintenloescher();
-        break;
-      case JokerType.federkiel:
-        levelState.useFederkiel();
-        break;
-    }
-  }
 }
 
 String _nameOf(AppLocalizations l10n, JokerType type) {
   switch (type) {
-    case JokerType.grace:
-      return l10n.jokerGraceName;
     case JokerType.sanduhr:
       return l10n.jokerSanduhrName;
-    case JokerType.tintenloescher:
-      return l10n.jokerTintenloescherName;
-    case JokerType.federkiel:
-      return l10n.jokerFederkielName;
+    case JokerType.vergebung:
+      return l10n.jokerVergebungName;
+    case JokerType.klarheit:
+      return l10n.jokerKlarheitName;
+    case JokerType.bonuszeit:
+      return l10n.jokerBonuszeitName;
   }
 }
 
 String _descriptionOf(AppLocalizations l10n, JokerType type) {
   switch (type) {
-    case JokerType.grace:
-      return l10n.jokerGraceDescription;
     case JokerType.sanduhr:
       return l10n.jokerSanduhrDescription;
-    case JokerType.tintenloescher:
-      return l10n.jokerTintenloescherDescription;
-    case JokerType.federkiel:
-      return l10n.jokerFederkielDescription;
+    case JokerType.vergebung:
+      return l10n.jokerVergebungDescription;
+    case JokerType.klarheit:
+      return l10n.jokerKlarheitDescription;
+    case JokerType.bonuszeit:
+      return l10n.jokerBonuszeitDescription;
   }
 }
 
 IconData _iconOf(JokerType type) {
   switch (type) {
-    case JokerType.grace:
-      return Icons.favorite;
     case JokerType.sanduhr:
       return Icons.hourglass_bottom;
-    case JokerType.tintenloescher:
+    case JokerType.vergebung:
+      return Icons.favorite;
+    case JokerType.klarheit:
       return Icons.auto_fix_high;
-    case JokerType.federkiel:
-      return Icons.edit;
+    case JokerType.bonuszeit:
+      return Icons.timer_outlined;
   }
 }
 
-class _JokerButton extends StatelessWidget {
+class _JokerToggle extends StatelessWidget {
   final JokerType type;
   final int owned;
-  final VoidCallback onUse;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-  const _JokerButton({
+  const _JokerToggle({
     required this.type,
     required this.owned,
-    required this.onUse,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
@@ -115,27 +108,32 @@ class _JokerButton extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final enabled = owned > 0;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Tooltip(
-        message: _descriptionOf(l10n, type),
+        message: '${_nameOf(l10n, type)}: ${_descriptionOf(l10n, type)}',
         child: InkResponse(
-          onTap: onUse,
+          onTap: enabled ? onTap : null,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: enabled
-                      ? palette.parchmentDark
-                      : palette.parchmentDark.withValues(alpha: 0.4),
-                  border: Border.all(color: palette.gold, width: 1.5),
+                  color: isSelected
+                      ? palette.gold.withValues(alpha: 0.35)
+                      : enabled
+                          ? palette.parchmentDark
+                          : palette.parchmentDark.withValues(alpha: 0.4),
+                  border: Border.all(
+                    color: isSelected ? palette.gold : palette.gold.withValues(alpha: 0.5),
+                    width: isSelected ? 2 : 1,
+                  ),
                 ),
                 child: Icon(
                   _iconOf(type),
                   color: enabled ? palette.ink : palette.inkFaded,
-                  size: 22,
+                  size: 18,
                 ),
               ),
               Positioned(
@@ -151,7 +149,7 @@ class _JokerButton extends StatelessWidget {
                   child: Text(
                     l10n.jokerOwnedCount(owned),
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 9,
                       fontWeight: FontWeight.bold,
                       color: palette.parchmentLight,
                     ),

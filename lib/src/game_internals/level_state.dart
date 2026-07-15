@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../jokers/joker_type.dart';
 
 class LevelState extends ChangeNotifier {
   final Function(LevelState) onWin;
@@ -74,10 +75,11 @@ class LevelState extends ChangeNotifier {
 
   // --- Joker effects (#53) --------------------------------------------
   //
-  // Each joker communicates through this shared state instead of reaching
-  // into FlyingWord's private internals directly - the same pattern the
-  // game already uses for pause/text-hidden. [jokerUsed] feeds the -50%
-  // Goldtinte penalty decided in #53/#54 (stars are left untouched).
+  // Jokers are chosen from the inventory before the round starts (level
+  // selection, see JokerPicker) and applied once via [applyJokers] - there
+  // is no in-play activation, since catching words leaves no time to
+  // spare for that. [jokerUsed] feeds the -50% Goldtinte penalty decided
+  // in #53/#54 (stars are left untouched).
 
   bool _jokerUsed = false;
 
@@ -87,61 +89,41 @@ class LevelState extends ChangeNotifier {
 
   int _pendingGraceCount = 0;
 
-  /// "Gnade": the next [_pendingGraceCount] mistakes are forgiven instead
-  /// of counting as errors.
-  void useGrace() {
-    _pendingGraceCount++;
-    _jokerUsed = true;
-    notifyListeners();
-  }
-
   double _speedMultiplier = 1.0;
 
   /// Multiplies the flying words' flight time; "Sanduhr" stretches it by
-  /// 50% (applies to the next word onward, not the one already in flight).
+  /// 50% for the whole round.
   double get speedMultiplier => _speedMultiplier;
 
-  void useSanduhr() {
-    _speedMultiplier *= 1.5;
+  Duration _bonusTimePerWord = Duration.zero;
+
+  /// Extra flight time added to every word; "Bonuszeit" grants a few
+  /// seconds of breathing room for the whole round.
+  Duration get bonusTimePerWord => _bonusTimePerWord;
+
+  bool _distractionsReduced = false;
+
+  /// "Klarheit": about a third of the wrong word options are left out of
+  /// every word draw for the whole round.
+  bool get distractionsReduced => _distractionsReduced;
+
+  /// Applies the [jokers] chosen before the round started. Called once,
+  /// right after construction.
+  void applyJokers(Set<JokerType> jokers) {
+    if (jokers.isEmpty) return;
     _jokerUsed = true;
+    if (jokers.contains(JokerType.vergebung)) _pendingGraceCount = 1;
+    if (jokers.contains(JokerType.sanduhr)) _speedMultiplier = 1.5;
+    if (jokers.contains(JokerType.bonuszeit)) {
+      _bonusTimePerWord = const Duration(seconds: 3);
+    }
+    _distractionsReduced = jokers.contains(JokerType.klarheit);
     notifyListeners();
-  }
-
-  int _removeWrongWordsRequested = 0;
-
-  /// How many wrong words "Tintenlöscher" still needs to clear from the
-  /// screen; consumed by [consumeRemoveWrongWordsRequest].
-  int get removeWrongWordsRequested => _removeWrongWordsRequested;
-
-  void useTintenloescher({int count = 3}) {
-    _removeWrongWordsRequested += count;
-    _jokerUsed = true;
-    notifyListeners();
-  }
-
-  void consumeRemoveWrongWordsRequest() {
-    _removeWrongWordsRequested = 0;
-  }
-
-  bool _autoCompleteRequested = false;
-
-  /// Whether "Federkiel" is waiting to auto-write the current word;
-  /// consumed by [consumeAutoCompleteRequest].
-  bool get autoCompleteRequested => _autoCompleteRequested;
-
-  void useFederkiel() {
-    _autoCompleteRequested = true;
-    _jokerUsed = true;
-    notifyListeners();
-  }
-
-  void consumeAutoCompleteRequest() {
-    _autoCompleteRequested = false;
   }
 
   void addErrorIndex(int index) {
     if (_pendingGraceCount > 0) {
-      // Forgiven by "Gnade": as if the mistake never happened.
+      // Forgiven by "Vergebung": as if the mistake never happened.
       _pendingGraceCount--;
       notifyListeners();
       return;

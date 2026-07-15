@@ -6,6 +6,8 @@ import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistenc
 import 'package:flying_words/src/game_internals/bible_reference.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/score.dart';
+import 'package:flying_words/src/jokers/joker_inventory.dart';
+import 'package:flying_words/src/jokers/persistence/memory_joker_inventory_persistence.dart';
 import 'package:flying_words/src/level_selection/level_item.dart';
 import 'package:flying_words/src/level_selection/level_selection_screen.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
@@ -54,6 +56,10 @@ Widget _wrap(PlayerProgress progress,
       Provider<AudioController>(create: (_) => AudioController()),
       ChangeNotifierProvider.value(
         value: goldInk ?? GoldInkController(MemoryOnlyGoldInkPersistence()),
+      ),
+      ChangeNotifierProvider(
+        create: (_) =>
+            JokerInventoryController(MemoryOnlyJokerInventoryPersistence()),
       ),
     ],
     child: const LocalizedMaterialApp(home: LevelSelectionScreen()),

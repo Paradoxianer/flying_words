@@ -47,10 +47,6 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   /// tapped twice.
   final Set<int> _misTapped = {};
 
-  /// Words cleared off-screen by the "Tintenlöscher" joker (#53) - simply
-  /// not rendered, unlike [_misTapped] which stays visible with an ink blot.
-  final Set<int> _removedByJoker = {};
-
   // Feedback popup for a correctly caught word.
   String? _caughtWord;
   Alignment _caughtAlignment = Alignment.center;
@@ -63,12 +59,14 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   List<String> get _words => widget.lesson.words;
 
   /// The flight time, stretched for mouse/trackpad players (#57) and by
-  /// the "Sanduhr" joker (#53).
-  Duration get _flightTime => Duration(
-      milliseconds: (widget.duration.inMilliseconds *
-              InputDevice.timeFactor *
-              widget.state.speedMultiplier)
-          .round());
+  /// the "Sanduhr" and "Bonuszeit" jokers (#53).
+  Duration get _flightTime =>
+      Duration(
+          milliseconds: (widget.duration.inMilliseconds *
+                  InputDevice.timeFactor *
+                  widget.state.speedMultiplier)
+              .round()) +
+      widget.state.bonusTimePerWord;
 
   void _registerPointer(PointerDeviceKind kind) {
     final wasMouse = InputDevice.usesMouse;
@@ -82,13 +80,16 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   void _randomWordsList(int howMany) {
     final currentWord = _words[widget.state.wordIndex];
     _misTapped.clear();
-    _removedByJoker.clear();
     // Draw without replacement so neither the correct word nor any
     // distraction word can show up twice on the screen.
     final candidates =
         bibleWords.where((word) => word != currentWord).toSet().toList()
           ..shuffle();
-    _allWords = candidates.take(howMany).toList();
+    // "Klarheit" (#53) leaves about a third of the wrong options out.
+    final effectiveHowMany = widget.state.distractionsReduced
+        ? (howMany * (1 - 1 / 3)).round()
+        : howMany;
+    _allWords = candidates.take(effectiveHowMany).toList();
     _allWords.add(currentWord);
     _correctWordIndex = _allWords.length - 1;
     _allAngles = List<double>.empty(growable: true);
@@ -159,10 +160,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     });
   }
 
-  /// Freezes the flight while the game is paused and resumes it afterwards;
-  /// also reacts to the "Federkiel"/"Tintenlöscher" jokers (#53), which
-  /// signal their request through [widget.state] rather than reaching into
-  /// this widget's private internals directly.
+  /// Freezes the flight while the game is paused and resumes it afterwards.
   void _onStateChanged() {
     if (!mounted) return;
     if (widget.state.paused) {
@@ -173,21 +171,9 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         widget.state.wordIndex < widget.lesson.words.length) {
       _controller.forward();
     }
-
-    if (widget.state.autoCompleteRequested) {
-      widget.state.consumeAutoCompleteRequest();
-      _catchCorrectWord(popupAt: Alignment.center);
-    }
-
-    if (widget.state.removeWrongWordsRequested > 0) {
-      final count = widget.state.removeWrongWordsRequested;
-      widget.state.consumeRemoveWrongWordsRequest();
-      _removeWrongWords(count);
-    }
   }
 
-  /// Catches the correct word, wherever it came from: a real tap (with the
-  /// tapped position for the popup) or the "Federkiel" joker (centered).
+  /// Catches the correct word at the tapped position.
   void _catchCorrectWord({required Alignment popupAt}) {
     setState(() {
       widget.state.registerCatch();
@@ -199,21 +185,6 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     });
   }
 
-  /// "Tintenlöscher": clears up to [count] currently visible wrong words
-  /// off the screen (never the correct word or one already gone).
-  void _removeWrongWords(int count) {
-    final candidates = [
-      for (var i = 0; i < _allWords.length; i++)
-        if (i != _correctWordIndex &&
-            !_misTapped.contains(i) &&
-            !_removedByJoker.contains(i))
-          i,
-    ]..shuffle();
-    setState(() {
-      _removedByJoker.addAll(candidates.take(count));
-    });
-  }
-
   @override
   void dispose() {
     widget.state.removeListener(_onStateChanged);
@@ -222,11 +193,6 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   }
 
   Widget _buildWord(int index, double aspectRatio, Palette palette) {
-    // Cleared off-screen by "Tintenlöscher" (#53) - not rendered at all.
-    if (_removedByJoker.contains(index)) {
-      return const SizedBox.shrink();
-    }
-
     final audioController = context.read<AudioController>();
     final angle = _allAngles[_wordIndexes[index]];
     // Direction in alignment space; the aspect ratio factor makes the

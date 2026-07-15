@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../jokers/joker_type.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
+import 'joker_picker.dart';
 import 'wax_seal.dart';
 
 /// One verse in the level selection: a parchment card with the verse,
@@ -25,6 +27,7 @@ class LevelItem extends StatefulWidget {
 
 class _LevelItemState extends State<LevelItem> {
   bool _blind = false;
+  final Set<JokerType> _selectedJokers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +92,17 @@ class _LevelItemState extends State<LevelItem> {
                   .copyWith(fontSize: 14, color: palette.inkFaded),
             ),
             const SizedBox(height: 8),
+            // Jokers are chosen here, before the round starts (#53) - there
+            // is no time to activate them once the words start flying.
+            JokerPicker(
+              selected: _selectedJokers,
+              onToggle: (type) => setState(() {
+                if (!_selectedJokers.remove(type)) {
+                  _selectedJokers.add(type);
+                }
+              }),
+            ),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -100,9 +114,17 @@ class _LevelItemState extends State<LevelItem> {
                     onPressed: () {
                       final audioController = context.read<AudioController>();
                       audioController.playSfx(SfxType.buttonTap);
+                      final query = <String, String>{
+                        if (_blind) 'blind': '1',
+                        if (_selectedJokers.isNotEmpty)
+                          'jokers': _selectedJokers.map((j) => j.name).join(','),
+                      };
+                      final queryString = query.isEmpty
+                          ? ''
+                          : '?${query.entries.map((e) => '${e.key}=${Uri.encodeComponent(e.value)}').join('&')}';
                       GoRouter.of(context).go(
                           '/play/session/${widget.level.number}/${difficulty.name}'
-                          '${_blind ? '?blind=1' : ''}');
+                          '$queryString');
                     },
                   ),
               ],

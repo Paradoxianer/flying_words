@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
+import 'package:flying_words/src/jokers/joker_type.dart';
 
 void main() {
   test('streak grows with catches and resets on any error', () {
@@ -72,14 +73,22 @@ void main() {
   });
 
   group('Joker effects (#53)', () {
-    test('useGrace forgives the next mistake without resetting the streak',
-        () {
+    test('applyJokers with no jokers leaves everything at its default', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({});
+      expect(state.jokerUsed, isFalse);
+      expect(state.speedMultiplier, 1.0);
+      expect(state.bonusTimePerWord, Duration.zero);
+      expect(state.distractionsReduced, isFalse);
+    });
+
+    test('Vergebung forgives one mistake without resetting the streak', () {
       final state = LevelState(onWin: (_) {}, length: 10);
       state.registerCatch();
       state.registerCatch();
       expect(state.streak, 2);
 
-      state.useGrace();
+      state.applyJokers({JokerType.vergebung});
       expect(state.jokerUsed, isTrue);
 
       state.addErrorIndex(0);
@@ -87,46 +96,40 @@ void main() {
       expect(state.numErrors, 0);
       expect(state.streak, 2);
 
-      // Grace only covers one mistake.
+      // Vergebung only covers one mistake.
       state.addErrorIndex(1);
       expect(state.numErrors, 1);
       expect(state.streak, 0);
     });
 
-    test('useSanduhr stacks the speed multiplier', () {
+    test('Sanduhr sets the speed multiplier for the whole round', () {
       final state = LevelState(onWin: (_) {}, length: 10);
-      expect(state.speedMultiplier, 1.0);
-
-      state.useSanduhr();
+      state.applyJokers({JokerType.sanduhr});
       expect(state.speedMultiplier, 1.5);
       expect(state.jokerUsed, isTrue);
-
-      state.useSanduhr();
-      expect(state.speedMultiplier, 2.25);
     });
 
-    test('useTintenloescher requests word removals, consumed once', () {
+    test('Bonuszeit adds extra flight time per word', () {
       final state = LevelState(onWin: (_) {}, length: 10);
-      expect(state.removeWrongWordsRequested, 0);
-
-      state.useTintenloescher();
-      expect(state.removeWrongWordsRequested, 3);
+      state.applyJokers({JokerType.bonuszeit});
+      expect(state.bonusTimePerWord, const Duration(seconds: 3));
       expect(state.jokerUsed, isTrue);
-
-      state.consumeRemoveWrongWordsRequest();
-      expect(state.removeWrongWordsRequested, 0);
     });
 
-    test('useFederkiel requests an auto-complete, consumed once', () {
+    test('Klarheit marks distractions as reduced', () {
       final state = LevelState(onWin: (_) {}, length: 10);
-      expect(state.autoCompleteRequested, isFalse);
-
-      state.useFederkiel();
-      expect(state.autoCompleteRequested, isTrue);
+      state.applyJokers({JokerType.klarheit});
+      expect(state.distractionsReduced, isTrue);
       expect(state.jokerUsed, isTrue);
+    });
 
-      state.consumeAutoCompleteRequest();
-      expect(state.autoCompleteRequested, isFalse);
+    test('multiple jokers combine in the same round', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({JokerType.sanduhr, JokerType.klarheit});
+      expect(state.speedMultiplier, 1.5);
+      expect(state.distractionsReduced, isTrue);
+      expect(state.bonusTimePerWord, Duration.zero);
+      expect(state.jokerUsed, isTrue);
     });
 
     test('jokerUsed stays false when no joker is used', () {

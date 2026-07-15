@@ -18,6 +18,14 @@ void main() {
       expect(goldInkForRun(Difficulty.slow, 0), 15);
       expect(goldInkForRun(Difficulty.normal, 0), 38);
     });
+
+    test('the blind bonus adds another 50%, stacking with flawless', () {
+      // Not flawless, blind: base * 1.5 only.
+      expect(goldInkForRun(Difficulty.slow, 2, blindBonus: true), 15);
+      // Flawless and blind: base * 1.5 * 1.5.
+      expect(goldInkForRun(Difficulty.slow, 0, blindBonus: true), 23);
+      expect(goldInkForRun(Difficulty.insane, 0, blindBonus: true), 135);
+    });
   });
 
   group('GoldInkController', () {

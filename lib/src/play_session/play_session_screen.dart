@@ -297,7 +297,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
     // Award Goldtinte for the run (#54).
-    final goldInkEarned = goldInkForRun(widget.difficulty, state.numErrors);
+    final goldInkEarned = goldInkForRun(widget.difficulty, state.numErrors,
+        blindBonus: state.blindRun);
     context.read<GoldInkController>().earn(goldInkEarned);
 
     // Let the player see the game just after winning for a bit.

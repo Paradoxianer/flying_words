@@ -19,12 +19,18 @@ const goldInkBaseReward = {
 };
 
 /// Goldtinte earned for a run on [difficulty] with [errors] mistakes: the
-/// seal's base reward, plus 50% for a flawless (max-star) run.
-int goldInkForRun(Difficulty difficulty, int errors) {
+/// seal's base reward, plus 50% for a flawless (max-star) run, plus another
+/// 50% if [blindBonus] applies (the verse text was hidden the whole run) -
+/// the same two bonuses and the same stacking `Score.fromResult` already
+/// uses for the run's score.
+int goldInkForRun(Difficulty difficulty, int errors,
+    {bool blindBonus = false}) {
   final base = goldInkBaseReward[difficulty]!;
   final stars = VerseProgress.starsForRun(difficulty, errors);
   final flawless = stars >= VerseProgress.maxStars(difficulty);
-  return flawless ? (base * 1.5).round() : base;
+  var amount = flawless ? base * 1.5 : base.toDouble();
+  if (blindBonus) amount *= 1.5;
+  return amount.round();
 }
 
 /// Tracks the player's Goldtinte ("gold ink") balance - the in-game

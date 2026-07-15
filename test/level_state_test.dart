@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
+import 'package:flying_words/src/jokers/joker_type.dart';
 
 void main() {
   test('streak grows with catches and resets on any error', () {
@@ -69,5 +70,73 @@ void main() {
     state.addErrorIndex(0);
     expect(state.streak, 0);
     expect(state.numErrors, 1);
+  });
+
+  group('Joker effects (#53)', () {
+    test('applyJokers with no jokers leaves everything at its default', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({});
+      expect(state.jokerUsed, isFalse);
+      expect(state.speedMultiplier, 1.0);
+      expect(state.bonusTimePerWord, Duration.zero);
+      expect(state.distractionsReduced, isFalse);
+    });
+
+    test('Vergebung forgives one mistake without resetting the streak', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.registerCatch();
+      state.registerCatch();
+      expect(state.streak, 2);
+
+      state.applyJokers({JokerType.vergebung});
+      expect(state.jokerUsed, isTrue);
+
+      state.addErrorIndex(0);
+      // Forgiven: no error recorded, streak untouched.
+      expect(state.numErrors, 0);
+      expect(state.streak, 2);
+
+      // Vergebung only covers one mistake.
+      state.addErrorIndex(1);
+      expect(state.numErrors, 1);
+      expect(state.streak, 0);
+    });
+
+    test('Sanduhr sets the speed multiplier for the whole round', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({JokerType.sanduhr});
+      expect(state.speedMultiplier, 1.5);
+      expect(state.jokerUsed, isTrue);
+    });
+
+    test('Bonuszeit adds extra flight time per word', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({JokerType.bonuszeit});
+      expect(state.bonusTimePerWord, const Duration(seconds: 3));
+      expect(state.jokerUsed, isTrue);
+    });
+
+    test('Klarheit marks distractions as reduced', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({JokerType.klarheit});
+      expect(state.distractionsReduced, isTrue);
+      expect(state.jokerUsed, isTrue);
+    });
+
+    test('multiple jokers combine in the same round', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.applyJokers({JokerType.sanduhr, JokerType.klarheit});
+      expect(state.speedMultiplier, 1.5);
+      expect(state.distractionsReduced, isTrue);
+      expect(state.bonusTimePerWord, Duration.zero);
+      expect(state.jokerUsed, isTrue);
+    });
+
+    test('jokerUsed stays false when no joker is used', () {
+      final state = LevelState(onWin: (_) {}, length: 10);
+      state.registerCatch();
+      state.addErrorIndex(0);
+      expect(state.jokerUsed, isFalse);
+    });
   });
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/score.dart';
+import 'package:flying_words/src/jokers/joker_inventory.dart';
+import 'package:flying_words/src/jokers/persistence/memory_joker_inventory_persistence.dart';
 import 'package:flying_words/src/level_selection/level_item.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/player_progress/player_progress.dart';
@@ -17,6 +19,10 @@ Widget _wrap(PlayerProgress progress) {
     providers: [
       Provider(create: (_) => Palette()),
       ChangeNotifierProvider.value(value: progress),
+      ChangeNotifierProvider(
+        create: (_) =>
+            JokerInventoryController(MemoryOnlyJokerInventoryPersistence()),
+      ),
     ],
     child: LocalizedMaterialApp(home: Scaffold(body: LevelItem(_lesson))),
   );

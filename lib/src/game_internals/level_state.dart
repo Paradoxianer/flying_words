@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../jokers/joker_type.dart';
 
 class LevelState extends ChangeNotifier {
   final Function(LevelState) onWin;
@@ -72,7 +73,61 @@ class LevelState extends ChangeNotifier {
     notifyListeners();
   }
 
+  // --- Joker effects (#53) --------------------------------------------
+  //
+  // Jokers are chosen from the inventory before the round starts (level
+  // selection, see JokerPicker) and applied once via [applyJokers] - there
+  // is no in-play activation, since catching words leaves no time to
+  // spare for that. [jokerUsed] feeds the -50% Goldtinte penalty decided
+  // in #53/#54 (stars are left untouched).
+
+  bool _jokerUsed = false;
+
+  /// Whether any joker was used this run - halves the Goldtinte earned
+  /// (#53/#54), but never affects stars, score or leaderboards.
+  bool get jokerUsed => _jokerUsed;
+
+  int _pendingGraceCount = 0;
+
+  double _speedMultiplier = 1.0;
+
+  /// Multiplies the flying words' flight time; "Sanduhr" stretches it by
+  /// 50% for the whole round.
+  double get speedMultiplier => _speedMultiplier;
+
+  Duration _bonusTimePerWord = Duration.zero;
+
+  /// Extra flight time added to every word; "Bonuszeit" grants a few
+  /// seconds of breathing room for the whole round.
+  Duration get bonusTimePerWord => _bonusTimePerWord;
+
+  bool _distractionsReduced = false;
+
+  /// "Klarheit": about a third of the wrong word options are left out of
+  /// every word draw for the whole round.
+  bool get distractionsReduced => _distractionsReduced;
+
+  /// Applies the [jokers] chosen before the round started. Called once,
+  /// right after construction.
+  void applyJokers(Set<JokerType> jokers) {
+    if (jokers.isEmpty) return;
+    _jokerUsed = true;
+    if (jokers.contains(JokerType.vergebung)) _pendingGraceCount = 1;
+    if (jokers.contains(JokerType.sanduhr)) _speedMultiplier = 1.5;
+    if (jokers.contains(JokerType.bonuszeit)) {
+      _bonusTimePerWord = const Duration(seconds: 3);
+    }
+    _distractionsReduced = jokers.contains(JokerType.klarheit);
+    notifyListeners();
+  }
+
   void addErrorIndex(int index) {
+    if (_pendingGraceCount > 0) {
+      // Forgiven by "Vergebung": as if the mistake never happened.
+      _pendingGraceCount--;
+      notifyListeners();
+      return;
+    }
     _streak = 0;
     //only register first mistake on the word... maybe later find a more fancy way to count multiple erros
     _errors.add(index);

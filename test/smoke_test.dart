@@ -2,10 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/main.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
 import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
+import 'package:flying_words/src/jokers/persistence/memory_joker_inventory_persistence.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
 import 'package:flying_words/src/verses/bolls_bible_api_client.dart';
@@ -25,6 +27,7 @@ void main() {
         ..languageCode = 'de',
       playerProgressPersistence: MemoryOnlyPlayerProgressPersistence(),
       goldInkPersistence: MemoryOnlyGoldInkPersistence(),
+      jokerInventoryPersistence: MemoryOnlyJokerInventoryPersistence(),
       adsController: null,
       gamesServicesController: null,
       inAppPurchaseController: null,
@@ -53,7 +56,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Wähle deine Herausforderung'), findsOneWidget);
 
-    // The first verse is offered as a lesson.
+    // The first verse is offered as a lesson; each card is tall enough
+    // now (Joker picker row, #53) that the second one needs a scroll.
+    await tester.dragUntilVisible(
+      find.text('1. Korinther 6, 12'),
+      find.byType(ListView),
+      const Offset(0, -100),
+    );
     expect(find.text('1. Korinther 6, 12'), findsOneWidget);
   });
 }

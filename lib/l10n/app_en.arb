@@ -127,6 +127,22 @@
     }
   },
 
+  "jokerPickerLabel": "Jokers for this round",
+  "jokerSanduhrName": "Hourglass",
+  "jokerSanduhrDescription": "All words fly 50% slower for the whole round.",
+  "jokerVergebungName": "Grace",
+  "jokerVergebungDescription": "One wrong word in the round doesn't count.",
+  "jokerKlarheitName": "Clarity",
+  "jokerKlarheitDescription": "Removes about a third of the wrong words from the round.",
+  "jokerBonuszeitName": "Bonus Time",
+  "jokerBonuszeitDescription": "Every word stays visible 3 seconds longer.",
+  "jokerOwnedCount": "{count}×",
+  "@jokerOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "help": "Help",
   "helpHowToPlayTitle": "How to play",
   "helpHowToPlayBody": "A Bible verse is shown to you word by word. Then several words fly across the screen — always tap the next correct word of the verse to learn it, piece by piece, by heart.",

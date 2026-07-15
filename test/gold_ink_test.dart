@@ -26,6 +26,19 @@ void main() {
       expect(goldInkForRun(Difficulty.slow, 0, blindBonus: true), 23);
       expect(goldInkForRun(Difficulty.insane, 0, blindBonus: true), 135);
     });
+
+    test('using a joker halves the total, applied last (#53)', () {
+      // Base only, halved: 10 * 0.5 = 5.
+      expect(goldInkForRun(Difficulty.slow, 2, jokerUsed: true), 5);
+      // Flawless, halved: 10 * 1.5 * 0.5 = 7.5 -> 8.
+      expect(goldInkForRun(Difficulty.slow, 0, jokerUsed: true), 8);
+      // Flawless + blind + joker: 10 * 1.5 * 1.5 * 0.5 = 11.25 -> 11.
+      expect(
+        goldInkForRun(Difficulty.slow, 0,
+            blindBonus: true, jokerUsed: true),
+        11,
+      );
+    });
   });
 
   group('GoldInkController', () {

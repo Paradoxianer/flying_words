@@ -22,14 +22,18 @@ const goldInkBaseReward = {
 /// seal's base reward, plus 50% for a flawless (max-star) run, plus another
 /// 50% if [blindBonus] applies (the verse text was hidden the whole run) -
 /// the same two bonuses and the same stacking `Score.fromResult` already
-/// uses for the run's score.
+/// uses for the run's score. If [jokerUsed] applies (any joker was used
+/// this run, #53), the total is halved afterwards - the steep joker price
+/// is the main economic brake, this is just a reward-layer correction and
+/// never touches stars, score or leaderboards.
 int goldInkForRun(Difficulty difficulty, int errors,
-    {bool blindBonus = false}) {
+    {bool blindBonus = false, bool jokerUsed = false}) {
   final base = goldInkBaseReward[difficulty]!;
   final stars = VerseProgress.starsForRun(difficulty, errors);
   final flawless = stars >= VerseProgress.maxStars(difficulty);
   var amount = flawless ? base * 1.5 : base.toDouble();
   if (blindBonus) amount *= 1.5;
+  if (jokerUsed) amount *= 0.5;
   return amount.round();
 }
 

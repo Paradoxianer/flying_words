@@ -58,10 +58,15 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   double _radius = 0.0;
   List<String> get _words => widget.lesson.words;
 
-  /// The flight time, stretched for mouse/trackpad players (#57).
-  Duration get _flightTime => Duration(
-      milliseconds:
-          (widget.duration.inMilliseconds * InputDevice.timeFactor).round());
+  /// The flight time, stretched for mouse/trackpad players (#57) and by
+  /// the "Sanduhr" and "Bonuszeit" jokers (#53).
+  Duration get _flightTime =>
+      Duration(
+          milliseconds: (widget.duration.inMilliseconds *
+                  InputDevice.timeFactor *
+                  widget.state.speedMultiplier)
+              .round()) +
+      widget.state.bonusTimePerWord;
 
   void _registerPointer(PointerDeviceKind kind) {
     final wasMouse = InputDevice.usesMouse;
@@ -80,7 +85,11 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     final candidates =
         bibleWords.where((word) => word != currentWord).toSet().toList()
           ..shuffle();
-    _allWords = candidates.take(howMany).toList();
+    // "Klarheit" (#53) leaves about a third of the wrong options out.
+    final effectiveHowMany = widget.state.distractionsReduced
+        ? (howMany * (1 - 1 / 3)).round()
+        : howMany;
+    _allWords = candidates.take(effectiveHowMany).toList();
     _allWords.add(currentWord);
     _correctWordIndex = _allWords.length - 1;
     _allAngles = List<double>.empty(growable: true);
@@ -141,7 +150,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
         }
       }
     });
-    widget.state.addListener(_onPauseChanged);
+    widget.state.addListener(_onStateChanged);
     super.initState();
     Future.delayed(Duration(milliseconds: 800), () {
       if (!mounted) return;
@@ -152,7 +161,7 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
   }
 
   /// Freezes the flight while the game is paused and resumes it afterwards.
-  void _onPauseChanged() {
+  void _onStateChanged() {
     if (!mounted) return;
     if (widget.state.paused) {
       if (_controller.isAnimating) {
@@ -164,9 +173,21 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     }
   }
 
+  /// Catches the correct word at the tapped position.
+  void _catchCorrectWord({required Alignment popupAt}) {
+    setState(() {
+      widget.state.registerCatch();
+      _caughtWord = _words[widget.state.wordIndex];
+      _caughtAlignment = popupAt;
+      _caughtTick++;
+      context.read<AudioController>().playSfx(SfxType.swishSwish);
+      _nextWord();
+    });
+  }
+
   @override
   void dispose() {
-    widget.state.removeListener(_onPauseChanged);
+    widget.state.removeListener(_onStateChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -205,21 +226,15 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
           onTap: misTapped
               ? null
               : () {
-                  setState(() {
-                    if (index == _correctWordIndex) {
-                      widget.state.registerCatch();
-                      // Remember where the word was caught for the popup.
-                      _caughtWord = _allWords[index];
-                      _caughtAlignment = Alignment(dx, dy);
-                      _caughtTick++;
-                      audioController.playSfx(SfxType.swishSwish);
-                      _nextWord();
-                    } else {
+                  if (index == _correctWordIndex) {
+                    _catchCorrectWord(popupAt: Alignment(dx, dy));
+                  } else {
+                    setState(() {
                       _misTapped.add(index);
                       widget.state.addErrorIndex(widget.state.wordIndex);
                       audioController.playSfx(SfxType.huhsh);
-                    }
-                  });
+                    });
+                  }
                 },
           child: misTapped
               // A wrongly tapped word gets an ink blot and fades out.

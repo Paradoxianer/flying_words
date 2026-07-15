@@ -127,6 +127,22 @@
     }
   },
 
+  "jokerPickerLabel": "Joker für diese Runde",
+  "jokerSanduhrName": "Sanduhr",
+  "jokerSanduhrDescription": "Alle Wörter fliegen die ganze Runde über 50 % langsamer.",
+  "jokerVergebungName": "Vergebung",
+  "jokerVergebungDescription": "Ein falsches Wort in der Runde zählt nicht.",
+  "jokerKlarheitName": "Klarheit",
+  "jokerKlarheitDescription": "Entfernt etwa ein Drittel der falschen Wörter aus der Runde.",
+  "jokerBonuszeitName": "Bonuszeit",
+  "jokerBonuszeitDescription": "Jedes Wort bleibt 3 Sekunden länger sichtbar.",
+  "jokerOwnedCount": "{count}×",
+  "@jokerOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "help": "Hilfe",
   "helpHowToPlayTitle": "So wird gespielt",
   "helpHowToPlayBody": "Ein Bibelvers wird dir Wort für Wort vorgestellt. Danach fliegen mehrere Wörter über den Bildschirm — tippe immer auf das nächste richtige Wort des Verses, um ihn Stück für Stück auswendig zu lernen.",

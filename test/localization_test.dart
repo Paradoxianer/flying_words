@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/main.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
+import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
 import 'package:flying_words/src/settings/settings.dart';
@@ -48,6 +49,7 @@ void main() {
     await tester.pumpWidget(MyApp(
       settingsPersistence: settingsPersistence,
       playerProgressPersistence: MemoryOnlyPlayerProgressPersistence(),
+      goldInkPersistence: MemoryOnlyGoldInkPersistence(),
       adsController: null,
       gamesServicesController: null,
       inAppPurchaseController: null,

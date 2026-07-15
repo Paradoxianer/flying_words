@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/gen/app_localizations.dart';
+import '../currency/gold_ink.dart';
 import '../game_internals/lesson.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
@@ -42,16 +43,34 @@ class LevelSelectionScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Text(
-                  l10n.chooseChallenge,
-                  style: const TextStyle(
-                      fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 30),
-                  textAlign: TextAlign.center,
-                ),
+              child: Column(
+                children: [
+                  Text(
+                    l10n.chooseChallenge,
+                    style: const TextStyle(
+                        fontFamily: 'Cormorant Garamond', fontWeight: FontWeight.w700, fontSize: 30),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Consumer<GoldInkController>(
+                    builder: (context, goldInk, child) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.auto_awesome, size: 18, color: palette.gold),
+                        const SizedBox(width: 6),
+                        Text(
+                          l10n.goldInkBalance(goldInk.balance),
+                          key: const Key('gold-ink-balance'),
+                          style:
+                              ScriptoriumText.label.copyWith(color: palette.gold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             Expanded(
               child: ListView(
                 children: [

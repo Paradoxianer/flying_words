@@ -25,6 +25,9 @@ import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
 import 'src/crashlytics/crashlytics.dart';
+import 'src/currency/gold_ink.dart';
+import 'src/currency/persistence/gold_ink_persistence.dart';
+import 'src/currency/persistence/local_storage_gold_ink_persistence.dart';
 import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/help/help_screen.dart';
@@ -149,6 +152,7 @@ void guardedMain() {
       MyApp(
         settingsPersistence: settingsPersistence,
         playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
+        goldInkPersistence: LocalStorageGoldInkPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
@@ -212,6 +216,7 @@ class MyApp extends StatelessWidget {
                       final lesson = map['lesson'] as Lesson;
                       final difficulty = map['difficulty'] as Difficulty;
                       final previousBest = map['previousBest'] as Score?;
+                      final goldInkEarned = map['goldInkEarned'] as int;
                       // The celebration verse crossfades into the win
                       // screen instead of being pushed away (#55).
                       return CustomTransitionPage<void>(
@@ -226,6 +231,7 @@ class MyApp extends StatelessWidget {
                           levelState: levelState,
                           difficulty: difficulty,
                           previousBest: previousBest,
+                          goldInkEarned: goldInkEarned,
                         ),
                       );
                     },
@@ -262,6 +268,8 @@ class MyApp extends StatelessWidget {
 
   final PlayerProgressPersistence playerProgressPersistence;
 
+  final GoldInkPersistence goldInkPersistence;
+
   final SettingsPersistence settingsPersistence;
 
   final GamesServicesController? gamesServicesController;
@@ -274,6 +282,7 @@ class MyApp extends StatelessWidget {
 
   const MyApp({
     required this.playerProgressPersistence,
+    required this.goldInkPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -294,6 +303,13 @@ class MyApp extends StatelessWidget {
                 knownLessons: [...gameLevels, ...customVersesController.verses],
               );
               return progress;
+            },
+          ),
+          ChangeNotifierProvider(
+            create: (context) {
+              final goldInk = GoldInkController(goldInkPersistence);
+              goldInk.getLatestFromStore();
+              return goldInk;
             },
           ),
           Provider<GamesServicesController?>.value(

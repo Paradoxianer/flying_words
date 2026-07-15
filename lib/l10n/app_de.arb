@@ -114,6 +114,18 @@
       "time": {"type": "String"}
     }
   },
+  "goldInkEarned": "+{amount} Goldtinte",
+  "@goldInkEarned": {
+    "placeholders": {
+      "amount": {"type": "int"}
+    }
+  },
+  "goldInkBalance": "{amount} Goldtinte",
+  "@goldInkBalance": {
+    "placeholders": {
+      "amount": {"type": "int"}
+    }
+  },
 
   "help": "Hilfe",
   "helpHowToPlayTitle": "So wird gespielt",

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/src/audio/audio_controller.dart';
+import 'package:flying_words/src/currency/gold_ink.dart';
+import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
 import 'package:flying_words/src/game_internals/bible_reference.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/games_services/score.dart';
@@ -32,7 +34,8 @@ class _FakeBibleApiClient implements BibleApiClient {
       FetchedVerse(text: 'eins zwei drei', translation: 'MB');
 }
 
-Widget _wrap(PlayerProgress progress, {CustomVersesController? customVerses}) {
+Widget _wrap(PlayerProgress progress,
+    {CustomVersesController? customVerses, GoldInkController? goldInk}) {
   return MultiProvider(
     providers: [
       Provider(create: (_) => Palette()),
@@ -49,6 +52,9 @@ Widget _wrap(PlayerProgress progress, {CustomVersesController? customVerses}) {
             persistence: MemoryOnlySettingsPersistence()),
       ),
       Provider<AudioController>(create: (_) => AudioController()),
+      ChangeNotifierProvider.value(
+        value: goldInk ?? GoldInkController(MemoryOnlyGoldInkPersistence()),
+      ),
     ],
     child: const LocalizedMaterialApp(home: LevelSelectionScreen()),
   );
@@ -160,6 +166,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Mastered verse'), findsOneWidget);
 
+    await tester.pump(const Duration(milliseconds: 600));
+  });
+
+  testWidgets('shows the current Goldtinte balance in the header (#54)',
+      (tester) async {
+    useTallSurface(tester);
+    final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+    final goldInk = GoldInkController(MemoryOnlyGoldInkPersistence())
+      ..earn(35);
+
+    await tester.pumpWidget(_wrap(progress, goldInk: goldInk));
+    await tester.pump();
+
+    expect(find.byKey(const Key('gold-ink-balance')), findsOneWidget);
+    expect(find.text('35 Goldtinte'), findsOneWidget);
+
+    // Flush the simulated async persistence write from earn().
     await tester.pump(const Duration(milliseconds: 600));
   });
 }

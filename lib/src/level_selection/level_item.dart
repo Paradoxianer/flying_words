@@ -92,17 +92,6 @@ class _LevelItemState extends State<LevelItem> {
                   .copyWith(fontSize: 14, color: palette.inkFaded),
             ),
             const SizedBox(height: 8),
-            // Jokers are chosen here, before the round starts (#53) - there
-            // is no time to activate them once the words start flying.
-            JokerPicker(
-              selected: _selectedJokers,
-              onToggle: (type) => setState(() {
-                if (!_selectedJokers.remove(type)) {
-                  _selectedJokers.add(type);
-                }
-              }),
-            ),
-            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -128,6 +117,17 @@ class _LevelItemState extends State<LevelItem> {
                     },
                   ),
               ],
+            ),
+            const SizedBox(height: 10),
+            // Jokers are chosen here, before the round starts (#53) - there
+            // is no time to activate them once the words start flying.
+            JokerPicker(
+              selected: _selectedJokers,
+              onToggle: (type) => setState(() {
+                if (!_selectedJokers.remove(type)) {
+                  _selectedJokers.add(type);
+                }
+              }),
             ),
           ],
         ),

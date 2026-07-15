@@ -9,12 +9,11 @@ import '../../l10n/gen/app_localizations.dart';
 import '../jokers/joker_inventory.dart';
 import '../jokers/joker_type.dart';
 import '../style/palette.dart';
-import '../style/scriptorium_text.dart';
 
 /// Lets the player pick which Jokers (#53) to bring into the next round,
 /// right here in the level selection - before the round starts, since
-/// there is no time to activate them once the words start flying.
-/// Mirrors the blind-run eye toggle next to it in [LevelItem].
+/// there is no time to activate them once the words start flying. Laid
+/// out as a compact 2x2 grid at the end of the [LevelItem] card.
 class JokerPicker extends StatelessWidget {
   final Set<JokerType> selected;
   final ValueChanged<JokerType> onToggle;
@@ -25,25 +24,31 @@ class JokerPicker extends StatelessWidget {
     required this.onToggle,
   });
 
+  Widget _row(BuildContext context, JokerInventoryController inventory,
+      List<JokerType> types) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (final type in types)
+          _JokerToggle(
+            type: type,
+            owned: inventory.countOf(type),
+            isSelected: selected.contains(type),
+            onTap: () => onToggle(type),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final palette = context.watch<Palette>();
-    final l10n = AppLocalizations.of(context)!;
     return Consumer<JokerInventoryController>(
-      builder: (context, inventory, child) => Row(
+      builder: (context, inventory, child) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            l10n.jokerPickerLabel,
-            style: ScriptoriumText.label.copyWith(color: palette.inkFaded),
-          ),
-          const SizedBox(width: 8),
-          for (final type in JokerType.values)
-            _JokerToggle(
-              type: type,
-              owned: inventory.countOf(type),
-              isSelected: selected.contains(type),
-              onTap: () => onToggle(type),
-            ),
+          _row(context, inventory, const [JokerType.sanduhr, JokerType.vergebung]),
+          const SizedBox(height: 4),
+          _row(context, inventory, const [JokerType.klarheit, JokerType.bonuszeit]),
         ],
       ),
     );
@@ -83,7 +88,7 @@ IconData _iconOf(JokerType type) {
     case JokerType.vergebung:
       return Icons.favorite;
     case JokerType.klarheit:
-      return Icons.auto_fix_high;
+      return Icons.cleaning_services;
     case JokerType.bonuszeit:
       return Icons.timer_outlined;
   }

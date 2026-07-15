@@ -16,16 +16,17 @@ enum LeaderboardCategory { totalScore, bestSingleRun, versesMemorized }
 /// legal screens (#18).
 class LeaderboardIds {
   static const _ids = <LeaderboardCategory, (String android, String ios)>{
+    // Android-IDs aus Play Console (Kommentar auf #14, 15.07.2026).
     LeaderboardCategory.totalScore: (
-      '[PLATZHALTER: Android-Leaderboard-ID für Gesamtpunktzahl]',
+      'CgkIuYao_PULEAIQAQ',
       '[PLATZHALTER: iOS-Leaderboard-ID für Gesamtpunktzahl]',
     ),
     LeaderboardCategory.bestSingleRun: (
-      '[PLATZHALTER: Android-Leaderboard-ID für besten Einzellauf]',
+      'CgkIuYao_PULEAIQAg',
       '[PLATZHALTER: iOS-Leaderboard-ID für besten Einzellauf]',
     ),
     LeaderboardCategory.versesMemorized: (
-      '[PLATZHALTER: Android-Leaderboard-ID für auswendig gelernte Verse]',
+      'CgkIuYao_PULEAIQAw',
       '[PLATZHALTER: iOS-Leaderboard-ID für auswendig gelernte Verse]',
     ),
   };

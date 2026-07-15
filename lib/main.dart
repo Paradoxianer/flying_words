@@ -2,8 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 // Uncomment the following lines when enabling Firebase Crashlytics
-// import 'dart:io';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
 
@@ -107,11 +108,14 @@ void guardedMain() {
   // }
 
   GamesServicesController? gamesServicesController;
-  // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-  //   gamesServicesController = GamesServicesController()
-  //     // Attempt to log the player in.
-  //     ..initialize();
-  // }
+  // Android-only for now (#14): Game Center isn't set up on the iOS side
+  // yet, so signing in there would just fail. Add `|| Platform.isIOS` back
+  // once that's done.
+  if (!kIsWeb && Platform.isAndroid) {
+    gamesServicesController = GamesServicesController()
+      // Attempt to log the player in.
+      ..initialize();
+  }
 
   InAppPurchaseController? inAppPurchaseController;
   // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {

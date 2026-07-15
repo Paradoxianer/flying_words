@@ -7,7 +7,7 @@ import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 
-const _sealNumerals = {
+const sealNumerals = {
   Difficulty.slow: 'I',
   Difficulty.normal: 'II',
   Difficulty.insane: 'III',
@@ -73,7 +73,7 @@ class WaxSeal extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Text(
-        _sealNumerals[difficulty]!,
+        sealNumerals[difficulty]!,
         style: ScriptoriumText.heading.copyWith(
           fontSize: 24,
           color: palette.trueWhite.withValues(alpha: 0.9),
@@ -85,8 +85,8 @@ class WaxSeal extends StatelessWidget {
       button: true,
       enabled: unlocked,
       label: unlocked
-          ? l10n.sealLabelUnlocked(_sealNumerals[difficulty]!)
-          : l10n.sealLabelLocked(_sealNumerals[difficulty]!),
+          ? l10n.sealLabelUnlocked(sealNumerals[difficulty]!)
+          : l10n.sealLabelLocked(sealNumerals[difficulty]!),
       child: InkWell(
         onTap: unlocked ? onPressed : null,
         borderRadius: BorderRadius.circular(12),

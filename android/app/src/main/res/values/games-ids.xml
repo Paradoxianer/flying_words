@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Google Play game services IDs. Save this file as res/values/games-ids.xml in your project.-->
 <resources>
-    <!-- Google Play Game Services App ID (Hier später deine echte ID aus der Play Console eintragen) -->
-    <string name="app_id" translatable="false">424242424242</string>
-    <string name="package_name" translatable="false">de.heilsarmee.flying_words</string>
-
-    <!-- Beispiel IDs für Achievements/Leaderboards (kannst du erst mal so lassen) -->
-    <string name="achievement_first_win" translatable="false">sOmEiDsTrInG</string>
-    <string name="leaderboard_highest_score" translatable="false">sOmEiDsTrInG</string>
+  <!--app_id-->
+  <string name="app_id" translatable="false">409624773433</string>
+  <!--package_name-->
+  <string name="package_name" translatable="false">de.heilsarmee.flying_words</string>
+  <!--leaderboard Gesamtpunktzahl-->
+  <string name="leaderboard_gesamtpunktzahl" translatable="false">CgkIuYao_PULEAIQAQ</string>
+  <!--leaderboard Bester Einzellauf-->
+  <string name="leaderboard_bester_einzellauf" translatable="false">CgkIuYao_PULEAIQAg</string>
+  <!--leaderboard Auswendig gelernte Verse-->
+  <string name="leaderboard_auswendig_gelernte_verse" translatable="false">CgkIuYao_PULEAIQAw</string>
 </resources>

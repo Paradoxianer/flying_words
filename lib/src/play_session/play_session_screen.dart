@@ -18,13 +18,16 @@ import '../../l10n/gen/app_localizations.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../currency/gold_ink.dart';
 import '../games_services/games_services.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
+import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
+import '../verses/custom_verses_controller.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final Lesson lesson;
@@ -293,6 +296,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         playerProgress.getScoreforVerse(progressKey, widget.difficulty);
     playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
+    // Award Goldtinte for the run (#54).
+    final goldInkEarned = goldInkForRun(widget.difficulty, state.numErrors,
+        blindBonus: state.blindRun);
+    context.read<GoldInkController>().earn(goldInkEarned);
+
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);
     if (!mounted) return;
@@ -315,8 +323,17 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         );
       }*/
 
-      // Send score to leaderboard.
-      await gamesServicesController.submitLeaderboardScore(score);
+      // Send the new standing to every leaderboard (#14).
+      final customVerses = context.read<CustomVersesController>();
+      final allVerseKeys = [...gameLevels, ...customVerses.verses]
+          .map(verseProgressKey)
+          .toList();
+      await gamesServicesController.submitAllLeaderboardScores(
+        totalScore: playerProgress.playerScore,
+        bestSingleRunScore: playerProgress.bestSingleRunScore,
+        memorizedVerseCount:
+            playerProgress.memorizedVerseCount(allVerseKeys),
+      );
     }
 
     /// Give the player some time to see the celebration animation - unless
@@ -330,6 +347,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       'lesson': widget.lesson,
       'difficulty': widget.difficulty,
       'previousBest': previousBest,
+      'goldInkEarned': goldInkEarned,
     });
   }
 }

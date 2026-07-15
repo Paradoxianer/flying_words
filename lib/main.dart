@@ -2,8 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 // Uncomment the following lines when enabling Firebase Crashlytics
-// import 'dart:io';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
 
@@ -24,10 +25,16 @@ import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
 import 'src/crashlytics/crashlytics.dart';
+import 'src/currency/gold_ink.dart';
+import 'src/currency/persistence/gold_ink_persistence.dart';
+import 'src/currency/persistence/local_storage_gold_ink_persistence.dart';
 import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/help/help_screen.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
+import 'src/leaderboard/local_leaderboard_screen.dart';
+import 'src/legal/impressum_screen.dart';
+import 'src/legal/privacy_screen.dart';
 import 'src/level_selection/level_selection_screen.dart';
 import 'src/level_selection/levels.dart';
 import 'src/main_menu/main_menu_screen.dart';
@@ -104,11 +111,14 @@ void guardedMain() {
   // }
 
   GamesServicesController? gamesServicesController;
-  // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-  //   gamesServicesController = GamesServicesController()
-  //     // Attempt to log the player in.
-  //     ..initialize();
-  // }
+  // Android-only for now (#14): Game Center isn't set up on the iOS side
+  // yet, so signing in there would just fail. Add `|| Platform.isIOS` back
+  // once that's done.
+  if (!kIsWeb && Platform.isAndroid) {
+    gamesServicesController = GamesServicesController()
+      // Attempt to log the player in.
+      ..initialize();
+  }
 
   InAppPurchaseController? inAppPurchaseController;
   // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
@@ -142,6 +152,7 @@ void guardedMain() {
       MyApp(
         settingsPersistence: settingsPersistence,
         playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
+        goldInkPersistence: LocalStorageGoldInkPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
@@ -205,6 +216,7 @@ class MyApp extends StatelessWidget {
                       final lesson = map['lesson'] as Lesson;
                       final difficulty = map['difficulty'] as Difficulty;
                       final previousBest = map['previousBest'] as Score?;
+                      final goldInkEarned = map['goldInkEarned'] as int;
                       // The celebration verse crossfades into the win
                       // screen instead of being pushed away (#55).
                       return CustomTransitionPage<void>(
@@ -219,6 +231,7 @@ class MyApp extends StatelessWidget {
                           levelState: levelState,
                           difficulty: difficulty,
                           previousBest: previousBest,
+                          goldInkEarned: goldInkEarned,
                         ),
                       );
                     },
@@ -234,11 +247,28 @@ class MyApp extends StatelessWidget {
               builder: (context, state) =>
                   const HelpScreen(key: Key('help')),
             ),
+            GoRoute(
+              path: 'impressum',
+              builder: (context, state) =>
+                  const ImpressumScreen(key: Key('impressum')),
+            ),
+            GoRoute(
+              path: 'privacy',
+              builder: (context, state) =>
+                  const PrivacyScreen(key: Key('privacy')),
+            ),
+            GoRoute(
+              path: 'leaderboard',
+              builder: (context, state) =>
+                  const LocalLeaderboardScreen(key: Key('leaderboard')),
+            ),
           ]),
     ],
   );
 
   final PlayerProgressPersistence playerProgressPersistence;
+
+  final GoldInkPersistence goldInkPersistence;
 
   final SettingsPersistence settingsPersistence;
 
@@ -252,6 +282,7 @@ class MyApp extends StatelessWidget {
 
   const MyApp({
     required this.playerProgressPersistence,
+    required this.goldInkPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -272,6 +303,13 @@ class MyApp extends StatelessWidget {
                 knownLessons: [...gameLevels, ...customVersesController.verses],
               );
               return progress;
+            },
+          ),
+          ChangeNotifierProvider(
+            create: (context) {
+              final goldInk = GoldInkController(goldInkPersistence);
+              goldInk.getLatestFromStore();
+              return goldInk;
             },
           ),
           Provider<GamesServicesController?>.value(

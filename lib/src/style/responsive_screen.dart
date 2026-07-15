@@ -5,15 +5,26 @@
 import 'package:flutter/material.dart';
 
 /// A widget that makes it easy to create a screen with a square-ish
-/// main area, a smaller menu area, and a small area for a message on top.
-/// It works in both orientations on mobile- and tablet-sized screens.
+/// main area, a smaller menu area below it, and a small area for a message
+/// on top.
+///
+/// Used to split into a side-by-side layout in landscape/wide windows, but
+/// every one of our screens puts a scrollable list (or similarly
+/// full-width content) in [squarishMainArea] and just a button or two in
+/// [rectangularMenuArea] - the split squeezed the list into a narrow
+/// column and stranded the menu area off to the side instead of below it
+/// (#95). Always stacking vertically, like the portrait layout, fixes that
+/// and works fine regardless of orientation since the content scrolls.
+///
+/// On wide windows the whole column is capped at [maxContentWidth] and
+/// centered - full-width buttons/cards stretched across a 1600px desktop
+/// window looked stretched and out of place (#95 follow-up).
 class ResponsiveScreen extends StatelessWidget {
-  /// This is the "hero" of the screen. It's more or less square, and will
-  /// be placed in the visual "center" of the screen.
+  /// This is the "hero" of the screen: the main, scrollable content.
   final Widget squarishMainArea;
 
-  /// The second-largest area after [squarishMainArea]. It can be narrow
-  /// or wide.
+  /// The menu area below [squarishMainArea] - usually a button or a row of
+  /// buttons.
   final Widget rectangularMenuArea;
 
   /// An area reserved for some static text close to the top of the screen.
@@ -23,11 +34,17 @@ class ResponsiveScreen extends StatelessWidget {
   /// elements.
   final double mainAreaProminence;
 
+  /// Caps how wide the whole screen gets on desktop-sized windows; the
+  /// column is centered within this width instead of stretching edge to
+  /// edge (#95).
+  final double maxContentWidth;
+
   const ResponsiveScreen({
     required this.squarishMainArea,
     required this.rectangularMenuArea,
     this.topMessageArea = const SizedBox.shrink(),
     this.mainAreaProminence = 0.8,
+    this.maxContentWidth = 700,
     super.key,
   });
 
@@ -35,90 +52,43 @@ class ResponsiveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // This widget wants to fill the whole screen.
         final size = constraints.biggest;
         final padding = EdgeInsets.all(size.shortestSide / 30);
 
-        if (size.height >= size.width) {
-          // "Portrait" / "mobile" mode.
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: padding,
-                  child: topMessageArea,
-                ),
-              ),
-              Expanded(
-                flex: (mainAreaProminence * 100).round(),
-                child: SafeArea(
-                  top: false,
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SafeArea(
                   bottom: false,
-                  minimum: padding,
-                  child: squarishMainArea,
+                  child: Padding(
+                    padding: padding,
+                    child: topMessageArea,
+                  ),
                 ),
-              ),
-              SafeArea(
-                top: false,
-                maintainBottomViewPadding: true,
-                child: Padding(
-                  padding: padding,
-                  child: rectangularMenuArea,
+                Expanded(
+                  flex: (mainAreaProminence * 100).round(),
+                  child: SafeArea(
+                    top: false,
+                    bottom: false,
+                    minimum: padding,
+                    child: squarishMainArea,
+                  ),
                 ),
-              ),
-            ],
-          );
-        } else {
-          // "Landscape" / "tablet" mode.
-          final isLarge = size.width > 900;
-
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: isLarge ? 7 : 5,
-                child: SafeArea(
-                  right: false,
+                SafeArea(
+                  top: false,
                   maintainBottomViewPadding: true,
-                  minimum: padding,
-                  child: squarishMainArea,
+                  child: Padding(
+                    padding: padding,
+                    child: rectangularMenuArea,
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  children: [
-                    SafeArea(
-                      bottom: false,
-                      left: false,
-                      maintainBottomViewPadding: true,
-                      child: Padding(
-                        padding: padding,
-                        child: topMessageArea,
-                      ),
-                    ),
-                    Expanded(
-                      child: SafeArea(
-                        top: false,
-                        left: false,
-                        maintainBottomViewPadding: true,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: padding,
-                            child: rectangularMenuArea,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          );
-        }
+              ],
+            ),
+          ),
+        );
       },
     );
   }

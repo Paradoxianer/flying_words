@@ -118,6 +118,46 @@ void main() {
     });
   });
 
+  group('PlayerProgress leaderboard stats (#14)', () {
+    test('bestSingleRunScore is the highest single run, not the sum', () {
+      final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+      progress.setScoreforVerse('a', Difficulty.slow, Score(score: 50));
+      progress.setScoreforVerse('b', Difficulty.normal, Score(score: 200));
+      progress.setScoreforVerse('b', Difficulty.slow, Score(score: 20));
+
+      expect(progress.bestSingleRunScore, 200);
+      // The sum (playerScore) is a different number entirely.
+      expect(progress.playerScore, 270);
+    });
+
+    test('bestSingleRunScore is 0 with no runs at all', () {
+      final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+      expect(progress.bestSingleRunScore, 0);
+    });
+
+    test(
+        'memorizedVerseCount only counts verses with all 3 stars on Seal II',
+        () {
+      final progress = PlayerProgress(MemoryOnlyPlayerProgressPersistence());
+      // 3 stars on Seal II (normal): flawless run, no errors.
+      progress.setScoreforVerse(
+          'mastered', Difficulty.normal, Score(score: 50, errors: 0));
+      // Only 2 stars on Seal II: a couple of errors.
+      progress.setScoreforVerse(
+          'in-progress', Difficulty.normal, Score(score: 50, errors: 2));
+      // Seal III alone doesn't count - it only requires 2 stars on Seal II
+      // to unlock, not 3.
+      progress.setScoreforVerse(
+          'sealed-iii-only', Difficulty.insane, Score(score: 50));
+
+      expect(
+        progress.memorizedVerseCount(
+            ['mastered', 'in-progress', 'sealed-iii-only', 'never-played']),
+        1,
+      );
+    });
+  });
+
   group('PlayerProgress.getLatestFromStore', () {
     test('loads progress and recalculates the highscore', () async {
       final store = MemoryOnlyPlayerProgressPersistence();

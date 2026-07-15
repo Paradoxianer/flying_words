@@ -19,11 +19,13 @@ class FakeBibleApiClient implements BibleApiClient {
   bool fail = false;
   String text = 'Denn so sehr hat Gott die Welt geliebt';
   BibleReference? lastRequest;
+  String? lastTranslation;
 
   @override
   Future<FetchedVerse> fetchPassage(BibleReference reference,
       {String? translation}) async {
     lastRequest = reference;
+    lastTranslation = translation;
     if (fail) throw const VerseFetchException('nicht gefunden');
     return FetchedVerse(text: text, translation: translation ?? 'MB');
   }
@@ -72,6 +74,8 @@ void main() {
     expect(api.lastRequest!.book, 'JHN');
     expect(api.lastRequest!.chapter, 3);
     expect(api.lastRequest!.verseStart, 16);
+    // German UI locale must fetch the German translation (#87).
+    expect(api.lastTranslation, 'MB');
     expect(controller.verses, hasLength(1));
     expect(controller.verses.single.verse, 'Johannes 3, 16');
     // Dialog closed on success.
@@ -135,5 +139,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(controller.verses.single.verse, 'John 6:24-26');
+    // English UI locale must fetch an English translation, not the German
+    // default (#87) - this used to silently return German text.
+    expect(api.lastTranslation, 'WEB');
   });
 }

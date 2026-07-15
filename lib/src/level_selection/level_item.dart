@@ -119,6 +119,12 @@ class _LevelItemState extends State<LevelItem> {
               ],
             ),
             const SizedBox(height: 10),
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: palette.gold.withValues(alpha: 0.3),
+            ),
+            const SizedBox(height: 10),
             // Jokers are chosen here, before the round starts (#53) - there
             // is no time to activate them once the words start flying.
             JokerPicker(

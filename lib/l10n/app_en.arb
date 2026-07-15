@@ -127,6 +127,27 @@
     }
   },
 
+  "jokerGraceName": "Grace",
+  "jokerGraceDescription": "Forgives your next mistake.",
+  "jokerSanduhrName": "Hourglass",
+  "jokerSanduhrDescription": "Slows the words down for the rest of the run.",
+  "jokerTintenloescherName": "Ink Eraser",
+  "jokerTintenloescherDescription": "Wipes three wrong words off the screen.",
+  "jokerFederkielName": "Quill",
+  "jokerFederkielDescription": "Writes the current word automatically.",
+  "jokerOwnedCount": "{count}×",
+  "@jokerOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "jokerNoneOwned": "No {joker} left.",
+  "@jokerNoneOwned": {
+    "placeholders": {
+      "joker": {"type": "String"}
+    }
+  },
+
   "help": "Help",
   "helpHowToPlayTitle": "How to play",
   "helpHowToPlayBody": "A Bible verse is shown to you word by word. Then several words fly across the screen — always tap the next correct word of the verse to learn it, piece by piece, by heart.",

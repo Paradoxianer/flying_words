@@ -127,6 +127,27 @@
     }
   },
 
+  "jokerGraceName": "Gnade",
+  "jokerGraceDescription": "Verzeiht den nächsten Fehler.",
+  "jokerSanduhrName": "Sanduhr",
+  "jokerSanduhrDescription": "Verlangsamt die Wörter für den Rest des Laufs.",
+  "jokerTintenloescherName": "Tintenlöscher",
+  "jokerTintenloescherDescription": "Wischt drei falsche Wörter vom Bildschirm.",
+  "jokerFederkielName": "Federkiel",
+  "jokerFederkielDescription": "Schreibt das aktuelle Wort automatisch.",
+  "jokerOwnedCount": "{count}×",
+  "@jokerOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "jokerNoneOwned": "Keine {joker} übrig.",
+  "@jokerNoneOwned": {
+    "placeholders": {
+      "joker": {"type": "String"}
+    }
+  },
+
   "help": "Hilfe",
   "helpHowToPlayTitle": "So wird gespielt",
   "helpHowToPlayBody": "Ein Bibelvers wird dir Wort für Wort vorgestellt. Danach fliegen mehrere Wörter über den Bildschirm — tippe immer auf das nächste richtige Wort des Verses, um ihn Stück für Stück auswendig zu lernen.",

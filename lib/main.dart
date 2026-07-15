@@ -32,6 +32,9 @@ import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/help/help_screen.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
+import 'src/jokers/joker_inventory.dart';
+import 'src/jokers/persistence/joker_inventory_persistence.dart';
+import 'src/jokers/persistence/local_storage_joker_inventory_persistence.dart';
 import 'src/leaderboard/local_leaderboard_screen.dart';
 import 'src/legal/impressum_screen.dart';
 import 'src/legal/privacy_screen.dart';
@@ -153,6 +156,7 @@ void guardedMain() {
         settingsPersistence: settingsPersistence,
         playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
         goldInkPersistence: LocalStorageGoldInkPersistence(),
+        jokerInventoryPersistence: LocalStorageJokerInventoryPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
@@ -270,6 +274,8 @@ class MyApp extends StatelessWidget {
 
   final GoldInkPersistence goldInkPersistence;
 
+  final JokerInventoryPersistence jokerInventoryPersistence;
+
   final SettingsPersistence settingsPersistence;
 
   final GamesServicesController? gamesServicesController;
@@ -283,6 +289,7 @@ class MyApp extends StatelessWidget {
   const MyApp({
     required this.playerProgressPersistence,
     required this.goldInkPersistence,
+    required this.jokerInventoryPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -310,6 +317,13 @@ class MyApp extends StatelessWidget {
               final goldInk = GoldInkController(goldInkPersistence);
               goldInk.getLatestFromStore();
               return goldInk;
+            },
+          ),
+          ChangeNotifierProvider(
+            create: (context) {
+              final jokers = JokerInventoryController(jokerInventoryPersistence);
+              jokers.getLatestFromStore();
+              return jokers;
             },
           ),
           Provider<GamesServicesController?>.value(

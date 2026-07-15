@@ -72,7 +72,80 @@ class LevelState extends ChangeNotifier {
     notifyListeners();
   }
 
+  // --- Joker effects (#53) --------------------------------------------
+  //
+  // Each joker communicates through this shared state instead of reaching
+  // into FlyingWord's private internals directly - the same pattern the
+  // game already uses for pause/text-hidden. [jokerUsed] feeds the -50%
+  // Goldtinte penalty decided in #53/#54 (stars are left untouched).
+
+  bool _jokerUsed = false;
+
+  /// Whether any joker was used this run - halves the Goldtinte earned
+  /// (#53/#54), but never affects stars, score or leaderboards.
+  bool get jokerUsed => _jokerUsed;
+
+  int _pendingGraceCount = 0;
+
+  /// "Gnade": the next [_pendingGraceCount] mistakes are forgiven instead
+  /// of counting as errors.
+  void useGrace() {
+    _pendingGraceCount++;
+    _jokerUsed = true;
+    notifyListeners();
+  }
+
+  double _speedMultiplier = 1.0;
+
+  /// Multiplies the flying words' flight time; "Sanduhr" stretches it by
+  /// 50% (applies to the next word onward, not the one already in flight).
+  double get speedMultiplier => _speedMultiplier;
+
+  void useSanduhr() {
+    _speedMultiplier *= 1.5;
+    _jokerUsed = true;
+    notifyListeners();
+  }
+
+  int _removeWrongWordsRequested = 0;
+
+  /// How many wrong words "Tintenlöscher" still needs to clear from the
+  /// screen; consumed by [consumeRemoveWrongWordsRequest].
+  int get removeWrongWordsRequested => _removeWrongWordsRequested;
+
+  void useTintenloescher({int count = 3}) {
+    _removeWrongWordsRequested += count;
+    _jokerUsed = true;
+    notifyListeners();
+  }
+
+  void consumeRemoveWrongWordsRequest() {
+    _removeWrongWordsRequested = 0;
+  }
+
+  bool _autoCompleteRequested = false;
+
+  /// Whether "Federkiel" is waiting to auto-write the current word;
+  /// consumed by [consumeAutoCompleteRequest].
+  bool get autoCompleteRequested => _autoCompleteRequested;
+
+  void useFederkiel() {
+    _autoCompleteRequested = true;
+    _jokerUsed = true;
+    notifyListeners();
+  }
+
+  void consumeAutoCompleteRequest() {
+    _autoCompleteRequested = false;
+  }
+
   void addErrorIndex(int index) {
+    if (_pendingGraceCount > 0) {
+      // Forgiven by "Gnade": as if the mistake never happened.
+      _pendingGraceCount--;
+      notifyListeners();
+      return;
+    }
     _streak = 0;
     //only register first mistake on the word... maybe later find a more fancy way to count multiple erros
     _errors.add(index);

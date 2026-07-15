@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/play_session/flying_words.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
+import 'package:flying_words/src/play_session/joker_tray.dart';
 import 'package:flying_words/src/play_session/play_scoreboard.dart';
 import 'package:flying_words/src/play_session/text_progress.dart';
 import 'package:go_router/go_router.dart';
@@ -194,6 +195,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         builder: (context, levelState, child) => TextProgress(
                             lesson: widget.lesson, state: levelState),
                       ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        child: JokerTray(),
+                      ),
                       Consumer<LevelState>(
                         builder: (context, levelState, child) => Expanded(
                           child: Stack(
@@ -296,9 +301,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         playerProgress.getScoreforVerse(progressKey, widget.difficulty);
     playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
-    // Award Goldtinte for the run (#54).
+    // Award Goldtinte for the run (#54); halved if a Joker was used (#53).
     final goldInkEarned = goldInkForRun(widget.difficulty, state.numErrors,
-        blindBonus: state.blindRun);
+        blindBonus: state.blindRun, jokerUsed: state.jokerUsed);
     context.read<GoldInkController>().earn(goldInkEarned);
 
     // Let the player see the game just after winning for a bit.

@@ -65,6 +65,7 @@ void main() {
           lesson: _lesson(),
           levelState: _finishedState(errors: {2}),
           difficulty: Difficulty.slow,
+          goldInkEarned: 10,
         ),
       ),
     ));
@@ -75,6 +76,7 @@ void main() {
     expect(find.textContaining('Score: 42'), findsOneWidget);
     expect(find.textContaining('Fehler: 1'), findsOneWidget);
     expect(find.textContaining('Zeit: 01:30'), findsOneWidget);
+    expect(find.text('+10 Goldtinte'), findsOneWidget);
     // One error on seal I: two earned stars out of three.
     expect(find.byIcon(Icons.star), findsNWidgets(2));
     expect(find.byIcon(Icons.star_border), findsNWidgets(1));
@@ -97,6 +99,7 @@ void main() {
               lesson: _lesson(),
               levelState: _finishedState(),
               difficulty: Difficulty.slow,
+              goldInkEarned: 10,
               previousBest: previousBest,
             ),
           ),

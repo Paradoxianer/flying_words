@@ -34,12 +34,16 @@ class WinGameScreen extends StatelessWidget {
   /// for the time comparison; null on the first win.
   final Score? previousBest;
 
+  /// Goldtinte awarded for this run (#54).
+  final int goldInkEarned;
+
   const WinGameScreen({
     super.key,
     required this.score,
     required this.lesson,
     required this.levelState,
     required this.difficulty,
+    required this.goldInkEarned,
     this.previousBest,
   });
 
@@ -161,6 +165,14 @@ class WinGameScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: ScriptoriumText.label
                               .copyWith(color: palette.inkFaded),
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          l10n.goldInkEarned(goldInkEarned),
+                          key: const Key('gold-ink-earned'),
+                          style: ScriptoriumText.label
+                              .copyWith(color: palette.gold),
                         ),
                       ),
                       // Achieved time compared to the best run so far.

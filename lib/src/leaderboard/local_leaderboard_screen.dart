@@ -40,8 +40,9 @@ class LocalLeaderboardScreen extends StatelessWidget {
     final playerProgress = context.watch<PlayerProgress>();
     final customVerses = context.watch<CustomVersesController>();
 
+    final allLessons = [...gameLevels, ...customVerses.verses];
     final runs = <_Run>[];
-    for (final lesson in [...gameLevels, ...customVerses.verses]) {
+    for (final lesson in allLessons) {
       final verseProgress =
           playerProgress.progressForVerse(verseProgressKey(lesson));
       for (final difficulty in Difficulty.values) {
@@ -52,6 +53,8 @@ class LocalLeaderboardScreen extends StatelessWidget {
       }
     }
     runs.sort((a, b) => b.score.score.compareTo(a.score.score));
+    final memorizedCount = playerProgress
+        .memorizedVerseCount(allLessons.map(verseProgressKey).toList());
 
     return Scaffold(
       backgroundColor: palette.backgroundSettings,
@@ -70,6 +73,12 @@ class LocalLeaderboardScreen extends StatelessWidget {
               l10n.leaderboardTotalScore(playerProgress.playerScore),
               textAlign: TextAlign.center,
               style: ScriptoriumText.heading.copyWith(color: palette.gold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.leaderboardMemorizedVerses(memorizedCount),
+              textAlign: TextAlign.center,
+              style: ScriptoriumText.body.copyWith(color: palette.inkFaded),
             ),
             const SizedBox(height: 24),
             Expanded(

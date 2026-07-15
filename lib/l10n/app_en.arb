@@ -13,6 +13,12 @@
     }
   },
   "leaderboardEmpty": "No runs completed yet. Play a verse to show up here!",
+  "leaderboardMemorizedVerses": "Verses memorized: {count}",
+  "@leaderboardMemorizedVerses": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "settings": "Settings",
   "musicAttribution": "Music by Mr Smith (CC BY 4.0)",
 

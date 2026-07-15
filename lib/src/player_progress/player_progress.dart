@@ -212,6 +212,27 @@ class PlayerProgress extends ChangeNotifier {
   bool verseUnlocked(List<String> orderedVerses, int index) =>
       index < unlockedVerseCount(orderedVerses);
 
+  /// The single highest score across every verse and difficulty - unlike
+  /// [playerScore], which is the sum of all of them. Feeds the "best single
+  /// run" leaderboard (#14).
+  int get bestSingleRunScore {
+    var best = 0;
+    for (final verseProgress in _progress.values) {
+      for (final score in verseProgress.values) {
+        if (score.score > best) best = score.score;
+      }
+    }
+    return best;
+  }
+
+  /// How many of [verseKeys] are mastered with all 3 stars on Seal II - the
+  /// bar decided on for "learned by heart" in #14's leaderboard discussion.
+  /// Reaching Seal III doesn't automatically count: it only requires 2
+  /// stars on Seal II to unlock, not 3.
+  int memorizedVerseCount(List<String> verseKeys) => verseKeys
+      .where((key) => progressForVerse(key).stars(Difficulty.normal) == 3)
+      .length;
+
   int _calculateTotalScore() {
     int total = 0;
     for (final verseProgress in _progress.values) {

@@ -19,6 +19,11 @@ const goldInkBaseReward = {
   Difficulty.insane: 25,
 };
 
+/// Goldtinte granted for watching a rewarded ad in the shop (#54 Phase D
+/// addendum) - deliberately equal to a flawless seal I win, so it reads as
+/// "worth about the easiest win" rather than a shortcut past earning it.
+final goldInkRewardedAdAmount = goldInkBaseReward[Difficulty.slow]!;
+
 /// Goldtinte earned for a run on [difficulty] with [errors] mistakes.
 ///
 /// Only a flawless (max-star) run earns anything at all - seal I/II need

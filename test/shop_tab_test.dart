@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flying_words/src/ads/ads_controller.dart';
 import 'package:flying_words/src/currency/gold_ink.dart';
 import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
 import 'package:flying_words/src/jokers/joker_inventory.dart';
@@ -17,6 +18,11 @@ Widget _wrap({required GoldInkController goldInk, required JokerInventoryControl
       Provider(create: (_) => Palette()),
       ChangeNotifierProvider.value(value: goldInk),
       ChangeNotifierProvider.value(value: jokers),
+      // No ads wired up in these tests (mirrors production on the web
+      // platform, where AdsController is always null, #17) - the "watch
+      // an ad" buttons must stay hidden rather than crash on a missing
+      // provider.
+      Provider<AdsController?>.value(value: null),
     ],
     child: const LocalizedMaterialApp(home: Scaffold(body: ShopTab())),
   );
@@ -61,5 +67,18 @@ void main() {
 
     // Flush the simulated async persistence write from earn().
     await tester.pump(const Duration(milliseconds: 700));
+  });
+
+  testWidgets(
+      'the rewarded-ad options stay hidden when no AdsController is '
+      'available (#54 Phase D addendum, e.g. on the web build)',
+      (tester) async {
+    final goldInk = GoldInkController(MemoryOnlyGoldInkPersistence());
+    final jokers = JokerInventoryController(MemoryOnlyJokerInventoryPersistence());
+
+    await tester.pumpWidget(_wrap(goldInk: goldInk, jokers: jokers));
+
+    expect(find.text('Werbung ansehen'), findsNothing);
+    expect(find.text('Goldtinte verdienen'), findsNothing);
   });
 }

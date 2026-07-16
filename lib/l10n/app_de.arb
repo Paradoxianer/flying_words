@@ -151,6 +151,22 @@
       "count": {"type": "int"}
     }
   },
+  "shopWatchAd": "Werbung ansehen",
+  "shopWatchAdRemaining": "{remaining} von {limit} heute",
+  "@shopWatchAdRemaining": {
+    "placeholders": {
+      "remaining": {"type": "int"},
+      "limit": {"type": "int"}
+    }
+  },
+  "shopEarnGoldInkTitle": "Goldtinte verdienen",
+  "shopEarnGoldInkDescription": "Sieh dir ein Werbevideo an und bekomme {amount} Goldtinte geschenkt.",
+  "@shopEarnGoldInkDescription": {
+    "placeholders": {
+      "amount": {"type": "int"}
+    }
+  },
+  "shopAdFailed": "Die Werbung konnte nicht geladen werden. Versuch's später noch mal.",
 
   "challenges": "Herausforderungen",
   "challengesDailyTitle": "Vers des Tages",

@@ -9,6 +9,7 @@ import 'package:flying_words/src/level_selection/levels.dart';
 import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
 import 'package:flying_words/src/challenges/persistence/memory_challenges_persistence.dart';
 import 'package:flying_words/src/legal/persistence/memory_consent_persistence.dart';
+import 'package:flying_words/src/ads/persistence/memory_rewarded_ad_limit_persistence.dart';
 import 'package:flying_words/src/jokers/persistence/memory_joker_inventory_persistence.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
@@ -39,6 +40,7 @@ void main() {
       jokerInventoryPersistence: MemoryOnlyJokerInventoryPersistence(),
       challengesPersistence: MemoryOnlyChallengesPersistence(),
       consentPersistence: MemoryOnlyConsentPersistence(),
+      rewardedAdLimitPersistence: MemoryOnlyRewardedAdLimitPersistence(),
       adsController: null,
       gamesServicesController: null,
       inAppPurchaseController: null,

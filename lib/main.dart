@@ -16,12 +16,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'l10n/gen/app_localizations.dart';
 
 import 'src/ads/ads_controller.dart';
+import 'src/ads/persistence/local_storage_rewarded_ad_limit_persistence.dart';
+import 'src/ads/persistence/rewarded_ad_limit_persistence.dart';
+import 'src/ads/rewarded_ad_limit_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
 import 'src/challenges/challenges_controller.dart';
@@ -112,13 +116,17 @@ void guardedMain() {
   //       Read the README for more info on each integration.
 
   AdsController? adsController;
-  // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-  //   /// Prepare the google_mobile_ads plugin so that the first ad loads
-  //   /// faster. This can be done later or with a delay if startup
-  //   /// experience suffers.
-  //   adsController = AdsController(MobileAds.instance);
-  //   adsController.initialize();
-  // }
+  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+    // Prepare the google_mobile_ads plugin so that the first ad loads
+    // faster. This can be done later or with a delay if startup
+    // experience suffers.
+    //
+    // Note (#17): still using AdMob's sample ad unit IDs (see
+    // AdsController.preloadAd/showRewardedAd) until a real AdMob account
+    // and unit IDs exist - swap those in before a real release build.
+    adsController = AdsController(MobileAds.instance);
+    adsController.initialize();
+  }
 
   GamesServicesController? gamesServicesController;
   // Android-only for now (#14): Game Center isn't set up on the iOS side
@@ -166,6 +174,7 @@ void guardedMain() {
         jokerInventoryPersistence: LocalStorageJokerInventoryPersistence(),
         challengesPersistence: LocalStorageChallengesPersistence(),
         consentPersistence: LocalStorageConsentPersistence(),
+        rewardedAdLimitPersistence: LocalStorageRewardedAdLimitPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
@@ -303,6 +312,8 @@ class MyApp extends StatelessWidget {
 
   final ConsentPersistence consentPersistence;
 
+  final RewardedAdLimitPersistence rewardedAdLimitPersistence;
+
   final SettingsPersistence settingsPersistence;
 
   final GamesServicesController? gamesServicesController;
@@ -319,6 +330,7 @@ class MyApp extends StatelessWidget {
     required this.jokerInventoryPersistence,
     required this.challengesPersistence,
     required this.consentPersistence,
+    required this.rewardedAdLimitPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -364,6 +376,14 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (context) => ConsentController(consentPersistence),
+          ),
+          ChangeNotifierProvider(
+            create: (context) {
+              final limits = RewardedAdLimitController(
+                  rewardedAdLimitPersistence);
+              limits.getLatestFromStore();
+              return limits;
+            },
           ),
           Provider<GamesServicesController?>.value(
               value: gamesServicesController),

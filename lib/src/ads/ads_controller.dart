@@ -93,10 +93,10 @@ class AdsController {
   /// The work doesn't start immediately so that calling this doesn't have
   /// adverse effects (jank) during start of a new screen.
   void preloadAd() {
-    // TODO: When ready, change this to the Ad Unit IDs provided by AdMob.
-    //       The current values are AdMob's sample IDs.
+    // TODO: iOS still uses AdMob's sample banner ID - swap it in once an
+    //       iOS app + ad unit exist in AdMob (Android has a real one).
     final adUnitId = defaultTargetPlatform == TargetPlatform.android
-        ? 'ca-app-pub-3940256099942544/6300978111'
+        ? 'ca-app-pub-5517526465149171/9788331428'
         // iOS
         : 'ca-app-pub-3940256099942544/2934735716';
     _preloadedAd =
@@ -125,10 +125,10 @@ class AdsController {
   /// to show, or was dismissed before completion. The caller is
   /// responsible for granting the reward and recording the daily watch.
   Future<bool> showRewardedAd() async {
-    // TODO: When ready, change this to the Ad Unit IDs provided by AdMob.
-    //       The current values are AdMob's sample rewarded-ad IDs.
+    // TODO: iOS still uses AdMob's sample rewarded-ad ID - swap it in once
+    //       an iOS app + ad unit exist in AdMob (Android has a real one).
     final adUnitId = defaultTargetPlatform == TargetPlatform.android
-        ? 'ca-app-pub-3940256099942544/5224354917'
+        ? 'ca-app-pub-5517526465149171/4739184727'
         // iOS
         : 'ca-app-pub-3940256099942544/1712485313';
 

@@ -116,12 +116,17 @@ void guardedMain() {
   //       Read the README for more info on each integration.
 
   AdsController? adsController;
-  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+  // Android-only for now (#17): iOS has no AdMob app/App ID configured yet
+  // (ios/Runner/Info.plist is still missing GADApplicationIdentifier) -
+  // the Google Mobile Ads SDK crashes on launch without it, so this must
+  // stay Android-only until that's set up. Add `|| Platform.isIOS` back
+  // once it is (same reasoning as the GamesServicesController guard below).
+  if (!kIsWeb && Platform.isAndroid) {
     // Prepare the google_mobile_ads plugin so that the first ad loads
     // faster. This can be done later or with a delay if startup
     // experience suffers.
     //
-    // Note (#17): still using AdMob's sample ad unit IDs (see
+    // Note (#17): still using AdMob's sample ad unit IDs on iOS (see
     // AdsController.preloadAd/showRewardedAd) until a real AdMob account
     // and unit IDs exist - swap those in before a real release build.
     adsController = AdsController(MobileAds.instance);

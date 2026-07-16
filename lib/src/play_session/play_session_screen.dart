@@ -29,7 +29,6 @@ import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
-import '../style/scriptorium_text.dart';
 import '../verses/custom_verses_controller.dart';
 
 class PlaySessionScreen extends StatefulWidget {
@@ -234,22 +233,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 // Tapping anywhere skips the fixed celebration wait (#69);
                 // the game controls underneath stay non-interactive during
                 // the celebration either way (see the IgnorePointer above).
+                // No on-screen hint for this (dropped in a later revision,
+                // see the linked issue) - it just ended up overlapping the
+                // "Zurück" button below, and players already tap to skip
+                // without needing to be told.
                 if (_duringCelebration)
                   Positioned.fill(
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: _skipCelebration,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 24),
-                          child: Text(
-                            l10n.tapToSkip,
-                            style: ScriptoriumText.body
-                                .copyWith(color: palette.inkFaded),
-                          ),
-                        ),
-                      ),
                     ),
                   ),
               ],

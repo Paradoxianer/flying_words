@@ -28,6 +28,8 @@
   "removeAds": "Remove ads",
   "resetProgress": "Reset progress",
   "progressResetConfirmation": "Progress has been reset.",
+  "resetProgressConfirmTitle": "Really reset progress?",
+  "resetProgressConfirmBody": "Your entire game progress (unlocked seals, stars, best times) will be permanently deleted. This cannot be undone.",
   "back": "Back",
   "language": "Language",
   "changeName": "Change name",
@@ -92,7 +94,6 @@
 
   "paused": "Paused",
   "mouseHint": "Tip: Flying Words plays most smoothly on a touch device — with a mouse you get a bit more time.",
-  "tapToSkip": "Tap to skip",
 
   "blindPlaceholder": "Text hidden — from memory! (Score ×1.5)",
 

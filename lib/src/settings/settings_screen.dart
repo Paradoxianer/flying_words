@@ -99,7 +99,29 @@ class SettingsScreen extends StatelessWidget {
             _SettingsLine(
               l10n.resetProgress,
               const Icon(Icons.delete),
-              onSelected: () {
+              onSelected: () async {
+                // Deleting all progress is unrecoverable and one tap away
+                // in the list - confirm first (#101).
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    title: Text(l10n.resetProgressConfirmTitle),
+                    content: Text(l10n.resetProgressConfirmBody),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(false),
+                        child: Text(l10n.cancel),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(true),
+                        child: Text(l10n.resetProgress),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirmed != true) return;
+                if (!context.mounted) return;
+
                 context.read<PlayerProgress>().reset();
 
                 final messenger = ScaffoldMessenger.of(context);

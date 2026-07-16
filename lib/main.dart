@@ -24,6 +24,10 @@ import 'l10n/gen/app_localizations.dart';
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
+import 'src/challenges/challenges_controller.dart';
+import 'src/challenges/challenges_screen.dart';
+import 'src/challenges/persistence/challenges_persistence.dart';
+import 'src/challenges/persistence/local_storage_challenges_persistence.dart';
 import 'src/crashlytics/crashlytics.dart';
 import 'src/currency/gold_ink.dart';
 import 'src/currency/persistence/gold_ink_persistence.dart';
@@ -158,6 +162,7 @@ void guardedMain() {
         playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
         goldInkPersistence: LocalStorageGoldInkPersistence(),
         jokerInventoryPersistence: LocalStorageJokerInventoryPersistence(),
+        challengesPersistence: LocalStorageChallengesPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
@@ -278,6 +283,11 @@ class MyApp extends StatelessWidget {
               builder: (context, state) =>
                   const LocalLeaderboardScreen(key: Key('leaderboard')),
             ),
+            GoRoute(
+              path: 'challenges',
+              builder: (context, state) =>
+                  const ChallengesScreen(key: Key('challenges')),
+            ),
           ]),
     ],
   );
@@ -287,6 +297,8 @@ class MyApp extends StatelessWidget {
   final GoldInkPersistence goldInkPersistence;
 
   final JokerInventoryPersistence jokerInventoryPersistence;
+
+  final ChallengesPersistence challengesPersistence;
 
   final SettingsPersistence settingsPersistence;
 
@@ -302,6 +314,7 @@ class MyApp extends StatelessWidget {
     required this.playerProgressPersistence,
     required this.goldInkPersistence,
     required this.jokerInventoryPersistence,
+    required this.challengesPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -336,6 +349,13 @@ class MyApp extends StatelessWidget {
               final jokers = JokerInventoryController(jokerInventoryPersistence);
               jokers.getLatestFromStore();
               return jokers;
+            },
+          ),
+          ChangeNotifierProvider(
+            create: (context) {
+              final challenges = ChallengesController(challengesPersistence);
+              challenges.getLatestFromStore();
+              return challenges;
             },
           ),
           Provider<GamesServicesController?>.value(

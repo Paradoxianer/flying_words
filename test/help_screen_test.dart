@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flying_words/main.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
 import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
+import 'package:flying_words/src/challenges/persistence/memory_challenges_persistence.dart';
 import 'package:flying_words/src/jokers/persistence/memory_joker_inventory_persistence.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
@@ -34,6 +35,7 @@ void main() {
       playerProgressPersistence: MemoryOnlyPlayerProgressPersistence(),
       goldInkPersistence: MemoryOnlyGoldInkPersistence(),
       jokerInventoryPersistence: MemoryOnlyJokerInventoryPersistence(),
+      challengesPersistence: MemoryOnlyChallengesPersistence(),
       adsController: null,
       gamesServicesController: null,
       inAppPurchaseController: null,

@@ -18,6 +18,7 @@ import '../../l10n/gen/app_localizations.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../challenges/challenges_controller.dart';
 import '../currency/gold_ink.dart';
 import '../games_services/games_services.dart';
 import '../games_services/score.dart';
@@ -29,6 +30,7 @@ import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
+import '../style/snack_bar.dart';
 import '../verses/custom_verses_controller.dart';
 
 class PlaySessionScreen extends StatefulWidget {
@@ -307,12 +309,44 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     // win screen ("Neue Bestzeit!").
     final previousBest =
         playerProgress.getScoreforVerse(progressKey, widget.difficulty);
+    // "Vers-Meister-Bonus" (#53): only the run that first finishes every
+    // seal of a verse counts, so this must be read before the update below.
+    final wasVerseMastered =
+        playerProgress.progressForVerse(progressKey).finished(Difficulty.insane);
     playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
     // Award Goldtinte for the run (#54); halved if a Joker was used (#53).
     final goldInkEarned = goldInkForRun(widget.difficulty, state.numErrors,
         blindBonus: state.blindRun, jokerUsed: state.jokerUsed);
     context.read<GoldInkController>().earn(goldInkEarned);
+
+    // Daily/weekly challenges and the play streak (#53 Phase C).
+    final challenges = context.read<ChallengesController>();
+    final orderedVerses = [for (final level in gameLevels) verseProgressKey(level)];
+    final unlockedVerseNumbers = [
+      for (var i = 0; i < playerProgress.unlockedVerseCount(orderedVerses); i++)
+        gameLevels[i].number,
+    ];
+    await challenges.ensureCurrent(unlockedVerseNumbers);
+    final earnedJokers = await challenges.registerWin(
+      verseNumber: widget.lesson.number,
+      difficulty: widget.difficulty,
+      errors: state.numErrors,
+    );
+    if (!mounted) return;
+    final isVerseMasteredNow =
+        playerProgress.progressForVerse(progressKey).finished(Difficulty.insane);
+    if (!wasVerseMastered && isVerseMasteredNow) {
+      earnedJokers.add(challenges.randomJokerType());
+    }
+    if (earnedJokers.isNotEmpty) {
+      final jokerInventory = context.read<JokerInventoryController>();
+      for (final type in earnedJokers) {
+        jokerInventory.add(type);
+      }
+      final l10n = AppLocalizations.of(context)!;
+      showSnackBar(l10n.challengeRewardEarned(earnedJokers.length));
+    }
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(_preCelebrationDuration);

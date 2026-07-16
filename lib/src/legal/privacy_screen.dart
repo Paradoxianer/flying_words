@@ -10,8 +10,7 @@ import '../../l10n/gen/app_localizations.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 import '../style/responsive_screen.dart';
-import 'legal_section.dart';
-import 'provider_info.dart';
+import 'privacy_policy_content.dart';
 
 class PrivacyScreen extends StatelessWidget {
   const PrivacyScreen({super.key});
@@ -36,77 +35,7 @@ class PrivacyScreen extends StatelessWidget {
                   ScriptoriumText.display.copyWith(color: palette.inkFullOpacity),
             ),
             _gap,
-            LegalSection(
-              title: l10n.privacyControllerTitle,
-              body: l10n.privacyControllerBody(
-                ProviderInfo.name,
-                ProviderInfo.address,
-                ProviderInfo.email,
-              ),
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyOverviewTitle,
-              body: l10n.privacyOverviewBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyLocalTitle,
-              body: l10n.privacyLocalBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyVerseApiTitle,
-              body: l10n.privacyVerseApiBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyAdsTitle,
-              body: l10n.privacyAdsBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyGameServicesTitle,
-              body: l10n.privacyGameServicesBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyCloudSaveTitle,
-              body: l10n.privacyCloudSaveBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyThirdCountryTitle,
-              body: l10n.privacyThirdCountryBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyRetentionTitle,
-              body: l10n.privacyRetentionBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyRightsTitle,
-              body: l10n.privacyRightsBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyComplaintTitle,
-              body: l10n.privacyComplaintBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyAutomatedTitle,
-              body: l10n.privacyAutomatedBody,
-              palette: palette,
-            ),
-            LegalSection(
-              title: l10n.privacyChangesTitle,
-              body: l10n.privacyChangesBody(
-                ProviderInfo.privacyPolicyLastUpdated,
-              ),
-              palette: palette,
-            ),
+            PrivacyPolicyContent(palette: palette),
             _gap,
           ],
         ),

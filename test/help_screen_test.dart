@@ -63,6 +63,12 @@ void main() {
     expect(find.text('Die Siegel I, II, III'), findsOneWidget);
     expect(find.text('Das Auge — blind spielen'), findsOneWidget);
     expect(find.text('Eigene Verse'), findsOneWidget);
+    // Joker and Goldtinte sections with their icons (#104).
+    expect(find.text('Joker'), findsOneWidget);
+    expect(find.text('Sanduhr'), findsOneWidget);
+    expect(find.text('Goldtinte'), findsOneWidget);
+    expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
+    expect(find.byIcon(Icons.visibility), findsOneWidget);
 
     // And back to the main menu again.
     await tester.tap(find.text('Zurück'));

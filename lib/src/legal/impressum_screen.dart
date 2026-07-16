@@ -29,6 +29,14 @@ class ImpressumScreen extends StatelessWidget {
         squarishMainArea: ListView(
           children: [
             const SizedBox(height: 40),
+            Center(
+              child: Image.asset(
+                'assets/images/app_icon.png',
+                width: 72,
+                height: 72,
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
               l10n.impressum,
               textAlign: TextAlign.center,

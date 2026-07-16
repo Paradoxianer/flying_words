@@ -101,6 +101,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Image.asset(
+                    'assets/images/app_icon.png',
+                    width: 96,
+                    height: 96,
+                  ),
+                  const SizedBox(height: 8),
                   Transform.rotate(
                     angle: -0.06,
                     child: Text(

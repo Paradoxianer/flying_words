@@ -142,6 +142,47 @@
     }
   },
 
+  "challenges": "Herausforderungen",
+  "challengesDailyTitle": "Vers des Tages",
+  "challengesDailyCta": "Jetzt spielen",
+  "challengesDailyDone": "Heute schon geschafft! ✓",
+  "challengesWeeklyTitle": "Wochen-Schreiber",
+  "challengesWeeklyBody": "{current} von {target} Sternen auf Siegel {seal}",
+  "@challengesWeeklyBody": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "target": {"type": "int"},
+      "seal": {"type": "String"}
+    }
+  },
+  "challengesWeeklyDone": "Diese Woche schon geschafft! ✓",
+  "challengesStreakTitle": "Serie",
+  "challengesStreakBody": "{days, plural, =0{Noch keine Serie} =1{1 Tag in Folge gespielt} other{{days} Tage in Folge gespielt}}",
+  "@challengesStreakBody": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "challengesStreakNext3": "{remaining, plural, =1{Noch 1 Tag bis zum 3-Tage-Bonus} other{Noch {remaining} Tage bis zum 3-Tage-Bonus}}",
+  "@challengesStreakNext3": {
+    "placeholders": {
+      "remaining": {"type": "int"}
+    }
+  },
+  "challengesStreakNext7": "{remaining, plural, =1{Noch 1 Tag bis zum 7-Tage-Bonus} other{Noch {remaining} Tage bis zum 7-Tage-Bonus}}",
+  "@challengesStreakNext7": {
+    "placeholders": {
+      "remaining": {"type": "int"}
+    }
+  },
+  "challengesStreakMilestonesDone": "Beide Serien-Boni diese Serie schon verdient! ✓",
+  "challengeRewardEarned": "{count, plural, =1{+1 Joker verdient!} other{+{count} Joker verdient!}}",
+  "@challengeRewardEarned": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "help": "Hilfe",
   "helpHowToPlayTitle": "So wird gespielt",
   "helpHowToPlayBody": "Ein Bibelvers wird dir Wort für Wort vorgestellt. Danach fliegen mehrere Wörter über den Bildschirm — tippe immer auf das nächste richtige Wort des Verses, um ihn Stück für Stück auswendig zu lernen.",

@@ -142,6 +142,47 @@
     }
   },
 
+  "challenges": "Challenges",
+  "challengesDailyTitle": "Verse of the Day",
+  "challengesDailyCta": "Play now",
+  "challengesDailyDone": "Done for today! ✓",
+  "challengesWeeklyTitle": "Weekly Scribe",
+  "challengesWeeklyBody": "{current} of {target} stars on Seal {seal}",
+  "@challengesWeeklyBody": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "target": {"type": "int"},
+      "seal": {"type": "String"}
+    }
+  },
+  "challengesWeeklyDone": "Done for this week! ✓",
+  "challengesStreakTitle": "Streak",
+  "challengesStreakBody": "{days, plural, =0{No streak yet} =1{1 day in a row} other{{days} days in a row}}",
+  "@challengesStreakBody": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "challengesStreakNext3": "{remaining, plural, =1{1 day to go for the 3-day bonus} other{{remaining} days to go for the 3-day bonus}}",
+  "@challengesStreakNext3": {
+    "placeholders": {
+      "remaining": {"type": "int"}
+    }
+  },
+  "challengesStreakNext7": "{remaining, plural, =1{1 day to go for the 7-day bonus} other{{remaining} days to go for the 7-day bonus}}",
+  "@challengesStreakNext7": {
+    "placeholders": {
+      "remaining": {"type": "int"}
+    }
+  },
+  "challengesStreakMilestonesDone": "Both streak bonuses already earned this streak! ✓",
+  "challengeRewardEarned": "{count, plural, =1{+1 Joker earned!} other{+{count} Jokers earned!}}",
+  "@challengeRewardEarned": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "help": "Help",
   "helpHowToPlayTitle": "How to play",
   "helpHowToPlayBody": "A Bible verse is shown to you word by word. Then several words fly across the screen — always tap the next correct word of the verse to learn it, piece by piece, by heart.",

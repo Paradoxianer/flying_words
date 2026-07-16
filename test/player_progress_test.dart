@@ -39,10 +39,17 @@ void main() {
       expect(VerseProgress.starsForRun(Difficulty.normal, 20, 20), 0);
     });
 
-    test('seal III (insane) always earns its single master star on '
-        'completion, regardless of errors', () {
+    test(
+        'seal III (insane) earns its single master star only within the '
+        'same 30% error-rate threshold, not for any completion (#114 '
+        'follow-up)', () {
       expect(VerseProgress.starsForRun(Difficulty.insane, 0, 20), 1);
-      expect(VerseProgress.starsForRun(Difficulty.insane, 20, 20), 1);
+      // 6/20 = 30%, right at the boundary.
+      expect(VerseProgress.starsForRun(Difficulty.insane, 6, 20), 1);
+      // 7/20 = 35%, over it.
+      expect(VerseProgress.starsForRun(Difficulty.insane, 7, 20), 0);
+      // Every word wrong.
+      expect(VerseProgress.starsForRun(Difficulty.insane, 20, 20), 0);
     });
 
     test(
@@ -50,6 +57,7 @@ void main() {
         'flat one-star-if-any-errors behavior', () {
       expect(VerseProgress.starsForRun(Difficulty.slow, 5, null), 1);
       expect(VerseProgress.starsForRun(Difficulty.slow, null, 20), 1);
+      expect(VerseProgress.starsForRun(Difficulty.insane, 5, null), 1);
     });
   });
 

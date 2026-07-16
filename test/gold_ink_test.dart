@@ -20,10 +20,14 @@ void main() {
     });
 
     test(
-        'seal III always earns its reward - its only star is already a '
-        'completion star', () {
+        'seal III earns its reward as long as the error rate stays at or '
+        'under 30% - its master star needs an actual clear, not just any '
+        'finish (#114 follow-up)', () {
       expect(goldInkForRun(Difficulty.insane, 0, 20), 25);
+      // 5/20 = 25%: still within the master-star threshold.
       expect(goldInkForRun(Difficulty.insane, 5, 20), 25);
+      // 7/20 = 35%: over it - no reward.
+      expect(goldInkForRun(Difficulty.insane, 7, 20), 0);
     });
 
     test('the blind bonus adds 50% on top of a flawless run', () {

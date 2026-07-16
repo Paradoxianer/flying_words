@@ -46,35 +46,42 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
 
   /// Maximum stars for [difficulty]: seal I and II award up to three stars,
   /// seal III (insane) a single "master star" - finishing it at all is the
-  /// achievement. (Design decision in #39.)
+  /// achievement, *if* it was actually cleared and not just survived
+  /// (design decision in #39, refined in #114: without an accuracy floor
+  /// the master star wouldn't mean anything, since infinite errors would
+  /// earn the same star as a clean run).
   static int maxStars(Difficulty difficulty) =>
       difficulty == Difficulty.insane ? 1 : 3;
 
   /// The error rate (errors / wordCount) below which a run still earns two
-  /// stars, and below which it earns at least one (#114). Anything above
-  /// [oneStarMaxErrorRate] earns zero - there used to be no such case at
-  /// all, so even a completely botched run earned a star.
+  /// stars, and below which it earns at least one - on seal III this is
+  /// the single line between earning the master star or not (#114).
+  /// Anything above [oneStarMaxErrorRate] earns zero - there used to be no
+  /// such case at all, so even a completely botched run earned a star.
   static const twoStarMaxErrorRate = 0.10;
   static const oneStarMaxErrorRate = 0.30;
 
   /// Stars for a single finished run on [difficulty] with [errors] errors
-  /// out of [wordCount] words: three only for an absolutely flawless run,
-  /// then two/one/zero depending on the error *rate* (#114) - a fixed
-  /// error count doesn't scale fairly across verses of very different
-  /// lengths. Legacy scores saved before [wordCount] was tracked, or with
-  /// an unknown error count, are worth one star if they have any errors at
-  /// all (or three if they're known to have none).
+  /// out of [wordCount] words: three (or, on seal III, the single master
+  /// star) only for an absolutely flawless run, then fewer depending on
+  /// the error *rate* (#114) - a fixed error count doesn't scale fairly
+  /// across verses of very different lengths. Legacy scores saved before
+  /// [wordCount] was tracked, or with an unknown error count, are worth
+  /// one star if they have any errors at all (or the max if they're known
+  /// to have none).
   static int starsForRun(Difficulty difficulty, int? errors, int? wordCount) {
-    if (difficulty == Difficulty.insane) {
-      return 1;
-    }
     if (errors == 0) {
-      return 3;
+      return maxStars(difficulty);
     }
     if (errors == null || wordCount == null || wordCount <= 0) {
+      // Legacy data (or an unknown error count): conservative flat one
+      // star, same fallback this used to be for every difficulty.
       return 1;
     }
     final errorRate = errors / wordCount;
+    if (difficulty == Difficulty.insane) {
+      return errorRate <= oneStarMaxErrorRate ? 1 : 0;
+    }
     if (errorRate <= twoStarMaxErrorRate) {
       return 2;
     }

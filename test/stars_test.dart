@@ -54,12 +54,25 @@ void main() {
       expect(progress.stars(Difficulty.normal), 0);
     });
 
-    test('insane awards a single master star for finishing', () {
+    test(
+        'insane awards a single master star for a flawless run, but needs '
+        'an actual clear (#114 follow-up) - infinite errors would '
+        'otherwise earn the same star as a perfect run', () {
       final progress = VerseProgress();
       progress[Difficulty.insane] = Score(score: 10, errors: 0);
       expect(progress.stars(Difficulty.insane), 1);
       expect(VerseProgress.maxStars(Difficulty.insane), 1);
       expect(VerseProgress.maxStars(Difficulty.slow), 3);
+
+      // 5/20 = 25%: still earns the master star.
+      progress[Difficulty.insane] =
+          Score(score: 10, errors: 5, wordCount: 20);
+      expect(progress.stars(Difficulty.insane), 1);
+
+      // 7/20 = 35%: over the threshold, no star.
+      progress[Difficulty.insane] =
+          Score(score: 10, errors: 7, wordCount: 20);
+      expect(progress.stars(Difficulty.insane), 0);
     });
 
     test('legacy scores without an error count are worth one star', () {

@@ -56,8 +56,17 @@ class WinGameScreen extends StatelessWidget {
     this.previousBest,
   });
 
-  bool get _isNewBestTime =>
-      previousBest == null || score.duration < previousBest!.duration;
+  /// A run only counts as a new best if it actually earned at least one
+  /// star (#114) - otherwise a deliberately botched, fast run (every word
+  /// left flying past uncaught) could "beat" a slow but flawless one on
+  /// time alone, and the very first attempt at a verse would always be
+  /// celebrated as a new best regardless of quality.
+  bool get _isNewBestTime {
+    final earnedStars = VerseProgress.starsForRun(
+        difficulty, levelState.numErrors, lesson.words.length);
+    if (earnedStars <= 0) return false;
+    return previousBest == null || score.duration < previousBest!.duration;
+  }
 
   /// Captures [boundaryKey]'s current content as a PNG and shares it
   /// together with [text] (#6). Falls back to a text-only share if the
@@ -88,8 +97,8 @@ class WinGameScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final l10n = AppLocalizations.of(context)!;
 
-    final earnedStars =
-        VerseProgress.starsForRun(difficulty, levelState.numErrors);
+    final earnedStars = VerseProgress.starsForRun(
+        difficulty, levelState.numErrors, lesson.words.length);
     final maxStars = VerseProgress.maxStars(difficulty);
 
     const gap = SizedBox(height: 10);
@@ -215,19 +224,22 @@ class WinGameScreen extends StatelessWidget {
                             ],
                           ),
                         ],
-                        // Achieved time compared to the best run so far.
-                        Center(
-                          child: Text(
-                            _isNewBestTime
-                                ? l10n.newBestTime
-                                : l10n.bestTime(previousBest!.formattedTime),
-                            style: ScriptoriumText.label.copyWith(
-                              color: _isNewBestTime
-                                  ? palette.gold
-                                  : palette.inkFaded,
+                        // Achieved time compared to the best run so far -
+                        // nothing to say if this is a zero-star first
+                        // attempt, there's no best time to compare to (#114).
+                        if (_isNewBestTime || previousBest != null)
+                          Center(
+                            child: Text(
+                              _isNewBestTime
+                                  ? l10n.newBestTime
+                                  : l10n.bestTime(previousBest!.formattedTime),
+                              style: ScriptoriumText.label.copyWith(
+                                color: _isNewBestTime
+                                    ? palette.gold
+                                    : palette.inkFaded,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),

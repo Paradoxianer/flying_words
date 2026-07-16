@@ -126,6 +126,7 @@ class ChallengesController extends ChangeNotifier {
     required int verseNumber,
     required Difficulty difficulty,
     required int errors,
+    required int wordCount,
     DateTime? now,
   }) async {
     await _ensureLoaded();
@@ -167,7 +168,7 @@ class ChallengesController extends ChangeNotifier {
 
     // "Wochen-Schreiber": stars earned this week on the rolled seal.
     if (!next.weeklyClaimed && next.weeklyDifficulty == difficulty) {
-      final stars = VerseProgress.starsForRun(difficulty, errors);
+      final stars = VerseProgress.starsForRun(difficulty, errors, wordCount);
       final weeklyStars = next.weeklyStars + stars;
       next = next.copyWith(weeklyStars: weeklyStars);
       if (weeklyStars >= next.weeklyTarget) {

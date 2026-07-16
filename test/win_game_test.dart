@@ -13,15 +13,21 @@ import 'package:provider/provider.dart';
 
 import 'helpers/localized_material_app.dart';
 
-Lesson _lesson() =>
-    Lesson(number: 1, verse: 'Test 1,1', text: 'Alpha Beta Gamma');
+// 20 words - long enough that a single error stays a small error rate
+// (#114: stars are now based on the error rate, not an absolute count, so
+// a too-short fixture can't land in the middle star tiers at all).
+Lesson _lesson() => Lesson(
+    number: 1,
+    verse: 'Test 1,1',
+    text: 'Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota Kappa '
+        'Lambda Mu Nu Xi Omicron Pi Rho Sigma Tau Upsilon');
 
 LevelState _finishedState({Set<int> errors = const {}}) {
-  final state = LevelState(onWin: (_) {}, length: 3);
+  final state = LevelState(onWin: (_) {}, length: 20);
   for (final index in errors) {
     state.addErrorIndex(index);
   }
-  state.setWordIndex(3);
+  state.setWordIndex(20);
   return state;
 }
 
@@ -44,7 +50,10 @@ void main() {
     ));
     final spans = (richText.text as TextSpan).children!.cast<TextSpan>();
 
-    expect(spans.map((s) => s.text).join(), 'Alpha Beta Gamma ');
+    expect(
+        spans.map((s) => s.text).join(),
+        'Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu '
+        'Nu Xi Omicron Pi Rho Sigma Tau Upsilon ');
     // The missed word is highlighted, the others are not.
     final palette = Palette();
     expect(spans[1].style!.color, palette.sealRed);
@@ -116,6 +125,35 @@ void main() {
         Score(score: 10, duration: const Duration(seconds: 60))));
     expect(find.text('Bestzeit: 01:00'), findsOneWidget);
     expect(find.text('Neue Bestzeit!'), findsNothing);
+  });
+
+  testWidgets(
+      'a zero-star run (every word wrong) is never celebrated as a new '
+      'best, even with no previous run to compare to (#114)', (tester) async {
+    await tester.pumpWidget(MultiProvider(
+      providers: [
+        Provider<AdsController?>.value(value: null),
+        ChangeNotifierProvider<InAppPurchaseController?>.value(value: null),
+        Provider(create: (_) => Palette()),
+      ],
+      child: LocalizedMaterialApp(
+        home: WinGameScreen(
+          score: Score(score: 0, duration: const Duration(seconds: 5)),
+          lesson: _lesson(),
+          // Every one of the 20 words missed.
+          levelState: _finishedState(errors: {for (var i = 0; i < 20; i++) i}),
+          difficulty: Difficulty.slow,
+          goldInkEarned: 0,
+        ),
+      ),
+    ));
+
+    expect(find.byIcon(Icons.star), findsNothing);
+    expect(find.byIcon(Icons.star_border), findsNWidgets(3));
+    // Nothing to celebrate and nothing to compare to - the whole "best
+    // time" row stays hidden rather than falsely claiming a new record.
+    expect(find.text('Neue Bestzeit!'), findsNothing);
+    expect(find.textContaining('Bestzeit:'), findsNothing);
   });
 
   testWidgets('shows earned Jokers with a fly-in animation (#112)',

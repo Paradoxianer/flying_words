@@ -15,10 +15,13 @@ void main() {
       expect(score.score, greaterThan(0));
     });
 
-    test('a won level is never worth less than one point', () {
+    test(
+        'a terrible enough run is worth nothing, not floored to one point '
+        'anymore (#114 - that floor is also why "finished" used to require '
+        'score > 0)', () {
       final score = Score.fromResult(
           20, Difficulty.insane, const Duration(minutes: 30), 1000);
-      expect(score.score, 1);
+      expect(score.score, 0);
     });
 
     test('faster runs score higher', () {
@@ -52,6 +55,14 @@ void main() {
       final insane = Score.fromResult(
           20, Difficulty.insane, const Duration(seconds: 30), 0);
       expect(insane.score, greaterThan(slow.score));
+    });
+
+    test('carries the word count through, for the error-rate star math '
+        '(#114)', () {
+      final score = Score.fromResult(
+          20, Difficulty.slow, const Duration(seconds: 30), 3);
+      expect(score.wordCount, 20);
+      expect(score.errors, 3);
     });
   });
 }

@@ -24,7 +24,9 @@ const goldInkBaseReward = {
 /// "worth about the easiest win" rather than a shortcut past earning it.
 final goldInkRewardedAdAmount = goldInkBaseReward[Difficulty.slow]!;
 
-/// Goldtinte earned for a run on [difficulty] with [errors] mistakes.
+/// Goldtinte earned for a run on [difficulty] with [errors] mistakes out of
+/// [wordCount] words (#114 - errors alone don't say much without knowing
+/// how long the verse was).
 ///
 /// Only a flawless (max-star) run earns anything at all - seal I/II need
 /// zero errors, seal III's only star is already a completion star, so any
@@ -34,9 +36,9 @@ final goldInkRewardedAdAmount = goldInkBaseReward[Difficulty.slow]!;
 /// applies (any joker was used this run, #53) - the steep joker price is
 /// the main economic brake, this is just a reward-layer correction and
 /// never touches stars, score or leaderboards.
-int goldInkForRun(Difficulty difficulty, int errors,
+int goldInkForRun(Difficulty difficulty, int errors, int wordCount,
     {bool blindBonus = false, bool jokerUsed = false}) {
-  final stars = VerseProgress.starsForRun(difficulty, errors);
+  final stars = VerseProgress.starsForRun(difficulty, errors, wordCount);
   final flawless = stars >= VerseProgress.maxStars(difficulty);
   if (!flawless) return 0;
   var amount = goldInkBaseReward[difficulty]!.toDouble();

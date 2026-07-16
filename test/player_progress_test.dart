@@ -7,6 +7,60 @@ import 'package:flying_words/src/player_progress/persistence/memory_player_progr
 import 'package:flying_words/src/player_progress/player_progress.dart';
 
 void main() {
+  group('VerseProgress.starsForRun (#114)', () {
+    test('an absolutely flawless run always earns three stars', () {
+      expect(VerseProgress.starsForRun(Difficulty.slow, 0, 3), 3);
+      expect(VerseProgress.starsForRun(Difficulty.slow, 0, 40), 3);
+      // Even with an unknown word count, zero known errors is unambiguous.
+      expect(VerseProgress.starsForRun(Difficulty.slow, 0, null), 3);
+    });
+
+    test('an error rate at or under 10% still earns two stars', () {
+      // 1/20 = 5%.
+      expect(VerseProgress.starsForRun(Difficulty.slow, 1, 20), 2);
+      // 2/20 = 10%, right at the boundary.
+      expect(VerseProgress.starsForRun(Difficulty.normal, 2, 20), 2);
+    });
+
+    test('an error rate over 10% but at or under 30% earns one star', () {
+      // 3/20 = 15%.
+      expect(VerseProgress.starsForRun(Difficulty.slow, 3, 20), 1);
+      // 6/20 = 30%, right at the boundary.
+      expect(VerseProgress.starsForRun(Difficulty.normal, 6, 20), 1);
+    });
+
+    test(
+        'an error rate over 30% earns zero stars - previously there was no '
+        'such case at all, so even every single word wrong still earned a '
+        'star', () {
+      // 7/20 = 35%.
+      expect(VerseProgress.starsForRun(Difficulty.slow, 7, 20), 0);
+      // Every word wrong.
+      expect(VerseProgress.starsForRun(Difficulty.normal, 20, 20), 0);
+    });
+
+    test(
+        'seal III (insane) earns its single master star only within the '
+        'same 30% error-rate threshold, not for any completion (#114 '
+        'follow-up)', () {
+      expect(VerseProgress.starsForRun(Difficulty.insane, 0, 20), 1);
+      // 6/20 = 30%, right at the boundary.
+      expect(VerseProgress.starsForRun(Difficulty.insane, 6, 20), 1);
+      // 7/20 = 35%, over it.
+      expect(VerseProgress.starsForRun(Difficulty.insane, 7, 20), 0);
+      // Every word wrong.
+      expect(VerseProgress.starsForRun(Difficulty.insane, 20, 20), 0);
+    });
+
+    test(
+        'legacy data without a known word count falls back to the old '
+        'flat one-star-if-any-errors behavior', () {
+      expect(VerseProgress.starsForRun(Difficulty.slow, 5, null), 1);
+      expect(VerseProgress.starsForRun(Difficulty.slow, null, 20), 1);
+      expect(VerseProgress.starsForRun(Difficulty.insane, 5, null), 1);
+    });
+  });
+
   group('Score JSON', () {
     test('round trip keeps score and duration', () {
       final score = Score(score: 420, duration: const Duration(seconds: 90));
@@ -14,6 +68,19 @@ void main() {
           json.decode(json.encode(score.toJson())) as Map<String, dynamic>);
       expect(restored.score, 420);
       expect(restored.duration, const Duration(seconds: 90));
+    });
+
+    test('round trip keeps errors and wordCount (#114)', () {
+      final score = Score(score: 420, errors: 2, wordCount: 20);
+      final restored = Score.fromJson(
+          json.decode(json.encode(score.toJson())) as Map<String, dynamic>);
+      expect(restored.errors, 2);
+      expect(restored.wordCount, 20);
+    });
+
+    test('legacy JSON without wordCount restores it as null', () {
+      final restored = Score.fromJson({'score': 10, 'duration': 0});
+      expect(restored.wordCount, isNull);
     });
   });
 
@@ -42,11 +109,15 @@ void main() {
       expect(restored[Difficulty.slow]!.score, 5);
     });
 
-    test('finished only for positive scores', () {
+    test(
+        'finished once a Score exists at all, regardless of its value '
+        '(#114 - it used to require score > 0, but a score can now be '
+        'legitimately 0 for a bad run without blocking verse progression)',
+        () {
       final progress = VerseProgress();
       expect(progress.finished(Difficulty.slow), isFalse);
       progress[Difficulty.slow] = Score(score: 0);
-      expect(progress.finished(Difficulty.slow), isFalse);
+      expect(progress.finished(Difficulty.slow), isTrue);
       progress[Difficulty.slow] = Score(score: 3);
       expect(progress.finished(Difficulty.slow), isTrue);
     });

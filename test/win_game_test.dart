@@ -5,6 +5,7 @@ import 'package:flying_words/src/game_internals/lesson.dart';
 import 'package:flying_words/src/game_internals/level_state.dart';
 import 'package:flying_words/src/games_services/score.dart';
 import 'package:flying_words/src/in_app_purchase/in_app_purchase.dart';
+import 'package:flying_words/src/jokers/joker_type.dart';
 import 'package:flying_words/src/play_session/text_progress.dart';
 import 'package:flying_words/src/style/palette.dart';
 import 'package:flying_words/src/win_game/win_game_screen.dart';
@@ -115,5 +116,66 @@ void main() {
         Score(score: 10, duration: const Duration(seconds: 60))));
     expect(find.text('Bestzeit: 01:00'), findsOneWidget);
     expect(find.text('Neue Bestzeit!'), findsNothing);
+  });
+
+  testWidgets('shows earned Jokers with a fly-in animation (#112)',
+      (tester) async {
+    await tester.pumpWidget(MultiProvider(
+      providers: [
+        Provider<AdsController?>.value(value: null),
+        ChangeNotifierProvider<InAppPurchaseController?>.value(value: null),
+        Provider(create: (_) => Palette()),
+      ],
+      child: LocalizedMaterialApp(
+        home: WinGameScreen(
+          score: Score(score: 42, duration: const Duration(seconds: 90)),
+          lesson: _lesson(),
+          levelState: _finishedState(),
+          difficulty: Difficulty.slow,
+          goldInkEarned: 5,
+          earnedJokers: const [JokerType.sanduhr, JokerType.vergebung],
+        ),
+      ),
+    ));
+
+    expect(find.text('+2 Joker verdient!'), findsOneWidget);
+    expect(find.byKey(const Key('earned-jokers')), findsOneWidget);
+    expect(find.text('Sanduhr'), findsOneWidget);
+    expect(find.text('Vergebung'), findsOneWidget);
+
+    // Badges fly in with a delay; not yet visible right after the pump...
+    final badgeFinder = find.descendant(
+      of: find.byKey(const Key('earned-jokers')),
+      matching: find.byType(AnimatedScale),
+    );
+    expect(tester.widget<AnimatedScale>(badgeFinder.first).scale, 0);
+
+    // ...but are after the staggered entrance animations settle.
+    await tester.pumpAndSettle();
+    for (final element in badgeFinder.evaluate()) {
+      expect((element.widget as AnimatedScale).scale, 1);
+    }
+  });
+
+  testWidgets('no earned-Jokers section when nothing was earned',
+      (tester) async {
+    await tester.pumpWidget(MultiProvider(
+      providers: [
+        Provider<AdsController?>.value(value: null),
+        ChangeNotifierProvider<InAppPurchaseController?>.value(value: null),
+        Provider(create: (_) => Palette()),
+      ],
+      child: LocalizedMaterialApp(
+        home: WinGameScreen(
+          score: Score(score: 42, duration: const Duration(seconds: 90)),
+          lesson: _lesson(),
+          levelState: _finishedState(),
+          difficulty: Difficulty.slow,
+          goldInkEarned: 5,
+        ),
+      ),
+    ));
+
+    expect(find.byKey(const Key('earned-jokers')), findsNothing);
   });
 }

@@ -143,6 +143,15 @@
     }
   },
 
+  "shop": "Shop",
+  "shopBuy": "Buy",
+  "shopOwnedCount": "{count} in inventory",
+  "@shopOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "challenges": "Challenges",
   "challengesDailyTitle": "Verse of the Day",
   "challengesDailyCta": "Play now",
@@ -224,6 +233,8 @@
 
   "privacyPolicy": "Privacy Policy",
   "privacyOptions": "Ad privacy options",
+  "privacyNoticeTitle": "Privacy Notice",
+  "privacyNoticeAcceptButton": "Got it",
   "privacyControllerTitle": "Data controller",
   "privacyControllerBody": "The controller responsible for data processing under the General Data Protection Regulation (GDPR) is:\n\n{name}\n{address}\n{email}",
   "@privacyControllerBody": {

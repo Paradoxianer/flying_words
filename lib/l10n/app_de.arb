@@ -143,6 +143,15 @@
     }
   },
 
+  "shop": "Shop",
+  "shopBuy": "Kaufen",
+  "shopOwnedCount": "{count} im Inventar",
+  "@shopOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "challenges": "Herausforderungen",
   "challengesDailyTitle": "Vers des Tages",
   "challengesDailyCta": "Jetzt spielen",
@@ -224,6 +233,8 @@
 
   "privacyPolicy": "Datenschutz",
   "privacyOptions": "Datenschutzeinstellungen für Werbung",
+  "privacyNoticeTitle": "Datenschutzhinweis",
+  "privacyNoticeAcceptButton": "Verstanden",
   "privacyControllerTitle": "Verantwortlicher",
   "privacyControllerBody": "Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:\n\n{name}\n{address}\n{email}",
   "@privacyControllerBody": {

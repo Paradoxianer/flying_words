@@ -10,28 +10,31 @@ import '../game_internals/lesson.dart';
 import '../player_progress/player_progress.dart';
 import 'persistence/gold_ink_persistence.dart';
 
-/// Base Goldtinte reward per seal, before the flawless bonus (decided in
-/// #54's discussion).
+/// Goldtinte reward per seal for a flawless run (revised 16.07.2026: a run
+/// with any errors used to still earn the full base reward, which felt
+/// wrong - 5 errors on seal II paid out the same 25 as a perfect run).
 const goldInkBaseReward = {
-  Difficulty.slow: 10,
-  Difficulty.normal: 25,
-  Difficulty.insane: 60,
+  Difficulty.slow: 5,
+  Difficulty.normal: 12,
+  Difficulty.insane: 25,
 };
 
-/// Goldtinte earned for a run on [difficulty] with [errors] mistakes: the
-/// seal's base reward, plus 50% for a flawless (max-star) run, plus another
-/// 50% if [blindBonus] applies (the verse text was hidden the whole run) -
-/// the same two bonuses and the same stacking `Score.fromResult` already
-/// uses for the run's score. If [jokerUsed] applies (any joker was used
-/// this run, #53), the total is halved afterwards - the steep joker price
-/// is the main economic brake, this is just a reward-layer correction and
+/// Goldtinte earned for a run on [difficulty] with [errors] mistakes.
+///
+/// Only a flawless (max-star) run earns anything at all - seal I/II need
+/// zero errors, seal III's only star is already a completion star, so any
+/// finish there counts. On top of that: +50% if [blindBonus] applies (the
+/// verse text was hidden the whole run), the same bonus and stacking
+/// `Score.fromResult` uses for the run's score; halved if [jokerUsed]
+/// applies (any joker was used this run, #53) - the steep joker price is
+/// the main economic brake, this is just a reward-layer correction and
 /// never touches stars, score or leaderboards.
 int goldInkForRun(Difficulty difficulty, int errors,
     {bool blindBonus = false, bool jokerUsed = false}) {
-  final base = goldInkBaseReward[difficulty]!;
   final stars = VerseProgress.starsForRun(difficulty, errors);
   final flawless = stars >= VerseProgress.maxStars(difficulty);
-  var amount = flawless ? base * 1.5 : base.toDouble();
+  if (!flawless) return 0;
+  var amount = goldInkBaseReward[difficulty]!.toDouble();
   if (blindBonus) amount *= 1.5;
   if (jokerUsed) amount *= 0.5;
   return amount.round();
@@ -60,5 +63,15 @@ class GoldInkController extends ChangeNotifier {
     _balance += amount;
     notifyListeners();
     unawaited(_store.saveBalance(_balance));
+  }
+
+  /// Deducts [amount] from the balance if there's enough (#54 Phase D
+  /// shop); returns whether the spend went through.
+  bool spend(int amount) {
+    if (amount <= 0 || _balance < amount) return false;
+    _balance -= amount;
+    notifyListeners();
+    unawaited(_store.saveBalance(_balance));
+    return true;
   }
 }

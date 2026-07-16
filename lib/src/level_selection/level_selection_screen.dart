@@ -12,6 +12,7 @@ import '../challenges/challenges_tab.dart';
 import '../currency/gold_ink.dart';
 import '../game_internals/lesson.dart';
 import '../player_progress/player_progress.dart';
+import '../shop/shop_tab.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 import '../style/scriptorium_text.dart';
@@ -29,7 +30,7 @@ class LevelSelectionScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: palette.backgroundLevelSelection,
         body: ResponsiveScreen(
@@ -76,6 +77,7 @@ class LevelSelectionScreen extends StatelessWidget {
                 tabs: [
                   Tab(text: l10n.levelSelectionVersesTab),
                   Tab(text: l10n.challenges),
+                  Tab(text: l10n.shop),
                 ],
               ),
               const Expanded(
@@ -83,6 +85,7 @@ class LevelSelectionScreen extends StatelessWidget {
                   children: [
                     _VersesTab(),
                     ChallengesTab(),
+                    ShopTab(),
                   ],
                 ),
               ),

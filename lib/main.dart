@@ -40,7 +40,10 @@ import 'src/jokers/joker_type.dart';
 import 'src/jokers/persistence/joker_inventory_persistence.dart';
 import 'src/jokers/persistence/local_storage_joker_inventory_persistence.dart';
 import 'src/leaderboard/local_leaderboard_screen.dart';
+import 'src/legal/consent_controller.dart';
 import 'src/legal/impressum_screen.dart';
+import 'src/legal/persistence/consent_persistence.dart';
+import 'src/legal/persistence/local_storage_consent_persistence.dart';
 import 'src/legal/privacy_screen.dart';
 import 'src/level_selection/level_selection_screen.dart';
 import 'src/level_selection/levels.dart';
@@ -162,6 +165,7 @@ void guardedMain() {
         goldInkPersistence: LocalStorageGoldInkPersistence(),
         jokerInventoryPersistence: LocalStorageJokerInventoryPersistence(),
         challengesPersistence: LocalStorageChallengesPersistence(),
+        consentPersistence: LocalStorageConsentPersistence(),
         inAppPurchaseController: inAppPurchaseController,
         adsController: adsController,
         gamesServicesController: gamesServicesController,
@@ -237,6 +241,8 @@ class MyApp extends StatelessWidget {
                       final difficulty = map['difficulty'] as Difficulty;
                       final previousBest = map['previousBest'] as Score?;
                       final goldInkEarned = map['goldInkEarned'] as int;
+                      final earnedJokers =
+                          map['earnedJokers'] as List<JokerType>? ?? const [];
                       // The celebration verse crossfades into the win
                       // screen instead of being pushed away (#55).
                       return CustomTransitionPage<void>(
@@ -252,6 +258,7 @@ class MyApp extends StatelessWidget {
                           difficulty: difficulty,
                           previousBest: previousBest,
                           goldInkEarned: goldInkEarned,
+                          earnedJokers: earnedJokers,
                         ),
                       );
                     },
@@ -294,6 +301,8 @@ class MyApp extends StatelessWidget {
 
   final ChallengesPersistence challengesPersistence;
 
+  final ConsentPersistence consentPersistence;
+
   final SettingsPersistence settingsPersistence;
 
   final GamesServicesController? gamesServicesController;
@@ -309,6 +318,7 @@ class MyApp extends StatelessWidget {
     required this.goldInkPersistence,
     required this.jokerInventoryPersistence,
     required this.challengesPersistence,
+    required this.consentPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -351,6 +361,9 @@ class MyApp extends StatelessWidget {
               challenges.getLatestFromStore();
               return challenges;
             },
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ConsentController(consentPersistence),
           ),
           Provider<GamesServicesController?>.value(
               value: gamesServicesController),

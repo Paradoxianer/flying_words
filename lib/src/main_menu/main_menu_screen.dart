@@ -10,12 +10,73 @@ import '../../l10n/gen/app_localizations.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../games_services/games_services.dart';
+import '../legal/consent_controller.dart';
+import '../legal/privacy_policy_content.dart';
 import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
+
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _maybeShowPrivacyNotice());
+  }
+
+  /// Presents the privacy notice once, on first app start (#111) - blocking
+  /// (no barrier dismiss, no back-button dismiss) since acknowledging it is
+  /// the whole point, but never gates playing itself.
+  ///
+  /// This is a notice, not an opt-in/opt-out consent gate: the only data
+  /// processed before any explicit choice is the locally-stored game
+  /// progress, which is necessary for the app to function. Ads and game
+  /// services each have their own separate consent/sign-in flow at the
+  /// point they're actually enabled, so there is nothing here to decline.
+  /// The body reuses [PrivacyPolicyContent], the same text shown under
+  /// Settings, so the legal wording only lives in one place.
+  Future<void> _maybeShowPrivacyNotice() async {
+    final consent = context.read<ConsentController>();
+    await consent.getLatestFromStore();
+    if (!mounted || consent.privacyNoticeSeen) return;
+    final l10n = AppLocalizations.of(context)!;
+    final palette = context.read<Palette>();
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          title: Text(l10n.privacyNoticeTitle),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: MediaQuery.of(dialogContext).size.height * 0.6,
+            child: SingleChildScrollView(
+              child: PrivacyPolicyContent(palette: palette),
+            ),
+          ),
+          actions: [
+            FilledButton(
+              key: const Key('privacy-notice-accept'),
+              onPressed: () {
+                consent.markPrivacyNoticeSeen();
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(l10n.privacyNoticeAcceptButton),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

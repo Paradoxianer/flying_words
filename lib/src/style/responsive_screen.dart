@@ -77,13 +77,20 @@ class ResponsiveScreen extends StatelessWidget {
                     child: squarishMainArea,
                   ),
                 ),
-                SafeArea(
-                  top: false,
-                  maintainBottomViewPadding: true,
-                  child: Padding(
-                    padding: padding,
-                    child: rectangularMenuArea,
+                Padding(
+                  // Add MediaQuery.viewPadding.bottom explicitly (#102)
+                  // rather than relying on SafeArea's own bottom inset:
+                  // with SystemUiMode.edgeToEdge, some Android versions/nav
+                  // bar styles under-report MediaQuery.padding.bottom (the
+                  // value SafeArea uses) even though viewPadding.bottom -
+                  // the raw system-bar inset, unaffected by that mismatch -
+                  // is correct, which left the back button hidden behind
+                  // the on-screen navigation bar.
+                  padding: padding.copyWith(
+                    bottom:
+                        padding.bottom + MediaQuery.viewPaddingOf(context).bottom,
                   ),
+                  child: rectangularMenuArea,
                 ),
               ],
             ),

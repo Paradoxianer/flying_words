@@ -237,6 +237,8 @@ class MyApp extends StatelessWidget {
                       final difficulty = map['difficulty'] as Difficulty;
                       final previousBest = map['previousBest'] as Score?;
                       final goldInkEarned = map['goldInkEarned'] as int;
+                      final earnedJokers =
+                          map['earnedJokers'] as List<JokerType>? ?? const [];
                       // The celebration verse crossfades into the win
                       // screen instead of being pushed away (#55).
                       return CustomTransitionPage<void>(
@@ -252,6 +254,7 @@ class MyApp extends StatelessWidget {
                           difficulty: difficulty,
                           previousBest: previousBest,
                           goldInkEarned: goldInkEarned,
+                          earnedJokers: earnedJokers,
                         ),
                       );
                     },

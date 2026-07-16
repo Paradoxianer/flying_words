@@ -30,7 +30,6 @@ import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
-import '../style/snack_bar.dart';
 import '../verses/custom_verses_controller.dart';
 
 class PlaySessionScreen extends StatefulWidget {
@@ -344,8 +343,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       for (final type in earnedJokers) {
         jokerInventory.add(type);
       }
-      final l10n = AppLocalizations.of(context)!;
-      showSnackBar(l10n.challengeRewardEarned(earnedJokers.length));
+      // Shown with a fly-in animation on the win screen instead of a
+      // snackbar (#112) - see the `earnedJokers` extra passed below.
     }
 
     // Let the player see the game just after winning for a bit.
@@ -395,6 +394,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       'difficulty': widget.difficulty,
       'previousBest': previousBest,
       'goldInkEarned': goldInkEarned,
+      'earnedJokers': earnedJokers,
     });
   }
 }

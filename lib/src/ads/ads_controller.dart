@@ -93,10 +93,10 @@ class AdsController {
   /// The work doesn't start immediately so that calling this doesn't have
   /// adverse effects (jank) during start of a new screen.
   void preloadAd() {
-    // TODO: When ready, change this to the Ad Unit IDs provided by AdMob.
-    //       The current values are AdMob's sample IDs.
+    // TODO: iOS still uses AdMob's sample banner ID - swap it in once an
+    //       iOS app + ad unit exist in AdMob (Android has a real one).
     final adUnitId = defaultTargetPlatform == TargetPlatform.android
-        ? 'ca-app-pub-3940256099942544/6300978111'
+        ? 'ca-app-pub-5517526465149171/9788331428'
         // iOS
         : 'ca-app-pub-3940256099942544/2934735716';
     _preloadedAd =
@@ -117,5 +117,51 @@ class AdsController {
     final ad = _preloadedAd;
     _preloadedAd = null;
     return ad;
+  }
+
+  /// Loads and shows a rewarded ad (#54 Phase D addendum: watching one
+  /// grants a Joker or Goldtinte in the shop). Returns whether the player
+  /// actually earned the reward - false if the ad failed to load, failed
+  /// to show, or was dismissed before completion. The caller is
+  /// responsible for granting the reward and recording the daily watch.
+  Future<bool> showRewardedAd() async {
+    // TODO: iOS still uses AdMob's sample rewarded-ad ID - swap it in once
+    //       an iOS app + ad unit exist in AdMob (Android has a real one).
+    final adUnitId = defaultTargetPlatform == TargetPlatform.android
+        ? 'ca-app-pub-5517526465149171/4739184727'
+        // iOS
+        : 'ca-app-pub-3940256099942544/1712485313';
+
+    final loadCompleter = Completer<RewardedAd?>();
+    await RewardedAd.load(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: loadCompleter.complete,
+        onAdFailedToLoad: (error) {
+          _log.warning('Rewarded ad failed to load: $error');
+          loadCompleter.complete(null);
+        },
+      ),
+    );
+    final ad = await loadCompleter.future;
+    if (ad == null) return false;
+
+    final earnedCompleter = Completer<bool>();
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        if (!earnedCompleter.isCompleted) earnedCompleter.complete(false);
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        ad.dispose();
+        _log.warning('Rewarded ad failed to show: $error');
+        if (!earnedCompleter.isCompleted) earnedCompleter.complete(false);
+      },
+    );
+    await ad.show(onUserEarnedReward: (ad, reward) {
+      if (!earnedCompleter.isCompleted) earnedCompleter.complete(true);
+    });
+    return earnedCompleter.future;
   }
 }

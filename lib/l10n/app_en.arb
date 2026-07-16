@@ -151,6 +151,22 @@
       "count": {"type": "int"}
     }
   },
+  "shopWatchAd": "Watch ad",
+  "shopWatchAdRemaining": "{remaining} of {limit} today",
+  "@shopWatchAdRemaining": {
+    "placeholders": {
+      "remaining": {"type": "int"},
+      "limit": {"type": "int"}
+    }
+  },
+  "shopEarnGoldInkTitle": "Earn Goldtinte",
+  "shopEarnGoldInkDescription": "Watch an ad video and get {amount} Goldtinte for free.",
+  "@shopEarnGoldInkDescription": {
+    "placeholders": {
+      "amount": {"type": "int"}
+    }
+  },
+  "shopAdFailed": "Couldn't load the ad. Try again later.",
 
   "challenges": "Challenges",
   "challengesDailyTitle": "Verse of the Day",

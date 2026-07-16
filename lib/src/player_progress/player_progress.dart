@@ -36,7 +36,13 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
   Map<String, dynamic> toJson() =>
       _progress.map((difficulty, score) => MapEntry(difficulty.name, score.toJson()));
 
-  bool finished(Difficulty difficulty) => (this[difficulty]?.score ?? 0) > 0;
+  /// A verse/difficulty is "finished" once it has been played at all - a
+  /// stored [Score] exists, regardless of how good it is. Deliberately not
+  /// based on the score's *value* (#114): that used to force every score
+  /// to be at least 1 (see the old `Score.fromResult`), which is also why
+  /// a run with every single word wrong could still earn a star, points,
+  /// and count as a new best.
+  bool finished(Difficulty difficulty) => this[difficulty] != null;
 
   /// Maximum stars for [difficulty]: seal I and II award up to three stars,
   /// seal III (insane) a single "master star" - finishing it at all is the
@@ -44,29 +50,47 @@ class VerseProgress extends DelegatingMap<Difficulty, Score> {
   static int maxStars(Difficulty difficulty) =>
       difficulty == Difficulty.insane ? 1 : 3;
 
-  /// Stars for a single finished run on [difficulty] with [errors] errors:
-  /// three for a flawless run, two for at most two errors, one for
-  /// finishing. Legacy scores without an error count are worth one star.
-  static int starsForRun(Difficulty difficulty, int? errors) {
+  /// The error rate (errors / wordCount) below which a run still earns two
+  /// stars, and below which it earns at least one (#114). Anything above
+  /// [oneStarMaxErrorRate] earns zero - there used to be no such case at
+  /// all, so even a completely botched run earned a star.
+  static const twoStarMaxErrorRate = 0.10;
+  static const oneStarMaxErrorRate = 0.30;
+
+  /// Stars for a single finished run on [difficulty] with [errors] errors
+  /// out of [wordCount] words: three only for an absolutely flawless run,
+  /// then two/one/zero depending on the error *rate* (#114) - a fixed
+  /// error count doesn't scale fairly across verses of very different
+  /// lengths. Legacy scores saved before [wordCount] was tracked, or with
+  /// an unknown error count, are worth one star if they have any errors at
+  /// all (or three if they're known to have none).
+  static int starsForRun(Difficulty difficulty, int? errors, int? wordCount) {
     if (difficulty == Difficulty.insane) {
-      return 1;
-    }
-    if (errors == null) {
       return 1;
     }
     if (errors == 0) {
       return 3;
     }
-    return errors <= 2 ? 2 : 1;
+    if (errors == null || wordCount == null || wordCount <= 0) {
+      return 1;
+    }
+    final errorRate = errors / wordCount;
+    if (errorRate <= twoStarMaxErrorRate) {
+      return 2;
+    }
+    if (errorRate <= oneStarMaxErrorRate) {
+      return 1;
+    }
+    return 0;
   }
 
   /// Stars earned on [difficulty] (best stored run).
   int stars(Difficulty difficulty) {
     final score = this[difficulty];
-    if (score == null || score.score <= 0) {
+    if (score == null) {
       return 0;
     }
-    return starsForRun(difficulty, score.errors);
+    return starsForRun(difficulty, score.errors, score.wordCount);
   }
 
   /// A difficulty unlocks once the previous one has at least two stars
@@ -166,9 +190,10 @@ class PlayerProgress extends ChangeNotifier {
     if (existing != null) {
       // Stars must never go down: keep the run with more stars, and only
       // for equal stars the one with the higher score.
-      final existingStars =
-          VerseProgress.starsForRun(difficulty, existing.errors);
-      final newStars = VerseProgress.starsForRun(difficulty, score.errors);
+      final existingStars = VerseProgress.starsForRun(
+          difficulty, existing.errors, existing.wordCount);
+      final newStars = VerseProgress.starsForRun(
+          difficulty, score.errors, score.wordCount);
       if (existingStars > newStars ||
           (existingStars == newStars && existing.score >= score.score)) {
         return;

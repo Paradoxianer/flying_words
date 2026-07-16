@@ -315,7 +315,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     playerProgress.setScoreforVerse(progressKey, widget.difficulty, score);
 
     // Award Goldtinte for the run (#54); halved if a Joker was used (#53).
-    final goldInkEarned = goldInkForRun(widget.difficulty, state.numErrors,
+    final goldInkEarned = goldInkForRun(
+        widget.difficulty, state.numErrors, widget.lesson.words.length,
         blindBonus: state.blindRun, jokerUsed: state.jokerUsed);
     context.read<GoldInkController>().earn(goldInkEarned);
 
@@ -331,6 +332,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       verseNumber: widget.lesson.number,
       difficulty: widget.difficulty,
       errors: state.numErrors,
+      wordCount: widget.lesson.words.length,
     );
     if (!mounted) return;
     final isVerseMasteredNow =

@@ -21,7 +21,18 @@ class Score {
   /// legacy data saved before errors were recorded.
   final int? errors;
 
-  Score({this.score = 0, this.duration = Duration.zero, this.errors});
+  /// Number of words/rounds in the run this score came from (varies by
+  /// verse - #114), or null for legacy data saved before this was
+  /// recorded. Needed to turn [errors] into an error *rate* for
+  /// [VerseProgress.starsForRun], since verses have very different
+  /// lengths.
+  final int? wordCount;
+
+  Score(
+      {this.score = 0,
+      this.duration = Duration.zero,
+      this.errors,
+      this.wordCount});
 
   factory Score.fromResult(
       int wordCount, Difficulty difficulty, Duration duration, int errors,
@@ -37,23 +48,28 @@ class Score {
     if (blindBonus) {
       score = (score * 1.5).round();
     }
-    // A won level is always worth at least one point - otherwise it would not
-    // count as finished (see VerseProgress.finished).
-    if (score < 1) score = 1;
-    return Score(score: score, duration: duration, errors: errors);
+    // A run with (almost) every word wrong is legitimately worth nothing -
+    // no artificial floor here anymore (#114: this used to be floored to
+    // 1, which is also why "finished" used to be defined as score > 0;
+    // see VerseProgress.finished, which no longer depends on this).
+    if (score < 0) score = 0;
+    return Score(
+        score: score, duration: duration, errors: errors, wordCount: wordCount);
   }
 
   factory Score.fromJson(Map<String, dynamic> json) => Score(
         score: json['score'] as int? ?? 0,
         duration: Duration(milliseconds: json['duration'] as int? ?? 0),
-        // Older saves don't carry the error count; keep it null then.
+        // Older saves don't carry the error/word count; keep them null then.
         errors: json['errors'] as int?,
+        wordCount: json['wordCount'] as int?,
       );
 
   Map<String, dynamic> toJson() => {
         'score': score,
         'duration': duration.inMilliseconds,
         if (errors != null) 'errors': errors,
+        if (wordCount != null) 'wordCount': wordCount,
       };
 
 

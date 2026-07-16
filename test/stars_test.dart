@@ -32,15 +32,26 @@ void main() {
       expect(VerseProgress().stars(Difficulty.slow), 0);
     });
 
-    test('stars follow the error count on seal I and II', () {
+    test(
+        'stars follow the error rate on seal I and II (#114: rate, not a '
+        'raw count, so verses of different lengths are judged fairly)', () {
       final progress = VerseProgress();
-      progress[Difficulty.slow] = Score(score: 10, errors: 0);
-      progress[Difficulty.normal] = Score(score: 10, errors: 2);
+      progress[Difficulty.slow] = Score(score: 10, errors: 0, wordCount: 20);
+      // 2/20 = 10%: still within the two-star band.
+      progress[Difficulty.normal] =
+          Score(score: 10, errors: 2, wordCount: 20);
       expect(progress.stars(Difficulty.slow), 3);
       expect(progress.stars(Difficulty.normal), 2);
 
-      progress[Difficulty.normal] = Score(score: 10, errors: 5);
+      // 5/20 = 25%: one star.
+      progress[Difficulty.normal] =
+          Score(score: 10, errors: 5, wordCount: 20);
       expect(progress.stars(Difficulty.normal), 1);
+
+      // 8/20 = 40%: over the #114 zero-star threshold.
+      progress[Difficulty.normal] =
+          Score(score: 10, errors: 8, wordCount: 20);
+      expect(progress.stars(Difficulty.normal), 0);
     });
 
     test('insane awards a single master star for finishing', () {
@@ -91,10 +102,14 @@ void main() {
 
     test('the next seal needs two stars on the previous one', () {
       final progress = VerseProgress();
-      progress[Difficulty.slow] = Score(score: 10, errors: 5); // one star
+      // 5/20 = 25%: one star.
+      progress[Difficulty.slow] =
+          Score(score: 10, errors: 5, wordCount: 20);
       expect(progress.unlocked(Difficulty.normal), isFalse);
 
-      progress[Difficulty.slow] = Score(score: 10, errors: 2); // two stars
+      // 2/20 = 10%: two stars.
+      progress[Difficulty.slow] =
+          Score(score: 10, errors: 2, wordCount: 20);
       expect(progress.unlocked(Difficulty.normal), isTrue);
       expect(progress.unlocked(Difficulty.insane), isFalse);
 

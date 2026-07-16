@@ -36,6 +36,7 @@ void main() {
         verseNumber: 5,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 20),
       );
       expect(controller.data.dailyClaimed, isTrue);
@@ -79,6 +80,7 @@ void main() {
         verseNumber: verse,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 20),
       );
 
@@ -90,6 +92,7 @@ void main() {
         verseNumber: verse,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 20, 12),
       );
       expect(earnedAgain, isEmpty);
@@ -104,6 +107,7 @@ void main() {
         verseNumber: verse,
         difficulty: Difficulty.normal,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 20),
       );
       expect(earned, isEmpty);
@@ -125,6 +129,7 @@ void main() {
         verseNumber: 1,
         difficulty: otherDifficulty,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 20),
       );
       expect(controller.data.weeklyStars, 0);
@@ -138,6 +143,7 @@ void main() {
           verseNumber: 1,
           difficulty: difficulty,
           errors: 0,
+          wordCount: 20,
           // Same day every time, so the streak logic can't also award a
           // Joker and skew the count this test is checking.
           now: DateTime(2026, 7, 20, 8 + i),
@@ -158,6 +164,7 @@ void main() {
         verseNumber: 1,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 20),
       );
       expect(controller.data.streakDays, 1);
@@ -166,6 +173,7 @@ void main() {
         verseNumber: 1,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 21),
       );
       expect(controller.data.streakDays, 2);
@@ -175,6 +183,7 @@ void main() {
         verseNumber: 1,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 21, 20),
       );
       expect(controller.data.streakDays, 2);
@@ -184,6 +193,7 @@ void main() {
         verseNumber: 1,
         difficulty: Difficulty.slow,
         errors: 0,
+        wordCount: 20,
         now: DateTime(2026, 7, 23),
       );
       expect(controller.data.streakDays, 1);
@@ -199,6 +209,7 @@ void main() {
           verseNumber: 1,
           difficulty: Difficulty.slow,
           errors: 5,
+          wordCount: 20,
           now: start.add(Duration(days: day)),
         );
         rewardCounts.add(earned.length);
@@ -221,6 +232,7 @@ void main() {
           verseNumber: 1,
           difficulty: Difficulty.slow,
           errors: 5,
+          wordCount: 20,
           now: DateTime(2026, 7, 20).add(Duration(days: day)),
         );
       }
@@ -231,6 +243,7 @@ void main() {
         verseNumber: 1,
         difficulty: Difficulty.slow,
         errors: 5,
+        wordCount: 20,
         now: DateTime(2026, 7, 30),
       );
       expect(earned, isEmpty);

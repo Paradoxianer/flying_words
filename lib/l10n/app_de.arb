@@ -143,6 +143,15 @@
     }
   },
 
+  "shop": "Shop",
+  "shopBuy": "Kaufen",
+  "shopOwnedCount": "{count} im Inventar",
+  "@shopOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "challenges": "Herausforderungen",
   "challengesDailyTitle": "Vers des Tages",
   "challengesDailyCta": "Jetzt spielen",

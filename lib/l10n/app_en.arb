@@ -143,6 +143,15 @@
     }
   },
 
+  "shop": "Shop",
+  "shopBuy": "Buy",
+  "shopOwnedCount": "{count} in inventory",
+  "@shopOwnedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
   "challenges": "Challenges",
   "challengesDailyTitle": "Verse of the Day",
   "challengesDailyCta": "Play now",

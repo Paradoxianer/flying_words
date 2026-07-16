@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../jokers/joker_inventory.dart';
 import '../jokers/joker_type.dart';
+import '../jokers/joker_type_info.dart';
 import '../style/palette.dart';
 
 /// Lets the player pick which Jokers (#53) to bring into the next round,
@@ -43,45 +44,6 @@ class JokerPicker extends StatelessWidget {
   }
 }
 
-String _nameOf(AppLocalizations l10n, JokerType type) {
-  switch (type) {
-    case JokerType.sanduhr:
-      return l10n.jokerSanduhrName;
-    case JokerType.vergebung:
-      return l10n.jokerVergebungName;
-    case JokerType.klarheit:
-      return l10n.jokerKlarheitName;
-    case JokerType.bonuszeit:
-      return l10n.jokerBonuszeitName;
-  }
-}
-
-String _descriptionOf(AppLocalizations l10n, JokerType type) {
-  switch (type) {
-    case JokerType.sanduhr:
-      return l10n.jokerSanduhrDescription;
-    case JokerType.vergebung:
-      return l10n.jokerVergebungDescription;
-    case JokerType.klarheit:
-      return l10n.jokerKlarheitDescription;
-    case JokerType.bonuszeit:
-      return l10n.jokerBonuszeitDescription;
-  }
-}
-
-IconData _iconOf(JokerType type) {
-  switch (type) {
-    case JokerType.sanduhr:
-      return Icons.hourglass_bottom;
-    case JokerType.vergebung:
-      return Icons.favorite;
-    case JokerType.klarheit:
-      return Icons.cleaning_services;
-    case JokerType.bonuszeit:
-      return Icons.timer_outlined;
-  }
-}
-
 class _JokerToggle extends StatelessWidget {
   final JokerType type;
   final int owned;
@@ -101,7 +63,7 @@ class _JokerToggle extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final enabled = owned > 0;
     return Tooltip(
-      message: '${_nameOf(l10n, type)}: ${_descriptionOf(l10n, type)}',
+      message: '${jokerName(l10n, type)}: ${jokerDescription(l10n, type)}',
       child: InkResponse(
         onTap: enabled ? onTap : null,
         child: Stack(
@@ -122,7 +84,7 @@ class _JokerToggle extends StatelessWidget {
                 ),
               ),
               child: Icon(
-                _iconOf(type),
+                jokerIcon(type),
                 color: enabled ? palette.ink : palette.inkFaded,
                 size: 18,
               ),

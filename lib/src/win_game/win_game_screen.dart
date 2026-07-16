@@ -167,14 +167,18 @@ class WinGameScreen extends StatelessWidget {
                               .copyWith(color: palette.inkFaded),
                         ),
                       ),
-                      Center(
-                        child: Text(
-                          l10n.goldInkEarned(goldInkEarned),
-                          key: const Key('gold-ink-earned'),
-                          style: ScriptoriumText.label
-                              .copyWith(color: palette.gold),
+                      // No line at all for a non-flawless run: only
+                      // flawless runs earn Goldtinte now (#54), and
+                      // "+0 Goldtinte" would just read as broken.
+                      if (goldInkEarned > 0)
+                        Center(
+                          child: Text(
+                            l10n.goldInkEarned(goldInkEarned),
+                            key: const Key('gold-ink-earned'),
+                            style: ScriptoriumText.label
+                                .copyWith(color: palette.gold),
+                          ),
                         ),
-                      ),
                       // Achieved time compared to the best run so far.
                       Center(
                         child: Text(

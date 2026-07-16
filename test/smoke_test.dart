@@ -8,6 +8,7 @@ import 'package:flying_words/main.dart';
 import 'package:flying_words/src/level_selection/levels.dart';
 import 'package:flying_words/src/currency/persistence/memory_gold_ink_persistence.dart';
 import 'package:flying_words/src/challenges/persistence/memory_challenges_persistence.dart';
+import 'package:flying_words/src/legal/persistence/memory_consent_persistence.dart';
 import 'package:flying_words/src/jokers/persistence/memory_joker_inventory_persistence.dart';
 import 'package:flying_words/src/player_progress/persistence/memory_player_progress_persistence.dart';
 import 'package:flying_words/src/settings/persistence/memory_settings_persistence.dart';
@@ -30,6 +31,7 @@ void main() {
       goldInkPersistence: MemoryOnlyGoldInkPersistence(),
       jokerInventoryPersistence: MemoryOnlyJokerInventoryPersistence(),
       challengesPersistence: MemoryOnlyChallengesPersistence(),
+      consentPersistence: MemoryOnlyConsentPersistence(),
       adsController: null,
       gamesServicesController: null,
       inAppPurchaseController: null,
@@ -43,6 +45,13 @@ void main() {
     expect(find.text('Flying Words'), findsOneWidget);
     expect(find.text('Spielen'), findsOneWidget);
     expect(find.text('Einstellungen'), findsOneWidget);
+
+    // Dismiss the first-start privacy notice (#111) before interacting
+    // with anything else - it shows after the simulated persistence read.
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('Datenschutzhinweis'), findsOneWidget);
+    await tester.tap(find.text('Verstanden'));
+    await tester.pumpAndSettle();
 
     // Go to the settings.
     await tester.tap(find.text('Einstellungen'));

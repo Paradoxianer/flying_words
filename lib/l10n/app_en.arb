@@ -233,6 +233,9 @@
 
   "privacyPolicy": "Privacy Policy",
   "privacyOptions": "Ad privacy options",
+  "privacyNoticeTitle": "Privacy Notice",
+  "privacyNoticeBody": "Flying Words processes some data to work: your progress is stored locally on your device. If ads or game-service sign-in (Play Games/Game Center) are active, additional data may be processed. The full privacy policy is always available under Settings.",
+  "privacyNoticeAcceptButton": "Got it",
   "privacyControllerTitle": "Data controller",
   "privacyControllerBody": "The controller responsible for data processing under the General Data Protection Regulation (GDPR) is:\n\n{name}\n{address}\n{email}",
   "@privacyControllerBody": {

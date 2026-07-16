@@ -10,12 +10,57 @@ import '../../l10n/gen/app_localizations.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../games_services/games_services.dart';
+import '../legal/consent_controller.dart';
 import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/scriptorium_text.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
+
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _maybeShowPrivacyNotice());
+  }
+
+  /// Presents the privacy notice once, on first app start (#111) - blocking
+  /// (no barrier dismiss, no back-button dismiss) since acknowledging it is
+  /// the whole point, but never gates playing itself.
+  Future<void> _maybeShowPrivacyNotice() async {
+    final consent = context.read<ConsentController>();
+    await consent.getLatestFromStore();
+    if (!mounted || consent.privacyNoticeSeen) return;
+    final l10n = AppLocalizations.of(context)!;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          title: Text(l10n.privacyNoticeTitle),
+          content: Text(l10n.privacyNoticeBody),
+          actions: [
+            FilledButton(
+              key: const Key('privacy-notice-accept'),
+              onPressed: () {
+                consent.markPrivacyNoticeSeen();
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(l10n.privacyNoticeAcceptButton),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

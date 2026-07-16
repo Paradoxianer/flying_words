@@ -233,6 +233,9 @@
 
   "privacyPolicy": "Datenschutz",
   "privacyOptions": "Datenschutzeinstellungen für Werbung",
+  "privacyNoticeTitle": "Datenschutzhinweis",
+  "privacyNoticeBody": "Flying Words verarbeitet einige Daten, damit die App funktioniert: dein Spielfortschritt wird lokal auf deinem Gerät gespeichert. Bei aktivierter Werbung oder Anmeldung bei Spielediensten (Play Games/Game Center) können zusätzlich Daten verarbeitet werden. Die vollständige Datenschutzerklärung findest du jederzeit unter Einstellungen.",
+  "privacyNoticeAcceptButton": "Verstanden",
   "privacyControllerTitle": "Verantwortlicher",
   "privacyControllerBody": "Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:\n\n{name}\n{address}\n{email}",
   "@privacyControllerBody": {

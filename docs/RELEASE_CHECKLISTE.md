@@ -6,32 +6,45 @@ Lizenzen in `docs/CREDITS.md`.
 
 ## Pflicht-Dokumente / Rechtliches
 
-- [ ] **Datenschutzerklärung** — von beiden Stores verpflichtend verlangt, sobald die App
-      Daten verarbeitet (Crashlytics, Games Services, später AdMob). Muss unter einer
-      **öffentlichen URL** erreichbar sein (z. B. GitHub Pages aus diesem Repo).
-      Entwurf: `docs/DATENSCHUTZ_ENTWURF.md` → **juristisch prüfen lassen!**
-- [ ] **Impressum/Anbieterkennzeichnung** — bei Veröffentlichung durch eine Organisation
+- [x] **Datenschutzerklärung** — ist inzwischen tatsächlich in der App implementiert
+      (`lib/src/legal/privacy_policy_content.dart`, angezeigt unter Einstellungen →
+      Datenschutz **und** im Erststart-Hinweis, #111/#105), nicht mehr nur der
+      Entwurf `docs/DATENSCHUTZ_ENTWURF.md` (der ist jetzt veraltet/überholt).
+      Für die Store-Konsolen wird trotzdem eine **öffentliche URL** gebraucht —
+      die Web-Version (GitHub Pages) kann dafür direkt verlinkt werden
+      (z. B. .../#/privacy), sonst Text separat als statische Seite hosten.
+      **Trotzdem noch juristisch prüfen lassen**, bevor veröffentlicht wird.
+- [ ] **Impressum/Anbieterkennzeichnung** — App-seitig bereits umgesetzt
+      (Einstellungen → Impressum). Für den Store-Eintrag selbst noch verlinken.
       (applicationId ist `de.heilsarmee.flying_words`) in DE i. d. R. erforderlich
-      (§ 5 DDG). In Store-Eintrag und/oder App verlinken.
+      (§ 5 DDG).
 - [ ] **Lizenz-Attribution** — Musik von Mr Smith ist CC BY 4.0 → Namensnennung ist
       **verpflichtend** (in-App „Credits"-Screen oder im Store-Text). Siehe `docs/CREDITS.md`.
+      Wird hinfällig, sobald #9 eigene Musik liefert.
 - [x] **Bibeltext-Lizenz geklärt** — deutsche Standard-Übersetzung ist die
       **Menge-Bibel** (gemeinfrei, Menge † 1939; Details in `docs/CREDITS.md`).
       Offen: hardcodierte Verse in `levels.dart` auf Menge-Text umstellen;
       bei weiteren Übersetzungen über die Bibel-API (#15) Lizenz je Übersetzung prüfen.
-- [ ] **DSGVO-Consent-Dialog** (#18) — spätestens mit AdMob (#17) nötig (Google UMP SDK).
+- [x] **DSGVO-Consent-Dialog** (#18) — Erststart-Hinweis umgesetzt (#111), UMP-Consent-Flow
+      für AdMob umgesetzt (#17, `AdsController._gatherConsent()`).
 
 ## Store-Einträge
 
-- [ ] Store-Texte DE/EN — Entwürfe: `docs/store/store_listing_de.md`, `store_listing_en.md`
-- [ ] Screenshots: Play min. 2 (Phone), besser 4–8; App Store je Gerätegröße
-- [ ] Feature-Grafik 1024×500 (Play, Pflicht), App-Icon 512×512 (Play) / 1024×1024 (iOS)
-- [ ] Google Play **Datensicherheits-Formular** (Data Safety) — Angaben müssen zur
-      Datenschutzerklärung passen (Crashlytics: Crash-Logs/Geräte-IDs; Games Services:
-      Spieler-ID, Scores; AdMob: Werbe-ID)
-- [ ] Apple **Privacy Nutrition Labels** — dieselben Angaben für App Store Connect
-- [ ] Altersfreigabe-Fragebogen (IARC bei Play; Altersgruppe bei Apple).
-      Inhaltlich unkritisch; „religiöse Inhalte" ehrlich angeben
+- [x] Store-Texte DE/EN aktualisiert (Features auf den echten Stand gebracht) —
+      `docs/store/store_listing_de.md`, `store_listing_en.md`. Noch offen: finaler
+      Korrekturlesen-Durchgang, Musik-Lizenzhinweis anpassen sobald #9 landet.
+- [x] Screenshots (Phone) — 6 Stück in `docs/store/screenshots/`, direkt aus dem
+      Web-Build erzeugt. App Store/Tablet-Varianten noch offen.
+- [ ] Feature-Grafik 1024×500 (Play, Pflicht), App-Icon 512×512 (Play) / 1024×1024 (iOS) —
+      App-Icon existiert (`data/icon/`, #100), Feature-Grafik noch offen (Design-Entscheidung).
+- [x] Google Play **Datensicherheits-Formular** (Data Safety) — Ausfüllhilfe basierend auf
+      dem tatsächlichen Code-Stand: `docs/store/data_safety_de.md`. Vor dem Absenden im
+      Formular nochmal gegen den dann aktuellen Stand prüfen (ändert sich mit #85/Crashlytics).
+- [ ] Apple **Privacy Nutrition Labels** — dieselben Angaben für App Store Connect,
+      `docs/store/data_safety_de.md` als Grundlage nutzbar.
+- [x] Altersfreigabe-Fragebogen (IARC bei Play; Altersgruppe bei Apple) —
+      Ausfüllhilfe: `docs/store/content_rating_de.md`. „Religiöse Inhalte" und
+      „enthält Werbung" ehrlich angegeben, kein Glücksspiel (bewusste Design-Entscheidung, #54).
 - [ ] Kategorie: Lernen/Bildung oder Wortspiele; Schlagworte (siehe Store-Texte)
 
 ## Technisch vor Release

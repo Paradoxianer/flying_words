@@ -22,18 +22,27 @@ of the verse before it disappears, and memorize the whole verse step by step.
 🏆 The faster and more accurate you are, the higher your score
 
 **Features**
-✅ Three difficulty levels – from relaxed learning to insane mode
-✅ Scoring system with high scores per verse
-✅ Your progress is saved
-✅ Fully playable offline
-⟨add when implemented: leaderboards & achievements, verse selection via Bible
-API, hide-the-text mode, star ratings⟩
+✅ Three difficulty levels (Seals I–III) – from relaxed learning to insane
+mode, star rating based on your error rate
+✅ Daily and weekly challenges with a streak bonus for practicing regularly
+✅ Jokers (Hourglass, Forgiveness, Clarity, Bonus Time) help with tough
+verses – earn them through challenges, buy them in the shop, or watch an ad
+✅ Goldtinte in-game currency for the Joker shop – earned through flawless
+runs, no betting or wagering mechanics of any kind
+✅ "The Eye" – hide the text and play entirely from memory, with a score
+bonus
+✅ Add your own Bible passages and memorize them the same way
+✅ Local leaderboard; on Android, Google Play Games leaderboards too
+✅ Your progress is saved, fully playable offline
 
 Great for youth groups, Bible study circles, families – and everyone who wants
 to hide God's word in their heart (Psalm 119:11).
 
 **License note:** Music by Mr Smith (CC BY 4.0),
-freemusicarchive.org/music/mr-smith
+freemusicarchive.org/music/mr-smith — will be replaced once original
+music/sound assets are in place (#9, #10).
+
+**Contains ads.** See the Data Safety notes (`docs/store/data_safety_de.md`).
 
 ## Keywords (App Store, max. 100 chars)
 

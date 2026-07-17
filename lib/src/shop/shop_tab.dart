@@ -182,7 +182,7 @@ class _ShopItemState extends State<_ShopItem> {
           ),
           if (adsController != null) ...[
             const SizedBox(height: 6),
-            _WatchAdLink(loading: _loading, onWatch: _watchAd),
+            _WatchAdButton(loading: _loading, onWatch: _watchAd),
           ],
         ],
       ),
@@ -190,39 +190,48 @@ class _ShopItemState extends State<_ShopItem> {
   }
 }
 
-/// The small "Werbung ansehen" text-button under a Joker's "Kaufen" button,
-/// its own widget only so it can read [RewardedAdLimitController] and
-/// rebuild on its own without the whole [_ShopItem] doing so.
-class _WatchAdLink extends StatelessWidget {
+/// The "Werbung ansehen" button under a Joker's "Kaufen" button. Styled as
+/// a [FilledButton] matching "Kaufen" (icon + count under the label)
+/// instead of a plain text link, so it reads as an equally valid purchase
+/// option rather than fine print (#121). Its own widget only so it can read
+/// [RewardedAdLimitController] and rebuild on its own without the whole
+/// [_ShopItem] doing so.
+class _WatchAdButton extends StatelessWidget {
   final bool loading;
   final VoidCallback onWatch;
 
-  const _WatchAdLink({required this.loading, required this.onWatch});
+  const _WatchAdButton({required this.loading, required this.onWatch});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final palette = context.watch<Palette>();
     final limits = context.watch<RewardedAdLimitController>();
     final canWatch = !loading && limits.canWatchJokerAd();
+    final remaining =
+        (rewardedAdDailyLimit - limits.jokerAdsWatchedToday())
+            .clamp(0, rewardedAdDailyLimit);
 
-    return TextButton(
+    return FilledButton(
       onPressed: canWatch ? onWatch : null,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
       child: loading
           ? const SizedBox(
-              width: 14,
-              height: 14,
+              width: 16,
+              height: 16,
               child: CircularProgressIndicator(strokeWidth: 2),
             )
-          : Text(
-              l10n.shopWatchAd,
-              style: ScriptoriumText.body
-                  .copyWith(fontSize: 11, color: palette.gold),
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(l10n.shopWatchAd),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.play_circle_outline, size: 12),
+                    const SizedBox(width: 3),
+                    Text('$remaining'),
+                  ],
+                ),
+              ],
             ),
     );
   }

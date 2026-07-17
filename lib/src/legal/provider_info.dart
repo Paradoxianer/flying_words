@@ -14,7 +14,7 @@ class ProviderInfo {
   static const zipCity = '09112 Chemnitz';
   static const country = 'Germany';
   static const email = 'two4god@gmail.com';
-  static const phone = '#49 163 86 87 637';
+  static const phone = '+49 163 86 87 637';
 
   /// Street, ZIP/city and country joined for the privacy policy's shorter
   /// "controller" section, which doesn't split the address into lines.

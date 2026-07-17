@@ -82,8 +82,9 @@ class _FlyingWordState extends State<FlyingWord> with TickerProviderStateMixin {
     _misTapped.clear();
     // Draw without replacement so neither the correct word nor any
     // distraction word can show up twice on the screen.
+    final words = bibleWordsForLocale(Localizations.localeOf(context));
     final candidates =
-        bibleWords.where((word) => word != currentWord).toSet().toList()
+        words.where((word) => word != currentWord).toSet().toList()
           ..shuffle();
     // "Klarheit" (#53) leaves about a third of the wrong options out.
     final effectiveHowMany = widget.state.distractionsReduced

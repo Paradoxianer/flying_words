@@ -63,17 +63,7 @@ First release: 6 verses, 3 difficulty levels, high scores.
       design/branding decision (not auto-generated)
 - [ ] Short promo video (optional)
 
-## Known bug found while generating screenshots
-
-The flying distractor words during gameplay are drawn from a hardcoded
-**German-only** word list (`lib/src/games_services/random_words.dart`,
-`bibleWords`), regardless of UI/verse language. In English, only the verse
-text and the target word are correctly localized — the distractors stay
-German (e.g. "Anbetung", "Hoffnung", "errettet"). This is a real gameplay
-localization bug, not just a screenshot artifact, and should get its own
-issue before the English listing is seriously promoted.
-
 Note: the app UI is now localized into English (issue #2, closed) — the
 screenshots above and the verse content
 (`assets/verses/curated_en.json`) are genuinely English, not just this
-listing text.
+listing text. The flying distractor words are English too (#124, fixed).

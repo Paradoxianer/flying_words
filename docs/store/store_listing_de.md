@@ -68,15 +68,3 @@ Erste Veröffentlichung: 6 Verse, 3 Schwierigkeitsgrade, Highscores.
 - [ ] Feature-Grafik 1024×500 — noch offen, braucht eine bewusste
       Design-/Branding-Entscheidung (nicht automatisiert erzeugt)
 - [ ] Kurzes Promo-Video (optional)
-
-## Bekannter Fehler, entdeckt beim Screenshot-Erzeugen
-
-Beim Erzeugen der englischen Screenshots aufgefallen: Die "fliegenden"
-Ablenkungswörter im Gameplay stammen aus einer fest verdrahteten,
-**rein deutschen** Wortliste (`lib/src/games_services/random_words.dart`,
-`bibleWords`), unabhängig von der UI-/Vers-Sprache. Auf Englisch ist daher nur
-der Vers-Text und das gesuchte Zielwort korrekt englisch — die
-Ablenkungswörter bleiben deutsch (z. B. "Anbetung", "Hoffnung", "errettet").
-Das ist ein echter Lokalisierungs-Bug im eigentlichen Gameplay (nicht nur ein
-Screenshot-Artefakt) und sollte als eigenes Issue nachgezogen werden, bevor
-die englische Version ernsthaft beworben wird.

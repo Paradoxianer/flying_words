@@ -23,18 +23,29 @@ Schritt für Schritt den ganzen Vers ein.
 🏆 Je schneller und fehlerfreier, desto mehr Punkte
 
 **Features**
-✅ Drei Schwierigkeitsgrade – vom entspannten Lernen bis zum Insane-Modus
-✅ Punktesystem mit Highscores pro Vers
-✅ Fortschritt wird gespeichert
-✅ Komplett offline spielbar
-⟨bei Umsetzung ergänzen: Bestenlisten & Erfolge, Vers-Auswahl über Bibel-API,
-Text-ausblenden-Modus, Sterne-System⟩
+✅ Drei Schwierigkeitsgrade (Siegel I–III) – vom entspannten Lernen bis zum
+Insane-Modus, mit Sterne-Bewertung nach Fehlerquote
+✅ Tägliche und wöchentliche Herausforderungen mit Serien-Bonus fürs
+regelmäßige Üben
+✅ Joker (Sanduhr, Vergebung, Klarheit, Bonuszeit) helfen bei schweren Versen –
+verdient durch Herausforderungen, im Shop gekauft oder per Werbevideo erhalten
+✅ Goldtinte als Spielwährung für den Joker-Shop – verdient durch fehlerfreie
+Läufe, kein Wett- oder Einsatz-Modus
+✅ „Das Auge" – Text ausblenden und ganz aus dem Gedächtnis spielen, mit
+Punktebonus
+✅ Eigene Bibelstellen frei wählbar und ebenso spielend auswendig lernen
+✅ Lokale Bestenliste; auf Android zusätzlich Google Play Games Bestenlisten
+✅ Fortschritt wird gespeichert, komplett offline spielbar
 
 Ideal für Konfirmanden- und Jugendgruppen, Hauskreise, Familien – und alle,
 die Gottes Wort im Herzen tragen wollen (Psalm 119,11).
 
 **Hinweis zu Lizenzen:** Musik von Mr Smith (CC BY 4.0),
-freemusicarchive.org/music/mr-smith
+freemusicarchive.org/music/mr-smith — wird ersetzt, sobald eigene Musik/Sounds
+vorliegen (#9, #10).
+
+**Enthält Werbung.** Details siehe Datensicherheits-Angaben
+(`docs/store/data_safety_de.md`).
 
 ## Schlagworte / Keywords (App Store, max. 100 Zeichen)
 
@@ -46,6 +57,10 @@ Erste Veröffentlichung: 6 Verse, 3 Schwierigkeitsgrade, Highscores.
 
 ## Noch zu produzieren
 
-- [ ] 4–8 Screenshots (Phone), 1–2 (Tablet) — Spielszene, Levelauswahl, Win-Screen
-- [ ] Feature-Grafik 1024×500
+- [x] Screenshots (Phone) — 6 Stück in `docs/store/screenshots/` (Hauptmenü,
+      Levelauswahl, Herausforderungen, Shop, Gameplay, Hilfe). Direkt aus dem
+      laufenden Web-Build erzeugt (Playwright, 1080×1920), keine Mockups.
+      Bei Bedarf durch Tablet-Screenshots ergänzen.
+- [ ] Feature-Grafik 1024×500 — noch offen, braucht eine bewusste
+      Design-/Branding-Entscheidung (nicht automatisiert erzeugt)
 - [ ] Kurzes Promo-Video (optional)

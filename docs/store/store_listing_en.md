@@ -52,4 +52,28 @@ bible,verse,memorize,memory,scripture,christian,game,word game,faith,devotion
 
 First release: 6 verses, 3 difficulty levels, high scores.
 
-Note: English store listing requires the app UI to be localized first (issue #2).
+## Still to produce
+
+- [x] Screenshots — 24 total in `docs/store/screenshots/<language>/<device>/`,
+      the same 6 shots (main menu, level selection, challenges, shop,
+      gameplay, help) per language (`de`, `en`) and device class (`phone`
+      1080×1920, `tablet` 1600×2560). Captured directly from the running web
+      build (Playwright), no mockups.
+- [ ] Feature graphic 1024×500 — still open, needs a deliberate
+      design/branding decision (not auto-generated)
+- [ ] Short promo video (optional)
+
+## Known bug found while generating screenshots
+
+The flying distractor words during gameplay are drawn from a hardcoded
+**German-only** word list (`lib/src/games_services/random_words.dart`,
+`bibleWords`), regardless of UI/verse language. In English, only the verse
+text and the target word are correctly localized — the distractors stay
+German (e.g. "Anbetung", "Hoffnung", "errettet"). This is a real gameplay
+localization bug, not just a screenshot artifact, and should get its own
+issue before the English listing is seriously promoted.
+
+Note: the app UI is now localized into English (issue #2, closed) — the
+screenshots above and the verse content
+(`assets/verses/curated_en.json`) are genuinely English, not just this
+listing text.

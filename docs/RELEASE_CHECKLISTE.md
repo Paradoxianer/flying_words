@@ -33,8 +33,9 @@ Lizenzen in `docs/CREDITS.md`.
 - [x] Store-Texte DE/EN aktualisiert (Features auf den echten Stand gebracht) —
       `docs/store/store_listing_de.md`, `store_listing_en.md`. Noch offen: finaler
       Korrekturlesen-Durchgang, Musik-Lizenzhinweis anpassen sobald #9 landet.
-- [x] Screenshots (Phone) — 6 Stück in `docs/store/screenshots/`, direkt aus dem
-      Web-Build erzeugt. App Store/Tablet-Varianten noch offen.
+- [x] Screenshots — 24 Stück in `docs/store/screenshots/<sprache>/<gerät>/`
+      (DE/EN × Phone/Tablet, je 6 Motive), direkt aus dem Web-Build erzeugt.
+      App-Store-Screenshots (iOS-spezifische Formate) noch offen.
 - [ ] Feature-Grafik 1024×500 (Play, Pflicht), App-Icon 512×512 (Play) / 1024×1024 (iOS) —
       App-Icon existiert (`data/icon/`, #100), Feature-Grafik noch offen (Design-Entscheidung).
 - [x] Google Play **Datensicherheits-Formular** (Data Safety) — Ausfüllhilfe basierend auf

@@ -57,10 +57,26 @@ Erste Veröffentlichung: 6 Verse, 3 Schwierigkeitsgrade, Highscores.
 
 ## Noch zu produzieren
 
-- [x] Screenshots (Phone) — 6 Stück in `docs/store/screenshots/` (Hauptmenü,
-      Levelauswahl, Herausforderungen, Shop, Gameplay, Hilfe). Direkt aus dem
-      laufenden Web-Build erzeugt (Playwright, 1080×1920), keine Mockups.
-      Bei Bedarf durch Tablet-Screenshots ergänzen.
+- [x] Screenshots — 24 Stück in `docs/store/screenshots/<sprache>/<gerät>/`,
+      je Sprache (`de`, `en`) und Geräteklasse (`phone` 1080×1920,
+      `tablet` 1600×2560) dieselben 6 Motive (Hauptmenü, Levelauswahl,
+      Herausforderungen, Shop, Gameplay, Hilfe). Direkt aus dem laufenden
+      Web-Build erzeugt (Playwright), keine Mockups. Für Play müssen DE und EN
+      als getrennte Listings mit ihren jeweiligen Sprach-Screenshots
+      hochgeladen werden; die Tablet-Variante deckt Play's "7-Zoll"/"10-Zoll"
+      Slot ab (nur eine Auflösung erzeugt, kein separater 7-Zoll-Satz).
 - [ ] Feature-Grafik 1024×500 — noch offen, braucht eine bewusste
       Design-/Branding-Entscheidung (nicht automatisiert erzeugt)
 - [ ] Kurzes Promo-Video (optional)
+
+## Bekannter Fehler, entdeckt beim Screenshot-Erzeugen
+
+Beim Erzeugen der englischen Screenshots aufgefallen: Die "fliegenden"
+Ablenkungswörter im Gameplay stammen aus einer fest verdrahteten,
+**rein deutschen** Wortliste (`lib/src/games_services/random_words.dart`,
+`bibleWords`), unabhängig von der UI-/Vers-Sprache. Auf Englisch ist daher nur
+der Vers-Text und das gesuchte Zielwort korrekt englisch — die
+Ablenkungswörter bleiben deutsch (z. B. "Anbetung", "Hoffnung", "errettet").
+Das ist ein echter Lokalisierungs-Bug im eigentlichen Gameplay (nicht nur ein
+Screenshot-Artefakt) und sollte als eigenes Issue nachgezogen werden, bevor
+die englische Version ernsthaft beworben wird.
